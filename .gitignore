@@ -1,0 +1,14 @@
+# System
+.DS_Store
+
+# Źródłowe oferty PDF (duże, niepotrzebne na stronie)
+*.pdf
+
+# Lokalne narzędzia / podgląd
+.claude/
+
+# Archiwa
+*.zip
+
+# Stara kopia stylów (nieużywana)
+styles_old.css
