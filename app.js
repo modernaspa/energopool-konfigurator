@@ -328,33 +328,242 @@
     window.location.href = `mailto:biuro@moderna-spa.pl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
-  function renderPrintable() {
-    const s = SIZES[state.size];
-    const items = buildItems();
-    const rows = items.map((it) => `
-      <tr${it.base ? ' class="qt-base"' : ""}><td>${it.name}</td><td>${fmt(it.price)}</td></tr>`).join("");
-    $("#quotePrintable").innerHTML = `
-      <h2 class="quote-h">Twój basen ENERGOPOOL — ${s.label}</h2>
-      <p class="quote-sub">Moderna Pool&Spa Sp. z o.o. · konfiguracja indywidualna</p>
-      <div class="quote-spec">
-        <b>Powierzchnia:</b> ${String(s.area).replace(".", ",")} m² · <b>Głębokość:</b> ${String(s.depth).replace(".", ",")} m · <b>Folia:</b> ${state.foil}<br>
-        <b>W pakiecie:</b> filtr ${s.filter}, pompa ${s.pump}, ${s.skimmer} skimmer / ${s.dysze} dysze / ${s.lampy} lampy RGB-LED, złoże AFM, instalacja PVC-U + elektryka.
-      </div>
-      <table class="quote-table">
-        ${rows}
-        <tr class="qt-total"><td>Cena całkowita brutto</td><td>${fmt(state._lastTotal)}</td></tr>
-      </table>
-      <p class="quote-contact">
-        <b>MODERNA POOL&Spa Sp. z o.o.</b><br>
-        ul. św. Teresy od Dzieciątka Jezus 91, 91-341 Łódź<br>
-        biuro@moderna-spa.pl · +48 500 560 245 · +48 500 560 246<br>
-        moderna-baseny.pl · moderna-spa.pl<br><br>
-        <small>Cena ma charakter informacyjny i nie stanowi oferty w rozumieniu art. 66 §1 Kodeksu cywilnego.</small>
-      </p>`;
+  /* =================== OFERTA PDF (szablon A4 w stylu Moderna) =================== */
+  const COMPANY = {
+    addr1: "ul. św. Teresy od Dzieciątka Jezus 91",
+    addr2: "91-341 Łódź",
+    phone: "+48 500 560 245",
+    email: "biuro@moderna-spa.pl",
+    web: "moderna-baseny.pl",
+    web2: "moderna-spa.pl",
+    hours: "Pon–Pt 10:00–17:00 · Sob 10:00–14:00"
+  };
+  const OA = {
+    hero: "assets/img_001.jpeg",     // okładka — basen infinity
+    band: "assets/konstrukcja.jpg",  // „dlaczego" — render konstrukcji
+    photo: "assets/img_027.jpeg",    // specyfikacja — realizacja
+    logo: "assets/img_002.png",      // logo (wersja jasna, na granat)
+    real: ["assets/img_003.jpeg", "assets/img_019.jpeg", "assets/img_034.png"]
+  };
+  const CHK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4 4 10-10.5"/></svg>';
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const plDate = (d) => d.toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" });
+
+  function offerGroups(s) {
+    const G = [];
+    G.push({ label: "Pakiet podstawowy", rows: [
+      { nm: `Basen ENERGOPOOL ${s.label}`, sub: "Niecka bloczkowo-betonowa · folia · filtracja · instalacja PVC-U + elektryka", price: s.base }
+    ] });
+    const fin = [];
+    if (state.stairs === "corner") fin.push({ nm: "Schody narożne", sub: "Oszczędność miejsca w narożniku", price: 0, free: true });
+    else if (state.stairs === "straight") fin.push({ nm: "Schody proste", sub: "Na całą szerokość basenu", price: s.stairs.straight });
+    else if (state.stairs === "shelf") fin.push({ nm: "Schody proste z półką", sub: "Z praktyczną półką do odpoczynku", price: s.stairs.shelf });
+    fin.push({ nm: `Folia RENOLIT ALKORPLAN — ${state.foil}`, sub: "TOUCH / VOGUE 2,0 mm · kolor bez dopłaty", price: 0, free: true });
+    G.push({ label: "Wykończenie i schody", rows: fin });
+    if (state.heat === "std") G.push({ label: "Podgrzewanie wody", rows: [{ nm: `Pompa ciepła Fairland INVER X13 · ${s.heatStd.kw}`, sub: "Full-Inverter · sterowanie Wi-Fi", price: s.heatStd.price }] });
+    else if (state.heat === "prem") G.push({ label: "Podgrzewanie wody", rows: [{ nm: `Pompa ciepła Fairland INVER X20 · ${s.heatPrem.kw}`, sub: "Turbo Boost + funkcja chłodzenia", price: s.heatPrem.price }] });
+    const w = [];
+    if (state.electro) w.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, sub: "Zasolenie 1 g/l · tryb Turbo 120%", price: s.electro.price });
+    if (state.uv) w.push({ nm: "Stacja UV Elecro Quantum Q-65", sub: "Technologia Nano Crystal", price: s.uv });
+    if (w.length) G.push({ label: "Uzdatnianie wody", rows: w });
+    if (state.cf === "ext") G.push({ label: "Przeciwprąd", rows: [{ nm: "Przeciwprąd zewnętrzny Swim Jet M", sub: `Plug & Play · ${s.cfExt.spec}`, price: s.cfExt.price }] });
+    else if (state.cf === "in") G.push({ label: "Przeciwprąd", rows: [{ nm: "Przeciwprąd do zabudowy Swim Jet F", sub: `InverTurbo · ${s.cfIn.spec}`, price: s.cfIn.price }] });
+    const ex = [];
+    if (state.iwash) ex.push({ nm: "Automatyczny zawór płukania iWASH", sub: "InverClear Tech · gwarancja 5 lat", price: FIXED.iwash });
+    if (state.robotInverbot) ex.push({ nm: "Odkurzacz Fairland Inverbot 60", sub: "Bezprzewodowy · AI · do 120 m²", price: FIXED.robotInverbot });
+    if (state.robotK60) ex.push({ nm: "Odkurzacz Fairland K60", sub: "Bateria 7500 mAh · tryb Turbo", price: FIXED.robotK60 });
+    if (ex.length) G.push({ label: "Wyposażenie dodatkowe", rows: ex });
+    const gr = [];
+    if (state.slab) gr.push({ nm: "Płyta fundamentowa ENERGO STANDARD PLUS", sub: "Zbrojona · 20 cm · beton C30/37 W10", price: s.slab });
+    if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", sub: "209 × 102 × 115 cm · z montażem", price: FIXED.techRoom });
+    if (gr.length) G.push({ label: "Prace ziemne i budowlane", rows: gr });
+    return G;
   }
 
-  function openModal() { renderPrintable(); $("#quoteModal").classList.add("open"); $("#quoteModal").setAttribute("aria-hidden", "false"); }
-  function closeModal() { $("#quoteModal").classList.remove("open"); $("#quoteModal").setAttribute("aria-hidden", "true"); }
+  function offerRow(r) {
+    const price = r.free ? `<div class="pr free">W cenie</div>` : `<div class="pr">${fmt(r.price)}</div>`;
+    return `<div class="row"><div><div class="nm">${r.nm}</div>${r.sub ? `<div class="sub">${r.sub}</div>` : ""}</div>
+      <div class="rt"><span class="qty">1×</span>${price}</div></div>`;
+  }
+
+  function buildOffer() {
+    const s = SIZES[state.size];
+    const area = String(s.area).replace(".", ",");
+    const depth = String(s.depth).replace(".", ",");
+    const gross = state._lastTotal;
+    const net = Math.round(gross / 1.23);
+    const vat = gross - net;
+    const today = new Date();
+    const valid = new Date(today.getTime() + 30 * 864e5);
+    const num = `EP/${today.getFullYear()}/${pad2(today.getMonth() + 1)}${pad2(today.getDate())}`;
+
+    const cover4 = [
+      { v: s.label, l: "Wymiary niecki" },
+      { v: area + " m²", l: "Powierzchnia wody" },
+      { v: depth + " m", l: "Głębokość" },
+      { v: state.foil, l: "Kolor folii" }
+    ];
+    const spec6 = [
+      { l: "Wymiary niecki", v: s.label },
+      { l: "Powierzchnia wody", v: area + " m²" },
+      { l: "Głębokość", v: depth + " m" },
+      { l: "Filtracja", v: s.filter },
+      { l: "Pompa cyrkulacyjna", v: s.pump },
+      { l: "Oświetlenie", v: `${s.lampy}× RGB-LED LUMIPLUS` }
+    ];
+    const included = [
+      "Niecka bloczkowo-betonowa · ściany 25 cm, beton C30/37 W8",
+      `Filtr piaskowy ${s.filter}`,
+      "Aktywne złoże filtracyjne AFM (szkło)",
+      `Pompa cyrkulacyjna ${s.pump}`,
+      `${s.skimmer}× skimmer ASTRALPOOL · ${s.dysze}× dysza napływowa`,
+      `${s.lampy}× lampa RGB-LED LUMIPLUS 22 W`,
+      "Folia zgrzewana RENOLIT ALKORPLAN 2,0 mm",
+      "Instalacja ciśnieniowa PVC-U + podstawowa elektryka"
+    ];
+    const pillars = [
+      { icon: "bolt", t: "Ekstremalnie energooszczędny", x: "Pompy i urządzenia Full-Inverter — niskie koszty eksploatacji przez cały sezon." },
+      { icon: "shield", t: "Wyjątkowo trwały", x: "Beton C30/37 W8 i folia RENOLIT 2,0 mm — najmocniejsza wykładzina basenowa." },
+      { icon: "sliders", t: "W pełni konfigurowalny", x: "Pompa ciepła, elektrolizer, UV, przeciwprąd, automatyka — dobierasz dokładnie to, czego chcesz." },
+      { icon: "cpu", t: "Nowoczesny i zautomatyzowany", x: "Sterowanie przez Wi-Fi i aplikację — pełna kontrola nad basenem z telefonu." }
+    ];
+    const warranty = [
+      "2 lata gwarancji Wykonawcy na prace budowlane i montażowe",
+      "2 lata na wykonane elementy instalacji elektrycznej",
+      "Wyposażenie basenu — gwarancja producenta lub dystrybutora",
+      "Serwis, części i wsparcie techniczne w Łodzi"
+    ];
+    const pay = [
+      ["I — 50%", "po zaakceptowaniu oferty i podpisaniu umowy"],
+      ["II — 25%", "po ukończeniu konstrukcji basenu"],
+      ["III — 10%", "po ukończeniu montażu folii basenowej"],
+      ["IV — 10%", "po montażu techniki i instalacji w pom. technicznym"],
+      ["V — 5%", "po ukończeniu i uruchomieniu basenu"]
+    ];
+    const groups = offerGroups(s);
+
+    return `
+      <table class="osheet">
+        <tfoot><tr><td><div class="foot-space"></div></td></tr></tfoot>
+        <tbody>
+          <tr><td>
+            <section class="cover pagebody">
+              <div class="cover-hero" style="background-image:url('${OA.hero}')">
+                <div class="cover-hero-grad"></div>
+                <div class="cover-top">
+                  <img class="cover-logo" src="${OA.logo}" alt="Moderna Pool&Spa">
+                  <div class="cover-date">Oferta przygotowana<b>${plDate(today)}</b></div>
+                </div>
+              </div>
+              <div class="cover-body">
+                <div class="kicker">ENERGOPOOL · Basen bloczkowo-betonowy</div>
+                <h1 class="cover-title">Basen ENERGOPOOL ${s.label}</h1>
+                <p class="cover-slogan">Ekstremalnie energooszczędny, wyjątkowo trwały i w pełni konfigurowalny basen — zbudowany dokładnie pod Twoje potrzeby.</p>
+                <div class="spec-row">${cover4.map((c) => `<div><div class="v">${c.v}</div><div class="l">${c.l}</div></div>`).join("")}</div>
+                <div class="cover-meta">
+                  <div><div class="ml">Klient</div><div class="mv"><span class="fill"></span></div><div class="mx"><span class="fill"></span></div></div>
+                  <div><div class="ml">Doradca handlowy</div><div class="mv">Moderna Pool&Spa</div><div class="mx">${COMPANY.phone} · ${COMPANY.email}</div></div>
+                </div>
+                <div class="cover-note">Oferta nr ${num} · ważna do ${plDate(valid)}</div>
+              </div>
+            </section>
+          </td></tr>
+
+          <tr><td>
+            <section class="page">
+              <div class="eyebrow">Dlaczego ENERGOPOOL</div>
+              <h2 class="h-sec">Basen, który buduje się raz — i służy pokoleniom</h2>
+              <p class="lead">Technologia bloczkowo-betonowa łączy trwałość konstrukcji żelbetowej z pełną swobodą konfiguracji wyposażenia. Projektujemy, budujemy i serwisujemy kompleksowo — od pomiaru po uruchomienie.</p>
+              <div class="band" style="background-image:url('${OA.band}')"></div>
+              <div class="pillars">${pillars.map((p) => `<div class="pillar"><div class="pill-ic">${ICONS[p.icon]}</div><div class="pill-t">${p.t}</div><div class="pill-x">${p.x}</div></div>`).join("")}</div>
+            </section>
+          </td></tr>
+
+          <tr class="brk"><td>
+            <section class="page">
+              <div class="eyebrow">Specyfikacja techniczna</div>
+              <h2 class="h-sec">Basen ENERGOPOOL ${s.label}</h2>
+              <p class="lead" style="margin-top:2mm">Technologia bloczkowo-betonowa · w ofercie ${num}</p>
+              <div class="spec-grid">
+                <div class="spec-photo" style="background-image:url('${OA.photo}')"></div>
+                <div class="spec-cards">${spec6.map((c) => `<div class="spec-card"><div class="l">${c.l}</div><div class="v">${c.v}</div></div>`).join("")}</div>
+              </div>
+              <div class="eyebrow" style="margin-top:6mm">W cenie — wyposażenie podstawowe</div>
+              <div class="checks">${included.map((x) => `<div class="chk">${CHK}<span>${x}</span></div>`).join("")}</div>
+              <div class="eyebrow" style="margin-top:6mm">Realizacje Moderna Pool&Spa</div>
+              <div class="thumbs">${OA.real.map((u) => `<div class="thumb"><div class="im" style="background-image:url('${u}')"></div></div>`).join("")}</div>
+              <p class="disc">Dane techniczne mają charakter poglądowy; konfiguracja z opcjami może zmieniać parametry. Nie stanowi oferty handlowej w rozumieniu art. 66 §1 Kodeksu cywilnego.</p>
+            </section>
+          </td></tr>
+
+          <tr class="brk"><td>
+            <section class="page pagebody" style="display:flex;flex-direction:column">
+              <div class="sum-head">
+                <div><div class="eyebrow">Twoja konfiguracja</div><h2 class="h-sec">Zestawienie oferty</h2></div>
+                <div class="meta">Basen ENERGOPOOL ${s.label} · nr ${num}<br>ceny brutto (PLN) · VAT 23%</div>
+              </div>
+              ${groups.map((g) => `<div class="group"><div class="group-t"><span>${g.label}</span><span class="rule"></span></div>${g.rows.map(offerRow).join("")}</div>`).join("")}
+              <div class="sum-2col avoid">
+                <div>
+                  <div class="eyebrow">Gwarancja spokoju</div>
+                  <div class="warr">${warranty.map((w) => `<div class="chk">${CHK}<span>${w}</span></div>`).join("")}</div>
+                </div>
+                <div>
+                  <div class="sumline"><span class="l">Wartość netto</span><span>${fmt(net)}</span></div>
+                  <div class="sumline"><span class="l">VAT 23%</span><span>${fmt(vat)}</span></div>
+                  <div class="grossbox"><span class="l">Do zapłaty (brutto)</span><span class="v">${fmt(gross)}</span></div>
+                </div>
+              </div>
+              <div class="pay avoid">
+                <div class="eyebrow">Harmonogram płatności (transze)</div>
+                <div class="pay-list">${pay.map((p) => `<div class="pay-row"><b>${p[0]}</b><span>${p[1]}</span></div>`).join("")}</div>
+              </div>
+              <div class="terms avoid">
+                <div><div class="th">Warunki oferty</div>Oferta ważna do ${plDate(valid)}. Ceny zawierają podatek VAT. Realizacja po potwierdzeniu zamówienia i podpisaniu umowy. Ceny mają charakter informacyjny i nie stanowią oferty w rozumieniu art. 66 §1 K.C.</div>
+                <div class="signs"><div class="sign">Podpis klienta</div><div class="sign">Podpis doradcy</div></div>
+              </div>
+              <div class="cta avoid" style="margin-top:auto">
+                <div><div class="t">Umów konsultację i pomiar</div><div class="s">Showroom w Łodzi · ${COMPANY.hours}</div></div>
+                <div class="ph"><div class="k">Dział handlowy</div>${COMPANY.phone}</div>
+              </div>
+            </section>
+          </td></tr>
+        </tbody>
+      </table>
+      <footer class="running-foot">
+        <div class="foot">
+          <div class="f1"><div class="ft">Showroom / Salon sprzedaży</div><div class="fa">${COMPANY.addr1}<br>${COMPANY.addr2}</div></div>
+          <div class="sep"></div>
+          <div class="col2"><div class="fl">Kontakt</div><div class="fv">${COMPANY.phone}</div><div class="fv" style="opacity:.6">${COMPANY.email}</div></div>
+          <div class="col3"><div class="fl">Portfolio</div><div class="fv">${COMPANY.web}</div><div class="fv">${COMPANY.web2}</div></div>
+        </div>
+      </footer>`;
+  }
+
+  function fitOffer() {
+    const scale = $("#offerScale"), doc = $("#offerDoc"), scroll = document.querySelector(".offer-scroll");
+    if (!scale || !doc || !scroll) return;
+    scale.style.transform = "none"; scale.style.height = "auto"; scale.style.width = "auto";
+    const avail = scroll.clientWidth - 44;
+    const w = doc.offsetWidth || 794;
+    const k = Math.min(1, avail / w);
+    scale.style.transform = `scale(${k})`;
+    scale.style.width = w + "px";
+    scale.style.height = doc.offsetHeight * k + "px";
+  }
+  function openOffer() {
+    $("#offerDoc").innerHTML = buildOffer();
+    const ov = $("#offerOverlay");
+    ov.classList.add("open"); ov.setAttribute("aria-hidden", "false");
+    document.body.classList.add("offer-open");
+    requestAnimationFrame(fitOffer);
+    setTimeout(fitOffer, 250); // po dociągnięciu obrazów/czcionek
+  }
+  function closeOffer() {
+    const ov = $("#offerOverlay");
+    ov.classList.remove("open"); ov.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("offer-open");
+  }
 
   /* =================== INIT =================== */
   document.addEventListener("DOMContentLoaded", () => {
@@ -362,11 +571,12 @@
     hydrateIcons();
     renderAll();
 
-    $("#btnEmail").addEventListener("click", openModal);
-    $("#btnPrint").addEventListener("click", () => { openModal(); setTimeout(() => window.print(), 350); });
-    $("#btnEmailModal").addEventListener("click", sendEmail);
-    $("#btnPrintModal").addEventListener("click", () => window.print());
-    document.querySelectorAll("#quoteModal [data-close]").forEach((el) => el.addEventListener("click", closeModal));
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+    $("#btnEmail").addEventListener("click", sendEmail);
+    $("#btnPrint").addEventListener("click", openOffer);
+    $("#offerClose").addEventListener("click", closeOffer);
+    $("#offerEmail").addEventListener("click", sendEmail);
+    $("#offerPrint").addEventListener("click", () => window.print());
+    window.addEventListener("resize", () => { if (document.body.classList.contains("offer-open")) fitOffer(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeOffer(); });
   });
 })();

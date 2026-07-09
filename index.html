@@ -7,6 +7,7 @@
 <meta name="description" content="Skonfiguruj swój energooszczędny basen bloczkowo-betonowy ENERGOPOOL i poznaj cenę online. Moderna Pool&Spa — baseny, zadaszenia i strefa SPA.">
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="oferta.css">
 </head>
 <body>
 
@@ -284,15 +285,17 @@
   <div class="footer-bottom"><div class="container">© <span id="year"></span> Moderna Pool&amp;Spa Sp. z o.o. — Konfigurator pakietu ENERGOPOOL. Ceny brutto, informacyjne.</div></div>
 </footer>
 
-<!-- ================= MODAL PODSUMOWANIA ================= -->
-<div class="modal" id="quoteModal" aria-hidden="true">
-  <div class="modal-backdrop" data-close></div>
-  <div class="modal-box" role="dialog" aria-modal="true">
-    <button class="modal-close" data-close aria-label="Zamknij">×</button>
-    <div id="quotePrintable"><!-- JS --></div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" id="btnEmailModal"><span class="ico" data-icon="mail"></span> Wyślij e-mailem</button>
-      <button class="btn btn-ghost" id="btnPrintModal"><span class="ico" data-icon="printer"></span> Drukuj / PDF</button>
+<!-- ================= NAKŁADKA PODGLĄDU OFERTY (PDF) ================= -->
+<div class="offer-overlay" id="offerOverlay" aria-hidden="true">
+  <div class="offer-toolbar">
+    <button class="ob-close" id="offerClose">✕ Zamknij</button>
+    <span class="sp"></span>
+    <button class="ob-ghost" id="offerEmail"><span class="ico" data-icon="mail"></span> Wyślij e-mailem</button>
+    <button class="ob-primary" id="offerPrint"><span class="ico" data-icon="printer"></span> Drukuj / zapisz PDF</button>
+  </div>
+  <div class="offer-scroll">
+    <div class="offer-scale" id="offerScale">
+      <div class="offer shadow" id="offerDoc"><!-- JS --></div>
     </div>
   </div>
 </div>

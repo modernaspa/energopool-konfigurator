@@ -285,10 +285,8 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ---------- print ---------- */
+/* Druk oferty obsługuje oferta.css (nakładka #offerOverlay). Poza trybem
+   oferty nie drukujemy strony konfiguratora. */
 @media print{
-  body *{visibility:hidden}
-  #quoteModal,#quoteModal *{visibility:visible}
-  #quoteModal{position:absolute;inset:0;display:block}
-  .modal-backdrop,.modal-close,.modal-actions{display:none}
-  .modal-box{box-shadow:none;margin:0;max-height:none;width:100%}
+  body:not(.offer-open) *{visibility:hidden}
 }

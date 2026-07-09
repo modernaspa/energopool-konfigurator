@@ -1,0 +1,185 @@
+/* ==========================================================================
+   ENERGOPOOL — szablon oferty PDF (A4, paged media)
+   Język wizualny przeniesiony z ofert Moderna (moderna-system: CSI/Treesse):
+   granat + akcent turkusowy + biel, okładka, karty parametrów, powtarzalna
+   stopka 30 mm, zestawienie z brutto w granatowym boxie.
+   Druk/PDF: File → Drukuj → Zapisz jako PDF (marginesy: Brak/None).
+   ========================================================================== */
+
+.offer{
+  --navy:#112232; --dark:#16293a;
+  --accent:#0E84A6; --accent-d:#0A5E78; --accent-soft:#EAF5F7;
+  --ink:#0C2330; --sub:#5A707A; --muted:#93A3AB; --line:#E4EAEC;
+  --foot:30mm; --pad:16mm;
+  width:210mm; background:#fff; color:var(--ink);
+  font-family:'Poppins',system-ui,sans-serif; line-height:1.5;
+}
+.offer *{box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+.offer h1,.offer h2,.offer h3{font-family:'Montserrat',sans-serif;margin:0;line-height:1.1;letter-spacing:-.01em;}
+.offer p{margin:0;}
+.offer img{display:block;}
+
+/* ── szkielet strony: tabela z tfoot-spacer + powtarzalna stopka ── */
+.offer .osheet{width:210mm;border-collapse:collapse;}
+.offer .osheet>tbody>tr>td{padding:0;vertical-align:top;}
+.offer .foot-space{height:var(--foot);}
+.offer .running-foot{left:0;right:0;bottom:0;height:var(--foot);}
+.offer .brk{break-before:page;}
+.offer .avoid{break-inside:avoid;}
+.offer .pagebody{min-height:calc(297mm - var(--foot));}
+
+/* ── typografia pomocnicza ── */
+.offer .kicker{font-family:'Montserrat',sans-serif;font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.22em;color:var(--accent);}
+.offer .eyebrow{font-family:'Montserrat',sans-serif;font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--accent);}
+.offer .h-sec{font-size:23pt;font-weight:600;margin-top:3mm;}
+.offer .lead{margin-top:4mm;max-width:165mm;font-size:10.5pt;color:var(--sub);}
+.offer .muted{color:var(--muted);}
+.offer .disc{margin-top:4mm;font-size:7.5pt;line-height:1.5;color:var(--muted);}
+
+/* ══════════ STRONA 1 — OKŁADKA ══════════ */
+.offer .cover{display:flex;flex-direction:column;background:var(--navy);color:#fff;}
+.offer .cover-hero{position:relative;flex:1;min-height:92mm;overflow:hidden;background-size:cover;background-position:center;}
+.offer .cover-hero-grad{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(17,34,50,.78) 0%,rgba(17,34,50,.30) 20%,rgba(17,34,50,0) 44%,rgba(17,34,50,0) 56%,var(--navy) 100%);}
+.offer .cover-top{position:absolute;inset-inline:0;top:0;display:flex;align-items:flex-start;justify-content:space-between;padding:13mm var(--pad) 0;}
+.offer .cover-logo{height:26mm;width:auto;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,.45));}
+.offer .cover-date{text-align:right;font-size:8.5pt;font-weight:500;text-transform:uppercase;letter-spacing:.16em;color:rgba(255,255,255,.85);text-shadow:0 1px 6px rgba(0,0,0,.45);}
+.offer .cover-date b{display:block;font-size:11pt;letter-spacing:.1em;color:#fff;}
+.offer .cover-body{padding:8mm var(--pad) 9mm;}
+.offer .cover-title{font-size:33pt;font-weight:700;margin-top:4mm;letter-spacing:.005em;}
+.offer .cover-slogan{margin-top:4mm;max-width:150mm;font-size:10.5pt;color:rgba(255,255,255,.66);}
+
+.offer .spec-row{margin-top:7mm;display:flex;border:1px solid rgba(255,255,255,.15);}
+.offer .spec-row>div{flex:1;padding:3.5mm 4mm;}
+.offer .spec-row>div+div{border-left:1px solid rgba(255,255,255,.12);}
+.offer .spec-row .v{font-size:11pt;font-weight:700;color:#fff;font-family:'Montserrat',sans-serif;}
+.offer .spec-row .l{margin-top:1.5mm;font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45);}
+
+.offer .cover-meta{margin-top:7mm;display:grid;grid-template-columns:1fr 1fr;gap:10mm;border-top:1px solid rgba(255,255,255,.1);padding-top:6mm;}
+.offer .cover-meta .ml{font-family:'Montserrat',sans-serif;font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);}
+.offer .cover-meta .mv{margin-top:1mm;font-size:10.5pt;font-weight:500;color:#fff;}
+.offer .cover-meta .mx{font-size:8.5pt;color:rgba(255,255,255,.5);}
+.offer .cover-meta .fill{display:inline-block;min-width:52mm;border-bottom:1px solid rgba(255,255,255,.25);}
+.offer .cover-note{margin-top:4mm;font-size:8.5pt;color:rgba(255,255,255,.45);}
+
+/* ══════════ SEKCJE JASNE ══════════ */
+.offer .page{background:#fff;padding:16mm var(--pad) 12mm;}
+.offer .band{margin-top:7mm;height:52mm;width:100%;overflow:hidden;background-size:cover;background-position:center;}
+
+/* filary */
+.offer .pillars{margin-top:8mm;display:grid;grid-template-columns:1fr 1fr;gap:5mm;}
+.offer .pillar{border:1px solid var(--line);padding:5mm;}
+.offer .pill-ic{display:flex;height:10mm;width:10mm;align-items:center;justify-content:center;border-radius:50%;background:var(--accent-soft);color:var(--accent);}
+.offer .pill-ic svg{width:5mm;height:5mm;}
+.offer .pill-t{margin-top:3mm;font-family:'Montserrat',sans-serif;font-size:11.5pt;font-weight:600;}
+.offer .pill-x{margin-top:1.5mm;font-size:9pt;color:var(--sub);}
+
+/* specyfikacja */
+.offer .spec-grid{margin-top:7mm;display:grid;grid-template-columns:78mm 1fr;gap:8mm;}
+.offer .spec-photo{height:72mm;overflow:hidden;border:1px solid var(--line);background-size:cover;background-position:center;}
+.offer .spec-cards{display:grid;grid-template-columns:1fr 1fr;gap:2mm;align-content:start;}
+.offer .spec-card{border:1px solid var(--line);padding:2mm 4mm;background:var(--accent-soft);}
+.offer .spec-card .l{font-family:'Montserrat',sans-serif;font-size:7.5pt;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);}
+.offer .spec-card .v{margin-top:.5mm;font-size:10.5pt;font-weight:600;color:var(--ink);}
+
+/* checklista „w cenie" */
+.offer .checks{margin-top:3mm;display:grid;grid-template-columns:1fr 1fr;gap:2mm 8mm;}
+.offer .chk{display:flex;gap:2mm;font-size:9pt;line-height:1.35;color:var(--sub);}
+.offer .chk svg{width:3.5mm;height:3.5mm;color:var(--accent);flex:none;margin-top:.5mm;}
+
+/* warstwy / thumbnails */
+.offer .thumbs{margin-top:3mm;display:grid;grid-template-columns:1fr 1fr 1fr;gap:3mm;}
+.offer .thumb{border:1px solid var(--line);overflow:hidden;}
+.offer .thumb .im{height:24mm;background-size:cover;background-position:center;}
+.offer .thumb .cap{padding:1mm 2mm;text-align:center;font-size:8.5pt;}
+
+/* ══════════ ZESTAWIENIE ══════════ */
+.offer .sum-head{display:flex;align-items:flex-end;justify-content:space-between;}
+.offer .sum-head .meta{text-align:right;font-size:9pt;color:var(--sub);}
+.offer .group{margin-top:5mm;}
+.offer .group-t{display:flex;align-items:center;gap:3mm;margin-bottom:1.5mm;}
+.offer .group-t span{font-family:'Montserrat',sans-serif;font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.16em;color:var(--accent);}
+.offer .group-t .rule{height:1px;flex:1;background:var(--accent);opacity:.35;}
+.offer .row{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--line);padding:2mm 0;}
+.offer .row .nm{font-size:10pt;font-weight:500;padding-right:6mm;}
+.offer .row .sub{margin-top:.5mm;font-size:8pt;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+.offer .row .rt{display:flex;align-items:baseline;gap:6mm;flex:none;}
+.offer .row .qty{font-size:9pt;color:var(--sub);}
+.offer .row .pr{width:34mm;text-align:right;font-size:10.5pt;font-weight:600;font-family:'Montserrat',sans-serif;}
+.offer .row .pr.free{color:#2e8b57;font-size:9.5pt;}
+
+.offer .sum-2col{margin-top:5mm;display:grid;grid-template-columns:1fr 1fr;gap:10mm;}
+.offer .warr{display:flex;flex-direction:column;gap:2.5mm;margin-top:3mm;}
+.offer .sumline{display:flex;align-items:center;justify-content:space-between;font-size:10pt;margin-bottom:2mm;}
+.offer .sumline .l{color:var(--sub);}
+.offer .grossbox{margin-top:3mm;display:flex;align-items:center;justify-content:space-between;padding:4mm 5mm;background:var(--navy);color:#fff;}
+.offer .grossbox .l{font-size:10pt;font-weight:500;text-transform:uppercase;letter-spacing:.08em;}
+.offer .grossbox .v{font-size:18pt;font-weight:700;font-family:'Montserrat',sans-serif;line-height:1;}
+.offer .savings{margin-top:3mm;display:flex;align-items:center;justify-content:space-between;padding:0 5mm;font-size:10pt;color:var(--accent);}
+
+/* harmonogram płatności */
+.offer .pay{margin-top:5mm;}
+.offer .pay-list{margin-top:2mm;display:grid;gap:1.5mm;}
+.offer .pay-row{display:flex;gap:3mm;font-size:9pt;color:var(--sub);border-bottom:1px solid var(--line);padding-bottom:1.5mm;}
+.offer .pay-row b{min-width:16mm;font-family:'Montserrat',sans-serif;color:var(--accent-d);}
+
+/* warunki + podpisy */
+.offer .terms{margin-top:5mm;display:grid;grid-template-columns:1fr 1fr;gap:10mm;font-size:8.5pt;color:var(--sub);}
+.offer .terms .th{margin-bottom:1mm;font-family:'Montserrat',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--ink);}
+.offer .signs{display:grid;grid-template-columns:1fr 1fr;gap:8mm;padding-top:10mm;}
+.offer .sign{border-top:1px solid var(--line);padding-top:1mm;text-align:center;font-size:8.5pt;}
+
+/* CTA */
+.offer .cta{margin-top:6mm;display:flex;align-items:center;justify-content:space-between;padding:5mm 8mm;background:var(--navy);color:#fff;border-left:3px solid var(--accent);}
+.offer .cta .t{font-family:'Montserrat',sans-serif;font-size:13pt;font-weight:600;}
+.offer .cta .s{margin-top:1mm;font-size:9pt;color:rgba(255,255,255,.55);}
+.offer .cta .ph{font-family:'Montserrat',sans-serif;font-size:16pt;font-weight:700;color:var(--accent);text-align:right;}
+.offer .cta .ph .k{font-size:7.5pt;text-transform:uppercase;letter-spacing:.18em;color:rgba(255,255,255,.5);font-weight:600;}
+
+/* ── STOPKA ── */
+.offer .foot{display:flex;height:100%;align-items:center;gap:10mm;padding:5mm 14mm;color:#fff;
+  background:linear-gradient(115deg,#16293a 0%,#0d1a28 55%,#0a1521 100%);border-top:2px solid var(--accent);}
+.offer .foot .f1{flex:1;}
+.offer .foot .ft{font-family:'Montserrat',sans-serif;font-size:12pt;font-weight:600;}
+.offer .foot .fa{margin-top:2mm;font-size:8.5pt;color:rgba(255,255,255,.55);}
+.offer .foot .sep{height:14mm;width:1px;background:rgba(255,255,255,.12);}
+.offer .foot .fl{font-family:'Montserrat',sans-serif;font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.45);}
+.offer .foot .fv{margin-top:2mm;font-size:9pt;color:rgba(255,255,255,.8);}
+.offer .foot .col2{width:44mm;}
+.offer .foot .col3{width:40mm;}
+
+/* ══════════ NAKŁADKA PODGLĄDU (ekran) ══════════ */
+.offer-overlay{position:fixed;inset:0;z-index:200;display:none;background:#33414d;}
+.offer-overlay.open{display:flex;flex-direction:column;}
+.offer-toolbar{flex:none;display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;background:#0C2330;color:#fff;}
+.offer-toolbar .sp{flex:1;}
+.offer-toolbar button{font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;padding:.6rem 1.1rem;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;}
+.offer-toolbar .ob-close{background:transparent;color:#fff;border-color:rgba(255,255,255,.3);}
+.offer-toolbar .ob-close:hover{border-color:#fff;}
+.offer-toolbar .ob-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.4);}
+.offer-toolbar .ob-ghost:hover{background:rgba(255,255,255,.1);}
+.offer-toolbar .ob-primary{background:var(--accent,#0E84A6);color:#fff;}
+.offer-toolbar .ob-primary:hover{background:#16A9CE;}
+.offer-scroll{flex:1;overflow:auto;padding:22px;display:flex;justify-content:center;}
+.offer-scale{transform-origin:top center;}
+.offer .shadow{box-shadow:0 10px 40px -10px rgba(0,0,0,.5);}
+/* na ekranie: stopka statyczna (raz), bez fixed */
+@media screen{
+  .offer .running-foot{position:static;height:var(--foot);}
+  .offer .foot-space{display:none;}
+}
+
+/* ══════════ DRUK ══════════ */
+@media print{
+  @page{size:A4;margin:0;}
+  html,body{margin:0;padding:0;background:#fff !important;}
+  body.offer-open>*:not(.offer-overlay){display:none !important;}
+  .offer-overlay{position:static;display:block;background:#fff;}
+  .offer-toolbar{display:none !important;}
+  .offer-scroll{overflow:visible;padding:0;display:block;}
+  .offer-scale{transform:none !important;}
+  .offer{width:210mm;margin:0;}
+  .offer .shadow{box-shadow:none;}
+  .offer .running-foot{position:fixed;}
+  .offer .foot-space{height:var(--foot);}
+}
