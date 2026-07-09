@@ -75,7 +75,7 @@
 .offer .pill-x{margin-top:1.5mm;font-size:9pt;color:var(--sub);}
 
 /* specyfikacja */
-.offer .spec-grid{margin-top:7mm;display:grid;grid-template-columns:78mm 1fr;gap:8mm;}
+.offer .spec-duo{margin-top:7mm;display:grid;grid-template-columns:78mm 1fr;gap:8mm;}
 .offer .spec-photo{height:72mm;overflow:hidden;border:1px solid var(--line);background-size:cover;background-position:center;}
 .offer .spec-cards{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);height:72mm;}
 .offer .spec-card{background:#fff;padding:3mm 4mm;display:flex;flex-direction:column;justify-content:center;}
@@ -127,7 +127,7 @@
 
 /* harmonogram płatności */
 .offer .pay{margin-top:5mm;}
-.offer .pay-list{margin-top:2mm;display:grid;gap:1.5mm;}
+.offer .pay-rows{margin-top:2mm;display:grid;gap:1.5mm;}
 .offer .pay-row{display:flex;gap:3mm;font-size:9pt;color:var(--sub);border-bottom:1px solid var(--line);padding-bottom:1.5mm;}
 .offer .pay-row b{min-width:16mm;font-family:'Montserrat',sans-serif;color:var(--accent-d);}
 

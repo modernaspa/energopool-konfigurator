@@ -500,7 +500,7 @@
               <div class="eyebrow">Specyfikacja techniczna</div>
               <h2 class="h-sec">ENERGOPOOL ${s.label}</h2>
               <p class="lead" style="margin-top:2mm">Technologia bloczkowo-betonowa · w ofercie ${num}</p>
-              <div class="spec-grid">
+              <div class="spec-duo">
                 <div class="spec-photo" style="background-image:url('${OA.photo}')"></div>
                 <div class="spec-cards">${spec6.map((c) => `<div class="spec-card"><div class="l">${c.l}</div><div class="v">${c.v}</div></div>`).join("")}</div>
               </div>
@@ -538,7 +538,7 @@
               </div>
               <div class="pay" style="margin-top:11mm">
                 <div class="eyebrow">Harmonogram płatności (transze)</div>
-                <div class="pay-list">${pay.map((p) => `<div class="pay-row"><b>${p[0]}</b><span>${p[1]}</span></div>`).join("")}</div>
+                <div class="pay-rows">${pay.map((p) => `<div class="pay-row"><b>${p[0]}</b><span>${p[1]}</span></div>`).join("")}</div>
               </div>
               <div class="terms" style="margin-top:13mm">
                 <div><div class="th">Warunki oferty</div>Oferta ważna do ${plDate(valid)}. Ceny zawierają podatek VAT. Realizacja po potwierdzeniu zamówienia i podpisaniu umowy. Ceny mają charakter informacyjny i nie stanowią oferty w rozumieniu art. 66 §1 K.C.</div>
