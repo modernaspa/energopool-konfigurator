@@ -352,37 +352,36 @@
   function offerGroups(s) {
     const G = [];
     G.push({ label: "Pakiet podstawowy", rows: [
-      { nm: `Basen ENERGOPOOL ${s.label}`, sub: "Niecka bloczkowo-betonowa · folia · filtracja · instalacja PVC-U + elektryka", price: s.base }
+      { nm: `Basen ENERGOPOOL ${s.label}`, sub: "Niecka bloczkowo-betonowa · folia · filtracja · instalacja PVC-U + elektryka", price: s.base, base: true }
     ] });
     const fin = [];
-    if (state.stairs === "corner") fin.push({ nm: "Schody narożne", sub: "Oszczędność miejsca w narożniku", price: 0, free: true });
-    else if (state.stairs === "straight") fin.push({ nm: "Schody proste", sub: "Na całą szerokość basenu", price: s.stairs.straight });
-    else if (state.stairs === "shelf") fin.push({ nm: "Schody proste z półką", sub: "Z praktyczną półką do odpoczynku", price: s.stairs.shelf });
-    fin.push({ nm: `Folia RENOLIT ALKORPLAN — ${state.foil}`, sub: "TOUCH / VOGUE 2,0 mm · kolor bez dopłaty", price: 0, free: true });
+    if (state.stairs === "corner") fin.push({ nm: "Schody narożne", price: 0, free: true });
+    else if (state.stairs === "straight") fin.push({ nm: "Schody proste", price: s.stairs.straight });
+    else if (state.stairs === "shelf") fin.push({ nm: "Schody proste z półką", price: s.stairs.shelf });
+    fin.push({ nm: `Folia RENOLIT ALKORPLAN — ${state.foil}`, price: 0, free: true });
     G.push({ label: "Wykończenie i schody", rows: fin });
-    if (state.heat === "std") G.push({ label: "Podgrzewanie wody", rows: [{ nm: `Pompa ciepła Fairland INVER X13 · ${s.heatStd.kw}`, sub: "Full-Inverter · sterowanie Wi-Fi", price: s.heatStd.price }] });
-    else if (state.heat === "prem") G.push({ label: "Podgrzewanie wody", rows: [{ nm: `Pompa ciepła Fairland INVER X20 · ${s.heatPrem.kw}`, sub: "Turbo Boost + funkcja chłodzenia", price: s.heatPrem.price }] });
-    const w = [];
-    if (state.electro) w.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, sub: "Zasolenie 1 g/l · tryb Turbo 120%", price: s.electro.price });
-    if (state.uv) w.push({ nm: "Stacja UV Elecro Quantum Q-65", sub: "Technologia Nano Crystal", price: s.uv });
-    if (w.length) G.push({ label: "Uzdatnianie wody", rows: w });
-    if (state.cf === "ext") G.push({ label: "Przeciwprąd", rows: [{ nm: "Przeciwprąd zewnętrzny Swim Jet M", sub: `Plug & Play · ${s.cfExt.spec}`, price: s.cfExt.price }] });
-    else if (state.cf === "in") G.push({ label: "Przeciwprąd", rows: [{ nm: "Przeciwprąd do zabudowy Swim Jet F", sub: `InverTurbo · ${s.cfIn.spec}`, price: s.cfIn.price }] });
-    const ex = [];
-    if (state.iwash) ex.push({ nm: "Automatyczny zawór płukania iWASH", sub: "InverClear Tech · gwarancja 5 lat", price: FIXED.iwash });
-    if (state.robotInverbot) ex.push({ nm: "Odkurzacz Fairland Inverbot 60", sub: "Bezprzewodowy · AI · do 120 m²", price: FIXED.robotInverbot });
-    if (state.robotK60) ex.push({ nm: "Odkurzacz Fairland K60", sub: "Bateria 7500 mAh · tryb Turbo", price: FIXED.robotK60 });
-    if (ex.length) G.push({ label: "Wyposażenie dodatkowe", rows: ex });
+    const tech = [];
+    if (state.heat === "std") tech.push({ nm: `Pompa ciepła Fairland INVER X13 · ${s.heatStd.kw}`, price: s.heatStd.price });
+    else if (state.heat === "prem") tech.push({ nm: `Pompa ciepła Fairland INVER X20 · ${s.heatPrem.kw}`, price: s.heatPrem.price });
+    if (state.electro) tech.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
+    if (state.uv) tech.push({ nm: "Stacja UV Elecro Quantum Q-65", price: s.uv });
+    if (state.cf === "ext") tech.push({ nm: `Przeciwprąd zewnętrzny Swim Jet M · ${s.cfExt.spec}`, price: s.cfExt.price });
+    else if (state.cf === "in") tech.push({ nm: `Przeciwprąd do zabudowy Swim Jet F · ${s.cfIn.spec}`, price: s.cfIn.price });
+    if (state.iwash) tech.push({ nm: "Automatyczny zawór płukania iWASH", price: FIXED.iwash });
+    if (state.robotInverbot) tech.push({ nm: "Odkurzacz Fairland Inverbot 60", price: FIXED.robotInverbot });
+    if (state.robotK60) tech.push({ nm: "Odkurzacz Fairland K60", price: FIXED.robotK60 });
+    if (tech.length) G.push({ label: "Technika i wyposażenie", rows: tech });
     const gr = [];
-    if (state.slab) gr.push({ nm: "Płyta fundamentowa ENERGO STANDARD PLUS", sub: "Zbrojona · 20 cm · beton C30/37 W10", price: s.slab });
-    if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", sub: "209 × 102 × 115 cm · z montażem", price: FIXED.techRoom });
+    if (state.slab) gr.push({ nm: "Płyta fundamentowa ENERGO STANDARD PLUS", price: s.slab });
+    if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
     if (gr.length) G.push({ label: "Prace ziemne i budowlane", rows: gr });
     return G;
   }
 
   function offerRow(r) {
     const price = r.free ? `<div class="pr free">W cenie</div>` : `<div class="pr">${fmt(r.price)}</div>`;
-    return `<div class="row"><div><div class="nm">${r.nm}</div>${r.sub ? `<div class="sub">${r.sub}</div>` : ""}</div>
+    const sub = (r.base && r.sub) ? `<div class="sub">${r.sub}</div>` : ""; // opis tylko przy pakiecie bazowym
+    return `<div class="row"><div><div class="nm">${r.nm}</div>${sub}</div>
       <div class="rt"><span class="qty">1×</span>${price}</div></div>`;
   }
 
@@ -514,32 +513,38 @@
           </td></tr>
 
           <tr class="brk"><td>
-            <section class="page pagebody" style="display:flex;flex-direction:column">
+            <section class="page">
               <div class="sum-head">
                 <div><div class="eyebrow">Twoja konfiguracja</div><h2 class="h-sec">Zestawienie oferty</h2></div>
                 <div class="meta">ENERGOPOOL ${s.label} · nr ${num}<br>ceny brutto (PLN) · VAT 23%</div>
               </div>
               ${groups.map((g) => `<div class="group"><div class="group-t"><span>${g.label}</span><span class="rule"></span></div>${g.rows.map(offerRow).join("")}</div>`).join("")}
-              <div class="sum-2col avoid">
-                <div>
-                  <div class="eyebrow">Gwarancja spokoju</div>
-                  <div class="warr">${warranty.map((w) => `<div class="chk">${CHK}<span>${w}</span></div>`).join("")}</div>
-                </div>
-                <div>
-                  <div class="sumline"><span class="l">Wartość netto</span><span>${fmt(net)}</span></div>
-                  <div class="sumline"><span class="l">VAT 23%</span><span>${fmt(vat)}</span></div>
-                  <div class="grossbox"><span class="l">Do zapłaty (brutto)</span><span class="v">${fmt(gross)}</span></div>
-                </div>
+              <div class="totals avoid">
+                <div class="sumline"><span class="l">Wartość netto</span><span>${fmt(net)}</span></div>
+                <div class="sumline"><span class="l">VAT 23%</span><span>${fmt(vat)}</span></div>
+                <div class="grossbox"><span class="l">Do zapłaty (brutto)</span><span class="v">${fmt(gross)}</span></div>
               </div>
-              <div class="pay avoid">
+            </section>
+          </td></tr>
+
+          <tr class="brk"><td>
+            <section class="page">
+              <div class="eyebrow">Płatności i współpraca</div>
+              <h2 class="h-sec">Realizacja krok po kroku</h2>
+              <p class="lead" style="margin-top:3mm">Przejrzysty harmonogram płatności rozłożony na etapy budowy — płacisz za faktycznie wykonane prace.</p>
+              <div style="margin-top:10mm">
+                <div class="eyebrow">Gwarancja spokoju</div>
+                <div class="warr2">${warranty.map((w) => `<div class="chk">${CHK}<span>${w}</span></div>`).join("")}</div>
+              </div>
+              <div class="pay" style="margin-top:11mm">
                 <div class="eyebrow">Harmonogram płatności (transze)</div>
                 <div class="pay-list">${pay.map((p) => `<div class="pay-row"><b>${p[0]}</b><span>${p[1]}</span></div>`).join("")}</div>
               </div>
-              <div class="terms avoid">
+              <div class="terms" style="margin-top:13mm">
                 <div><div class="th">Warunki oferty</div>Oferta ważna do ${plDate(valid)}. Ceny zawierają podatek VAT. Realizacja po potwierdzeniu zamówienia i podpisaniu umowy. Ceny mają charakter informacyjny i nie stanowią oferty w rozumieniu art. 66 §1 K.C.</div>
                 <div class="signs"><div class="sign">Podpis klienta</div><div class="sign">Podpis doradcy</div></div>
               </div>
-              <div class="cta avoid" style="margin-top:auto">
+              <div class="cta" style="margin-top:16mm">
                 <div><div class="t">Umów konsultację i pomiar</div><div class="s">Showroom w Łodzi · ${COMPANY.hours}</div></div>
                 <div class="ph"><div class="k">Dział handlowy</div>${COMPANY.phone}</div>
               </div>
