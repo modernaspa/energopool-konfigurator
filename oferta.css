@@ -46,7 +46,7 @@
 .offer .cover-date{text-align:right;font-size:8.5pt;font-weight:500;text-transform:uppercase;letter-spacing:.16em;color:rgba(255,255,255,.85);text-shadow:0 1px 6px rgba(0,0,0,.45);}
 .offer .cover-date b{display:block;font-size:11pt;letter-spacing:.1em;color:#fff;}
 .offer .cover-body{padding:8mm var(--pad) 9mm;}
-.offer .cover-title{font-size:33pt;font-weight:700;margin-top:4mm;letter-spacing:.005em;}
+.offer .cover-title{font-size:33pt;font-weight:700;margin-top:4mm;letter-spacing:.005em;white-space:nowrap;}
 .offer .cover-slogan{margin-top:4mm;max-width:150mm;font-size:10.5pt;color:rgba(255,255,255,.66);}
 
 .offer .spec-row{margin-top:7mm;display:flex;border:1px solid rgba(255,255,255,.15);}

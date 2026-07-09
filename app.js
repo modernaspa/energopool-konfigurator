@@ -551,13 +551,24 @@
     scale.style.width = w + "px";
     scale.style.height = doc.offsetHeight * k + "px";
   }
+  // Tytuł okładki zawsze w jednej linii: zmniejsza font, aż zmieści się w szerokości.
+  function fitTitle() {
+    const t = $("#offerDoc .cover-title");
+    if (!t) return;
+    let size = 33;
+    t.style.fontSize = size + "pt";
+    let guard = 0;
+    while (t.scrollWidth > t.clientWidth + 1 && size > 16 && guard < 60) {
+      size -= 0.5; t.style.fontSize = size + "pt"; guard++;
+    }
+  }
   function openOffer() {
     $("#offerDoc").innerHTML = buildOffer();
     const ov = $("#offerOverlay");
     ov.classList.add("open"); ov.setAttribute("aria-hidden", "false");
     document.body.classList.add("offer-open");
-    requestAnimationFrame(fitOffer);
-    setTimeout(fitOffer, 250); // po dociągnięciu obrazów/czcionek
+    requestAnimationFrame(() => { fitTitle(); fitOffer(); });
+    setTimeout(() => { fitTitle(); fitOffer(); }, 250); // po dociągnięciu czcionek
   }
   function closeOffer() {
     const ov = $("#offerOverlay");
