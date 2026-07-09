@@ -386,6 +386,23 @@
       <div class="rt"><span class="qty">1×</span>${price}</div></div>`;
   }
 
+  // Realne zdjęcia tego, co jest w ofercie (folia + wybrane wyposażenie).
+  function offerSelected() {
+    const out = [];
+    const foil = (typeof FOILS !== "undefined") ? FOILS.find((f) => f.name === state.foil) : null;
+    if (foil) out.push({ img: foil.img, cap: `Folia RENOLIT ${state.foil}`, fit: "cover" });
+    if (state.heat === "std") out.push({ img: IMG.heatStd, cap: "Pompa ciepła INVER X13" });
+    else if (state.heat === "prem") out.push({ img: IMG.heatPrem, cap: "Pompa ciepła INVER X20" });
+    if (state.electro) out.push({ img: IMG.electro, cap: "Elektrolizer soli InverPure" });
+    if (state.uv) out.push({ img: IMG.uv, cap: "Stacja UV Quantum Q-65" });
+    if (state.cf === "ext") out.push({ img: IMG.cfExt, cap: "Przeciwprąd Swim Jet M" });
+    else if (state.cf === "in") out.push({ img: IMG.cfIn, cap: "Przeciwprąd Swim Jet F" });
+    if (state.iwash) out.push({ img: IMG.iwash, cap: "Zawór płukania iWASH" });
+    if (state.robotInverbot) out.push({ img: IMG.robotInverbot, cap: "Odkurzacz Inverbot 60" });
+    if (state.robotK60) out.push({ img: IMG.robotK60, cap: "Odkurzacz K60" });
+    return out.slice(0, 4);
+  }
+
   function buildOffer() {
     const s = SIZES[state.size];
     const area = String(s.area).replace(".", ",");
@@ -457,7 +474,7 @@
               </div>
               <div class="cover-body">
                 <div class="kicker">ENERGOPOOL · Basen bloczkowo-betonowy</div>
-                <h1 class="cover-title">Basen ENERGOPOOL ${s.label}</h1>
+                <h1 class="cover-title">ENERGOPOOL ${s.label}</h1>
                 <p class="cover-slogan">Ekstremalnie energooszczędny, wyjątkowo trwały i w pełni konfigurowalny basen — zbudowany dokładnie pod Twoje potrzeby.</p>
                 <div class="spec-row">${cover4.map((c) => `<div><div class="v">${c.v}</div><div class="l">${c.l}</div></div>`).join("")}</div>
                 <div class="cover-meta">
@@ -482,7 +499,7 @@
           <tr class="brk"><td>
             <section class="page">
               <div class="eyebrow">Specyfikacja techniczna</div>
-              <h2 class="h-sec">Basen ENERGOPOOL ${s.label}</h2>
+              <h2 class="h-sec">ENERGOPOOL ${s.label}</h2>
               <p class="lead" style="margin-top:2mm">Technologia bloczkowo-betonowa · w ofercie ${num}</p>
               <div class="spec-grid">
                 <div class="spec-photo" style="background-image:url('${OA.photo}')"></div>
@@ -490,8 +507,8 @@
               </div>
               <div class="eyebrow" style="margin-top:6mm">W cenie — wyposażenie podstawowe</div>
               <div class="checks">${included.map((x) => `<div class="chk">${CHK}<span>${x}</span></div>`).join("")}</div>
-              <div class="eyebrow" style="margin-top:6mm">Realizacje Moderna Pool&Spa</div>
-              <div class="thumbs">${OA.real.map((u) => `<div class="thumb"><div class="im" style="background-image:url('${u}')"></div></div>`).join("")}</div>
+              ${(() => { const picks = offerSelected(); return picks.length ? `<div class="eyebrow" style="margin-top:6mm">W tej ofercie</div>
+              <div class="picks" style="grid-template-columns:repeat(${picks.length},1fr)">${picks.map((p) => `<div class="pick"><div class="pim" style="background-image:url('${p.img}');background-size:${p.fit === "cover" ? "cover" : "contain"}"></div><div class="pcap">${p.cap}</div></div>`).join("")}</div>` : ""; })()}
               <p class="disc">Dane techniczne mają charakter poglądowy; konfiguracja z opcjami może zmieniać parametry. Nie stanowi oferty handlowej w rozumieniu art. 66 §1 Kodeksu cywilnego.</p>
             </section>
           </td></tr>
@@ -500,7 +517,7 @@
             <section class="page pagebody" style="display:flex;flex-direction:column">
               <div class="sum-head">
                 <div><div class="eyebrow">Twoja konfiguracja</div><h2 class="h-sec">Zestawienie oferty</h2></div>
-                <div class="meta">Basen ENERGOPOOL ${s.label} · nr ${num}<br>ceny brutto (PLN) · VAT 23%</div>
+                <div class="meta">ENERGOPOOL ${s.label} · nr ${num}<br>ceny brutto (PLN) · VAT 23%</div>
               </div>
               ${groups.map((g) => `<div class="group"><div class="group-t"><span>${g.label}</span><span class="rule"></span></div>${g.rows.map(offerRow).join("")}</div>`).join("")}
               <div class="sum-2col avoid">

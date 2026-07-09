@@ -77,10 +77,16 @@
 /* specyfikacja */
 .offer .spec-grid{margin-top:7mm;display:grid;grid-template-columns:78mm 1fr;gap:8mm;}
 .offer .spec-photo{height:72mm;overflow:hidden;border:1px solid var(--line);background-size:cover;background-position:center;}
-.offer .spec-cards{display:grid;grid-template-columns:1fr 1fr;gap:2mm;align-content:start;}
-.offer .spec-card{border:1px solid var(--line);padding:2mm 4mm;background:var(--accent-soft);}
-.offer .spec-card .l{font-family:'Montserrat',sans-serif;font-size:7.5pt;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);}
-.offer .spec-card .v{margin-top:.5mm;font-size:10.5pt;font-weight:600;color:var(--ink);}
+.offer .spec-cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;align-content:start;background:var(--line);border:1px solid var(--line);}
+.offer .spec-card{background:#fff;padding:3mm 4mm;position:relative;}
+.offer .spec-card .l{font-family:'Montserrat',sans-serif;font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--sub);}
+.offer .spec-card .v{margin-top:1mm;font-size:10.5pt;font-weight:600;color:var(--ink);line-height:1.25;font-family:'Montserrat',sans-serif;}
+
+/* „W tej ofercie" — realne zdjęcia wybranego wyposażenia */
+.offer .picks{margin-top:3mm;display:grid;gap:3mm;}
+.offer .pick{border:1px solid var(--line);overflow:hidden;background:#fff;}
+.offer .pick .pim{height:26mm;background-position:center;background-repeat:no-repeat;background-color:#fff;}
+.offer .pick .pcap{padding:2mm;text-align:center;font-size:8pt;line-height:1.2;color:var(--ink);border-top:1px solid var(--line);}
 
 /* checklista „w cenie" */
 .offer .checks{margin-top:3mm;display:grid;grid-template-columns:1fr 1fr;gap:2mm 8mm;}
