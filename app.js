@@ -21,7 +21,8 @@
     printer: svg('<path d="M7 8V3h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/>'),
     spark: svg('<path d="M12 3v6M12 15v6M3 12h6M15 12h6"/><path d="M12 8.5 13 11l2.5 1-2.5 1-1 2.5-1-2.5L8.5 12 11 11z"/>'),
     pin: svg('<path d="M12 21s6.5-5 6.5-10.5a6.5 6.5 0 0 0-13 0C5.5 16 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/>'),
-    globe: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"/>')
+    globe: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"/>'),
+    lock: svg('<rect x="5" y="10.5" width="14" height="10" rx="1.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>')
   };
   function hydrateIcons(root) {
     (root || document).querySelectorAll("[data-icon]").forEach((el) => {
@@ -66,6 +67,17 @@
   };
 
   const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  /* =================== BRAMKA WYCENY (lead gate) =================== */
+  const LEAD_KEY = "ep_lead_v1";
+  function getLead() {
+    try { return JSON.parse(localStorage.getItem(LEAD_KEY)); } catch { return null; }
+  }
+  function isUnlocked() { return !!getLead(); }
+  function saveLead(l) { localStorage.setItem(LEAD_KEY, JSON.stringify(l)); }
+  // pomoc przy testach: window.epReset() czyści odblokowanie
+  window.epReset = function () { localStorage.removeItem(LEAD_KEY); location.reload(); };
 
   /* =================== KROK 1: ROZMIAR =================== */
   function renderSizes() {
@@ -74,7 +86,7 @@
       <div class="size-tile${key === state.size ? " active" : ""}" data-size="${key}">
         <div class="st-dim">${s.label}</div>
         <div class="st-area">${String(s.area).replace(".", ",")} m² wody</div>
-        <div class="st-price">od ${fmt(s.base)}</div>
+        ${isUnlocked() ? `<div class="st-price">od ${fmt(s.base)}</div>` : `<div class="st-lock">${ICONS.lock}</div>`}
       </div>`).join("");
     grid.querySelectorAll(".size-tile").forEach((t) =>
       t.addEventListener("click", () => { state.size = t.dataset.size; renderAll(); }));
@@ -195,7 +207,9 @@
       : `<img class="opt-img" src="${o.img}" alt="" loading="lazy">`;
     const price = o.free
       ? `<div class="opt-price free">${o.price ? fmt(o.price) : "W cenie"}</div>`
-      : `<div class="opt-price">+ ${fmt(o.price)}</div>`;
+      : (isUnlocked()
+        ? `<div class="opt-price">+ ${fmt(o.price)}</div>`
+        : `<div class="opt-price olock" title="Cena po odblokowaniu wyceny">${ICONS.lock}</div>`);
     return `
       <label class="opt${active ? " active" : ""}" data-val="${o.id}">
         ${img}
@@ -209,6 +223,9 @@
   }
 
   function checkCard(key, img, name, desc, price, active) {
+    const priceHtml = isUnlocked()
+      ? `<div class="opt-price">+ ${fmt(price)}</div>`
+      : `<div class="opt-price olock" title="Cena po odblokowaniu wyceny">${ICONS.lock}</div>`;
     return `
       <label class="opt${active ? " active" : ""}" data-key="${key}">
         <img class="opt-img" src="${img}" alt="" loading="lazy">
@@ -216,7 +233,7 @@
           <div class="opt-name">${name}</div>
           <div class="opt-desc">${desc}</div>
         </div>
-        <div class="opt-price">+ ${fmt(price)}</div>
+        ${priceHtml}
         <span class="opt-check"></span>
       </label>`;
   }
@@ -277,13 +294,27 @@
     const items = buildItems();
     const total = items.reduce((a, b) => a + b.price, 0);
 
+    const un = isUnlocked();
     $("#summarySize").textContent = "Basen " + s.label + "  ·  folia " + state.foil;
     $("#summaryItems").innerHTML = items.map((it) => `
       <li${it.base ? ' class="base"' : ""}>
         <span class="si-name">${it.name}</span>
-        <span class="si-price">${fmt(it.price)}</span>
+        <span class="si-price${un ? "" : " locked"}">${un ? fmt(it.price) : "•••"}</span>
       </li>`).join("");
-    $("#summaryTotal").textContent = fmt(total);
+    const totalEl = $("#summaryTotal");
+    if (un) {
+      totalEl.textContent = fmt(total);
+      totalEl.classList.remove("masked");
+    } else {
+      totalEl.textContent = "1•• ••• zł";
+      totalEl.classList.add("masked");
+    }
+    $("#btnUnlock").style.display = un ? "none" : "";
+    $("#btnEmail").style.display = un ? "" : "none";
+    $("#btnPrint").style.display = un ? "" : "none";
+    $("#summaryNote").textContent = un
+      ? "Cena ma charakter informacyjny i nie stanowi oferty w rozumieniu art. 66 §1 K.C. Ostateczna wycena po kontakcie z biurem."
+      : "Ceny zobaczysz po podaniu danych kontaktowych — na Twój e-mail wyślemy kod odblokowujący wycenę i ofertę PDF.";
     state._lastTotal = total;
     state._lastItems = items;
   }
@@ -320,11 +351,13 @@
   }
 
   function sendEmail() {
+    if (!isUnlocked()) { openLead(); return; }
     const s = SIZES[state.size];
+    const kl = getLead() || {};
     const subject = `Zapytanie ofertowe — basen ENERGOPOOL ${s.label} (${fmt(state._lastTotal)})`;
     let body = `Dzień dobry,\n\nproszę o kontakt w sprawie wyceny basenu ENERGOPOOL w poniższej konfiguracji:\n\n`;
     body += quoteText();
-    body += `\nMoje dane kontaktowe:\nImię i nazwisko: \nTelefon: \nLokalizacja inwestycji: \n\nPozdrawiam`;
+    body += `\nMoje dane kontaktowe:\nImię i nazwisko: ${kl.name || ""}\nTelefon: ${kl.phone || ""}\nE-mail: ${kl.email || ""}\nLokalizacja inwestycji: \n\nPozdrawiam`;
     window.location.href = `mailto:biuro@moderna-spa.pl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
@@ -477,7 +510,9 @@
                 <p class="cover-slogan">Ekstremalnie energooszczędny, wyjątkowo trwały i w pełni konfigurowalny basen — zbudowany dokładnie pod Twoje potrzeby.</p>
                 <div class="spec-row">${cover4.map((c) => `<div><div class="v">${c.v}</div><div class="l">${c.l}</div></div>`).join("")}</div>
                 <div class="cover-meta">
-                  <div><div class="ml">Klient</div><div class="mv"><span class="fill"></span></div><div class="mx"><span class="fill"></span></div></div>
+                  ${(() => { const kl = getLead(); return kl
+                    ? `<div><div class="ml">Klient</div><div class="mv">${esc(kl.name)}</div><div class="mx">${esc(kl.phone)} · ${esc(kl.email)}</div></div>`
+                    : `<div><div class="ml">Klient</div><div class="mv"><span class="fill"></span></div><div class="mx"><span class="fill"></span></div></div>`; })()}
                   <div><div class="ml">Doradca handlowy</div><div class="mv">Moderna Pool&Spa</div><div class="mx">${COMPANY.phone} · ${COMPANY.email}</div></div>
                 </div>
                 <div class="cover-note">Oferta nr ${num} · ważna do ${plDate(valid)}</div>
@@ -585,6 +620,7 @@
     }
   }
   function openOffer() {
+    if (!isUnlocked()) { openLead(); return; }
     $("#offerDoc").innerHTML = buildOffer();
     const ov = $("#offerOverlay");
     ov.classList.add("open"); ov.setAttribute("aria-hidden", "false");
@@ -596,6 +632,131 @@
     const ov = $("#offerOverlay");
     ov.classList.remove("open"); ov.setAttribute("aria-hidden", "true");
     document.body.classList.remove("offer-open");
+  }
+
+  /* =================== MODAL ODBLOKOWANIA (kod e-mail) =================== */
+  let pendingCode = null, codeExpiry = 0, codeAttempts = 0, resendAt = 0, leadDraft = null;
+  const gateConfigured = () => !!(LEADS.publicKey && LEADS.serviceId && LEADS.tplCode);
+
+  function openLead() {
+    $("#leadModal").classList.add("open");
+    $("#leadModal").setAttribute("aria-hidden", "false");
+    showLeadStep(1);
+  }
+  function closeLead() {
+    $("#leadModal").classList.remove("open");
+    $("#leadModal").setAttribute("aria-hidden", "true");
+  }
+  function showLeadStep(n) {
+    $("#leadStep1").hidden = n !== 1;
+    $("#leadStep2").hidden = n !== 2;
+    leadError(1, ""); leadError(2, "");
+  }
+  function leadError(n, msg) {
+    const el = $("#leadErr" + n);
+    el.hidden = !msg;
+    el.textContent = msg || "";
+  }
+
+  function validLead() {
+    const name = $("#leadName").value.trim();
+    const email = $("#leadEmail").value.trim();
+    const phone = $("#leadPhone").value.trim();
+    const rodo = $("#leadRodo").checked;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+    const phoneOk = /^(\+48)?\d{9}$/.test(phone.replace(/[\s-]/g, ""));
+    $("#leadName").classList.toggle("bad", name.length < 3);
+    $("#leadEmail").classList.toggle("bad", !emailOk);
+    $("#leadPhone").classList.toggle("bad", !phoneOk);
+    if (name.length < 3) return { err: "Podaj imię i nazwisko." };
+    if (!emailOk) return { err: "Podaj poprawny adres e-mail." };
+    if (!phoneOk) return { err: "Podaj poprawny numer telefonu (9 cyfr, opcjonalnie +48)." };
+    if (!rodo) return { err: "Zaznacz zgodę na przetwarzanie danych osobowych." };
+    return { lead: { name, email, phone } };
+  }
+
+  // EmailJS REST — bez SDK
+  function ejsSend(templateId, params) {
+    return fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ service_id: LEADS.serviceId, template_id: templateId, user_id: LEADS.publicKey, template_params: params })
+    }).then((r) => { if (!r.ok) throw new Error("send-failed"); });
+  }
+
+  function notifyLead(lead) {
+    if (!LEADS.publicKey || !LEADS.tplLead) return;
+    const s = SIZES[state.size];
+    ejsSend(LEADS.tplLead, {
+      name: lead.name, email: lead.email, phone: lead.phone,
+      size: s.label, total: fmt(state._lastTotal), config: quoteText()
+    }).catch(() => {}); // powiadomienie nie może blokować klienta
+  }
+
+  function unlock(lead) {
+    saveLead({ ...lead, ts: Date.now() });
+    notifyLead(lead);
+    closeLead();
+    renderAll();
+  }
+
+  function newCode() {
+    pendingCode = String(Math.floor(100000 + Math.random() * 900000));
+    codeExpiry = Date.now() + 10 * 60 * 1000;
+    codeAttempts = 0;
+  }
+
+  async function sendCodeTo(lead) {
+    newCode();
+    await ejsSend(LEADS.tplCode, { to_email: lead.email, to_name: lead.name, code: pendingCode });
+    resendAt = Date.now() + 45 * 1000;
+  }
+
+  async function onLeadSend() {
+    leadError(1, "");
+    const v = validLead();
+    if (v.err) return leadError(1, v.err);
+    leadDraft = v.lead;
+    if (!gateConfigured()) { unlock(leadDraft); return; } // tryb uproszczony do czasu konfiguracji EmailJS
+    const btn = $("#leadSend");
+    btn.disabled = true; btn.textContent = "Wysyłanie…";
+    try {
+      await sendCodeTo(leadDraft);
+      $("#leadSentTo").textContent = leadDraft.email;
+      $("#leadCode").value = "";
+      showLeadStep(2);
+      $("#leadCode").focus();
+    } catch {
+      leadError(1, "Nie udało się wysłać kodu. Sprawdź adres e-mail i spróbuj ponownie.");
+    } finally {
+      btn.disabled = false; btn.textContent = "Wyślij kod na e-mail";
+    }
+  }
+
+  function onLeadVerify() {
+    leadError(2, "");
+    const code = $("#leadCode").value.trim();
+    if (!/^\d{6}$/.test(code)) return leadError(2, "Wpisz 6-cyfrowy kod z e-maila.");
+    if (Date.now() > codeExpiry) return leadError(2, "Kod wygasł — wyślij nowy.");
+    codeAttempts++;
+    if (codeAttempts > 5) return leadError(2, "Zbyt wiele prób — wyślij nowy kod.");
+    if (code !== pendingCode) return leadError(2, "Nieprawidłowy kod. Sprawdź e-mail i spróbuj ponownie.");
+    unlock(leadDraft);
+  }
+
+  async function onLeadResend() {
+    leadError(2, "");
+    if (Date.now() < resendAt) return leadError(2, "Odczekaj chwilę przed ponowną wysyłką kodu.");
+    const btn = $("#leadResend");
+    btn.disabled = true;
+    try {
+      await sendCodeTo(leadDraft);
+      leadError(2, "");
+    } catch {
+      leadError(2, "Nie udało się wysłać kodu. Spróbuj ponownie za chwilę.");
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   /* =================== INIT =================== */
@@ -610,6 +771,14 @@
     $("#offerEmail").addEventListener("click", sendEmail);
     $("#offerPrint").addEventListener("click", () => window.print());
     window.addEventListener("resize", () => { if (document.body.classList.contains("offer-open")) fitOffer(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeOffer(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeOffer(); closeLead(); } });
+
+    // bramka wyceny
+    $("#btnUnlock").addEventListener("click", openLead);
+    $("#leadSend").addEventListener("click", onLeadSend);
+    $("#leadVerify").addEventListener("click", onLeadVerify);
+    $("#leadResend").addEventListener("click", onLeadResend);
+    $("#leadCode").addEventListener("keydown", (e) => { if (e.key === "Enter") onLeadVerify(); });
+    document.querySelectorAll("#leadModal [data-lclose]").forEach((el) => el.addEventListener("click", closeLead));
   });
 })();

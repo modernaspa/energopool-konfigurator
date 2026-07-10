@@ -120,6 +120,23 @@ const FIXED = {
   techRoom: 8600       // Pomieszczenie techniczne wolnostojące 209×102×115 cm (z montażem)
 };
 
+/* ==========================================================================
+   Bramka wyceny (lead gate) — EmailJS (https://www.emailjs.com)
+   Po założeniu darmowego konta wklej poniżej 4 wartości. Dopóki publicKey
+   jest pusty, bramka działa w trybie uproszczonym: walidacja formatu danych
+   bez wysyłki kodu i bez powiadomienia leadowego.
+   - publicKey : EmailJS → Account → General → Public Key
+   - serviceId : EmailJS → Email Services (np. Gmail/SMTP biuro@moderna-spa.pl)
+   - tplCode   : szablon e-maila z kodem dla klienta (zmienne: to_email, to_name, code)
+   - tplLead   : szablon powiadomienia dla biura (zmienne: name, email, phone, size, total, config)
+   ========================================================================== */
+const LEADS = {
+  publicKey: "",
+  serviceId: "",
+  tplCode: "",
+  tplLead: ""
+};
+
 /* Kolory folii RENOLIT ALKORPLAN TOUCH / VOGUE (2,0 mm) — wybór bez dopłaty */
 const FOILS = [
   { name: "Vanity",    img: "assets/img_021.jpeg" },

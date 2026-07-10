@@ -191,11 +191,12 @@
             <strong id="summaryTotal">—</strong>
           </div>
           <div class="summary-actions">
+            <button class="btn btn-primary btn-block" id="btnUnlock"><span class="ico" data-icon="lock"></span> Odblokuj wycenę</button>
             <button class="btn btn-primary btn-block" id="btnEmail"><span class="ico" data-icon="mail"></span> Zamów wycenę e-mailem</button>
             <button class="btn btn-ghost btn-block" id="btnPrint"><span class="ico" data-icon="printer"></span> Drukuj / zapisz PDF</button>
           </div>
-          <p class="summary-note">Cena ma charakter informacyjny i nie stanowi oferty w rozumieniu art. 66 §1 K.C.
-            Ostateczna wycena po kontakcie z biurem.</p>
+          <p class="summary-note" id="summaryNote">Ceny zobaczysz po podaniu danych kontaktowych — na Twój e-mail wyślemy
+            kod odblokowujący wycenę i ofertę PDF.</p>
         </div>
       </aside>
     </div>
@@ -284,6 +285,44 @@
   </div>
   <div class="footer-bottom"><div class="container">© <span id="year"></span> Moderna Pool&amp;Spa Sp. z o.o. — Konfigurator pakietu ENERGOPOOL. Ceny brutto, informacyjne.</div></div>
 </footer>
+
+<!-- ================= MODAL ODBLOKOWANIA WYCENY (lead gate) ================= -->
+<div class="modal" id="leadModal" aria-hidden="true">
+  <div class="modal-backdrop" data-lclose></div>
+  <div class="modal-box lead-box" role="dialog" aria-modal="true">
+    <button class="modal-close" data-lclose aria-label="Zamknij">×</button>
+
+    <div id="leadStep1">
+      <h3 class="lead-h">Odblokuj wycenę</h3>
+      <p class="lead-sub">Podaj dane kontaktowe — wyślemy na Twój e-mail 6-cyfrowy kod.
+        Po jego wpisaniu zobaczysz ceny i pobierzesz ofertę PDF.</p>
+      <label class="fld"><span>Imię i nazwisko *</span>
+        <input type="text" id="leadName" autocomplete="name" placeholder="Jan Kowalski"></label>
+      <label class="fld"><span>Adres e-mail *</span>
+        <input type="email" id="leadEmail" autocomplete="email" placeholder="jan@przyklad.pl"></label>
+      <label class="fld"><span>Telefon *</span>
+        <input type="tel" id="leadPhone" autocomplete="tel" placeholder="+48 600 000 000"></label>
+      <label class="consent"><input type="checkbox" id="leadRodo">
+        <span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez Moderna Pool&amp;Spa Sp. z o.o.
+        w celu przygotowania i przedstawienia wyceny. *</span></label>
+      <div class="lead-err" id="leadErr1" hidden></div>
+      <button class="btn btn-primary btn-block" id="leadSend">Wyślij kod na e-mail</button>
+      <p class="lead-note">Administratorem danych jest Moderna Pool&amp;Spa Sp. z o.o.,
+        ul. św. Teresy od Dzieciątka Jezus 91, 91-341 Łódź. Dane przetwarzamy wyłącznie
+        w celu kontaktu i przygotowania wyceny.</p>
+    </div>
+
+    <div id="leadStep2" hidden>
+      <h3 class="lead-h">Wpisz kod z e-maila</h3>
+      <p class="lead-sub">Wysłaliśmy 6-cyfrowy kod na adres <b id="leadSentTo"></b>.
+        Jeśli nie widzisz wiadomości, sprawdź folder SPAM.</p>
+      <input inputmode="numeric" autocomplete="one-time-code" maxlength="6" id="leadCode" class="code-input" placeholder="••••••">
+      <div class="lead-err" id="leadErr2" hidden></div>
+      <button class="btn btn-primary btn-block" id="leadVerify">Potwierdź kod</button>
+      <button class="btn btn-ghost btn-block" id="leadResend">Wyślij kod ponownie</button>
+    </div>
+  </div>
+</div>
 
 <!-- ================= NAKŁADKA PODGLĄDU OFERTY (PDF) ================= -->
 <div class="offer-overlay" id="offerOverlay" aria-hidden="true">
