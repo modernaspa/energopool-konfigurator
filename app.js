@@ -304,10 +304,8 @@
     const totalEl = $("#summaryTotal");
     if (un) {
       totalEl.textContent = fmt(total);
-      totalEl.classList.remove("masked");
     } else {
-      totalEl.textContent = "1•• ••• zł";
-      totalEl.classList.add("masked");
+      totalEl.innerHTML = `<button class="btn btn-primary btn-sm" id="totalUnlock"><span class="ico">${ICONS.lock}</span> Odblokuj</button>`;
     }
     $("#btnUnlock").style.display = un ? "none" : "";
     $("#btnEmail").style.display = un ? "" : "none";
@@ -775,6 +773,7 @@
 
     // bramka wyceny
     $("#btnUnlock").addEventListener("click", openLead);
+    $("#summaryTotal").addEventListener("click", (e) => { if (e.target.closest("#totalUnlock")) openLead(); });
     $("#leadSend").addEventListener("click", onLeadSend);
     $("#leadVerify").addEventListener("click", onLeadVerify);
     $("#leadResend").addEventListener("click", onLeadResend);
