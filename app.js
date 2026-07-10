@@ -312,7 +312,7 @@
     $("#btnPrint").style.display = un ? "" : "none";
     $("#summaryNote").textContent = un
       ? "Cena ma charakter informacyjny i nie stanowi oferty w rozumieniu art. 66 §1 K.C. Ostateczna wycena po kontakcie z biurem."
-      : "Ceny zobaczysz po podaniu danych kontaktowych — na Twój e-mail wyślemy kod odblokowujący wycenę i ofertę PDF.";
+      : "Ceny zobaczysz po podaniu danych kontaktowych.";
     state._lastTotal = total;
     state._lastItems = items;
   }
@@ -637,6 +637,12 @@
   const gateConfigured = () => !!(LEADS.publicKey && LEADS.serviceId && LEADS.tplCode);
 
   function openLead() {
+    // teksty zależne od konfiguracji EmailJS: z kodem e-mail lub bez
+    const cfg = gateConfigured();
+    $("#leadSub").textContent = cfg
+      ? "Podaj dane kontaktowe — wyślemy na Twój e-mail 6-cyfrowy kod. Po jego wpisaniu zobaczysz ceny i pobierzesz ofertę PDF."
+      : "Podaj dane kontaktowe, aby zobaczyć ceny i pobrać ofertę PDF.";
+    $("#leadSend").textContent = cfg ? "Wyślij kod na e-mail" : "Odblokuj wycenę";
     $("#leadModal").classList.add("open");
     $("#leadModal").setAttribute("aria-hidden", "false");
     showLeadStep(1);
