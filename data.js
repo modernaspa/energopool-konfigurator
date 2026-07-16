@@ -114,10 +114,11 @@ const SIZES = {
 
 /* Ceny stałe (niezależne od rozmiaru) */
 const FIXED = {
-  iwash: 5400,        // Automatyczny zawór płukania FAIRLAND iWASH (z montażem)
-  robotInverbot: 5299, // Odkurzacz bezprzewodowy FAIRLAND INVERBOT 60
-  robotK60: 2499,      // Odkurzacz bezprzewodowy FAIRLAND K60
-  techRoom: 8600       // Pomieszczenie techniczne wolnostojące 209×102×115 cm (z montażem)
+  iwash: 5400,          // Automatyczny zawór płukania FAIRLAND iWASH (z montażem)
+  niya35: 2261,         // Odkurzacz DOLPHIN NIYA TRACKER 35 (553,50 € brutto − 5% × kurs 4,30)
+  niya55: 2673,         // Odkurzacz DOLPHIN NIYA TRACKER 55 (654,36 € brutto − 5% × kurs 4,30)
+  techRoom: 8600,       // Pomieszczenie techniczne wolnostojące 209×102×115 cm (z montażem)
+  techRoomUnder: 12000  // Pomieszczenie techniczne podziemne (z montażem)
 };
 
 /* ==========================================================================

@@ -44,10 +44,11 @@
     cfExt:          "assets/img_042.png",
     cfIn:           "assets/img_046.png",
     iwash:          "assets/img_047.png",
-    robotInverbot:  "assets/img_049.jpeg",
-    robotK60:       "assets/img_050.png",
+    niya35:         "assets/niya35.png",
+    niya55:         "assets/niya55.png",
     slab:           "assets/img_053.jpeg",
-    techRoom:       "assets/img_051.png"
+    techRoom:       "assets/img_051.png",
+    techRoomUnder:  "assets/techroom-underground.jpg"
   };
 
   // ---- stan ----
@@ -59,10 +60,11 @@
     uv: false,
     cf: "none",
     iwash: false,
-    robotInverbot: false,
-    robotK60: false,
+    niya35: false,
+    niya55: false,
     slab: false,
     techRoom: false,
+    techRoomUnder: false,
     foil: "Vanity"
   };
 
@@ -170,12 +172,12 @@
       checkCard("iwash", IMG.iwash, "Automatyczny zawór płukania iWASH",
         "Dotykowe sterowanie · InverClear Tech · gwarancja 5 lat", FIXED.iwash, state.iwash,
         "Automatycznie płucze filtr — czynność, którą normalnie trzeba robić ręcznie co tydzień. Mniej obsługi, czystsza woda, wszystko sterowane dotykowo."),
-      checkCard("robotInverbot", IMG.robotInverbot, "Odkurzacz Fairland Inverbot 60",
-        "Bezprzewodowy · AI · czyści baseny do 120 m²", FIXED.robotInverbot, state.robotInverbot,
-        "Bezprzewodowy robot, który sam czyści dno, ściany i linię wody — wrzucasz do basenu i zapominasz. Najwyższa półka, do dużych basenów."),
-      checkCard("robotK60", IMG.robotK60, "Odkurzacz Fairland K60",
-        "Bateria 7500 mAh · do 6 h pracy · tryb Turbo 200%", FIXED.robotK60, state.robotK60,
-        "Prostszy bezprzewodowy odkurzacz na baterię — szybko zbiera osad z dna i ścian bez podłączania do instalacji. Wygodny wybór do mniejszych basenów.")
+      checkCard("niya35", IMG.niya35, "Odkurzacz Dolphin Niya Tracker 35",
+        "Bezprzewodowy · 2 szczotki · dno i ściany · cykl 2,5 h · kosz 150 µm · app · gw. 24 mies.", FIXED.niya35, state.niya35,
+        "Najnowszy bezprzewodowy robot Maytronics (Dolphin) do basenów do 12 m. Sam czyści dno i ściany, tryby ECO/Standard, program ustawiasz w aplikacji Niya — wrzucasz do wody i odzyskujesz wolny czas."),
+      checkCard("niya55", IMG.niya55, "Odkurzacz Dolphin Niya Tracker 55",
+        "Bezprzewodowy · 2 szczotki · dno i ściany · cykl 2,5 h · kosz 150 µm · app · gw. 24 mies.", FIXED.niya55, state.niya55,
+        "Topowy model serii Niya — mocniejszy odpowiednik „35” dla wymagających. Kompleksowe czyszczenie dna i ścian, pełna personalizacja programów w aplikacji, filtr 150 µm, gwarancja 24 miesiące.")
     ];
     $("#extrasGrid").innerHTML = cards.join("");
     bindCheck("#extrasGrid");
@@ -190,7 +192,10 @@
         "Solidny betonowy fundament, na którym stanie basen — podstawa trwałej i stabilnej konstrukcji na lata. Cena obejmuje materiał i robociznę."),
       checkCard("techRoom", IMG.techRoom, "Pomieszczenie techniczne wolnostojące",
         "209 × 102 × 115 cm · płyta warstwowa 40 mm · z montażem", FIXED.techRoom, state.techRoom,
-        "Gotowy, zamykany domek obok basenu na pompę, filtr i sterowanie — chroni urządzenia przed pogodą i ukrywa całą technikę. Dostarczany z montażem.")
+        "Gotowy, zamykany domek obok basenu na pompę, filtr i sterowanie — chroni urządzenia przed pogodą i ukrywa całą technikę. Dostarczany z montażem."),
+      checkCard("techRoomUnder", IMG.techRoomUnder, "Pomieszczenie techniczne podziemne",
+        "Podziemna komora na całą technikę basenu · z montażem", FIXED.techRoomUnder, state.techRoomUnder,
+        "Podziemna komora tuż przy basenie mieszcząca pompy, filtrację i sterowanie — cała technika schowana pod ziemią, niewidoczna w ogrodzie, z wygodnym dostępem serwisowym.")
     ];
     $("#groundGrid").innerHTML = cards.join("");
     bindCheck("#groundGrid");
@@ -289,11 +294,12 @@
     else if (state.cf === "in") items.push({ name: `Przeciwprąd do zabudowy Swim Jet F (${s.cfIn.spec})`, price: s.cfIn.price });
 
     if (state.iwash) items.push({ name: "Automatyczny zawór płukania iWASH", price: FIXED.iwash });
-    if (state.robotInverbot) items.push({ name: "Odkurzacz Fairland Inverbot 60", price: FIXED.robotInverbot });
-    if (state.robotK60) items.push({ name: "Odkurzacz Fairland K60", price: FIXED.robotK60 });
+    if (state.niya35) items.push({ name: "Odkurzacz Dolphin Niya Tracker 35", price: FIXED.niya35 });
+    if (state.niya55) items.push({ name: "Odkurzacz Dolphin Niya Tracker 55", price: FIXED.niya55 });
 
     if (state.slab) items.push({ name: "Płyta fundamentowa ENERGO STANDARD PLUS", price: s.slab });
     if (state.techRoom) items.push({ name: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
+    if (state.techRoomUnder) items.push({ name: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
 
     return items;
   }
@@ -408,12 +414,13 @@
     if (state.cf === "ext") tech.push({ nm: `Przeciwprąd zewnętrzny Swim Jet M · ${s.cfExt.spec}`, price: s.cfExt.price });
     else if (state.cf === "in") tech.push({ nm: `Przeciwprąd do zabudowy Swim Jet F · ${s.cfIn.spec}`, price: s.cfIn.price });
     if (state.iwash) tech.push({ nm: "Automatyczny zawór płukania iWASH", price: FIXED.iwash });
-    if (state.robotInverbot) tech.push({ nm: "Odkurzacz Fairland Inverbot 60", price: FIXED.robotInverbot });
-    if (state.robotK60) tech.push({ nm: "Odkurzacz Fairland K60", price: FIXED.robotK60 });
+    if (state.niya35) tech.push({ nm: "Odkurzacz Dolphin Niya Tracker 35", price: FIXED.niya35 });
+    if (state.niya55) tech.push({ nm: "Odkurzacz Dolphin Niya Tracker 55", price: FIXED.niya55 });
     if (tech.length) G.push({ label: "Technika i wyposażenie", rows: tech });
     const gr = [];
     if (state.slab) gr.push({ nm: "Płyta fundamentowa ENERGO STANDARD PLUS", price: s.slab });
     if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
+    if (state.techRoomUnder) gr.push({ nm: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
     if (gr.length) G.push({ label: "Prace ziemne i budowlane", rows: gr });
     return G;
   }
@@ -437,8 +444,8 @@
     if (state.cf === "ext") out.push({ img: IMG.cfExt, cap: "Przeciwprąd Swim Jet M" });
     else if (state.cf === "in") out.push({ img: IMG.cfIn, cap: "Przeciwprąd Swim Jet F" });
     if (state.iwash) out.push({ img: IMG.iwash, cap: "Zawór płukania iWASH" });
-    if (state.robotInverbot) out.push({ img: IMG.robotInverbot, cap: "Odkurzacz Inverbot 60" });
-    if (state.robotK60) out.push({ img: IMG.robotK60, cap: "Odkurzacz K60" });
+    if (state.niya35) out.push({ img: IMG.niya35, cap: "Odkurzacz Dolphin Niya 35" });
+    if (state.niya55) out.push({ img: IMG.niya55, cap: "Odkurzacz Dolphin Niya 55" });
     return out.slice(0, 4);
   }
 
