@@ -129,7 +129,7 @@ const FIXED = {
    od razu po poprawnym wypełnieniu formularza).
    ========================================================================== */
 const LEADS = {
-  endpoint: ""
+  endpoint: "https://moderna-wellness.cloud/api/energopool/wycena"
 };
 
 /* Kolory folii RENOLIT ALKORPLAN TOUCH / VOGUE (2,0 mm) — wybór bez dopłaty */
