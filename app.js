@@ -332,20 +332,85 @@
     }).then((r) => r.json());
   }
 
-  function orderPayload() {
+  // Pogrupowane pozycje oferty (dla PDF w moderna-system).
+  function offerGroupsData(s) {
+    const G = [];
+    G.push({ label: "Pakiet podstawowy", rows: [
+      { nm: `Basen ENERGOPOOL ${s.label}`, sub: "Niecka bloczkowo-betonowa · folia · filtracja · instalacja PVC-U + elektryka", price: s.base, base: true }
+    ] });
+    const fin = [];
+    if (state.stairs === "corner") fin.push({ nm: "Schody narożne", price: 0, free: true });
+    else if (state.stairs === "straight") fin.push({ nm: "Schody proste", price: s.stairs.straight });
+    else if (state.stairs === "shelf") fin.push({ nm: "Schody proste z półką", price: s.stairs.shelf });
+    fin.push({ nm: `Folia RENOLIT ALKORPLAN — ${state.foil}`, price: 0, free: true });
+    G.push({ label: "Wykończenie i schody", rows: fin });
+    const tech = [];
+    if (state.heat === "std") tech.push({ nm: `Pompa ciepła Fairland INVER X13 · ${s.heatStd.kw}`, price: s.heatStd.price });
+    else if (state.heat === "prem") tech.push({ nm: `Pompa ciepła Fairland INVER X20 · ${s.heatPrem.kw}`, price: s.heatPrem.price });
+    if (state.electro) tech.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
+    if (state.uv) tech.push({ nm: "Stacja UV Elecro Quantum Q-65", price: s.uv });
+    if (state.cf === "ext") tech.push({ nm: `Przeciwprąd zewnętrzny Swim Jet M · ${s.cfExt.spec}`, price: s.cfExt.price });
+    else if (state.cf === "in") tech.push({ nm: `Przeciwprąd do zabudowy Swim Jet F · ${s.cfIn.spec}`, price: s.cfIn.price });
+    if (state.iwash) tech.push({ nm: "Automatyczny zawór płukania iWASH", price: FIXED.iwash });
+    if (state.niya35) tech.push({ nm: "Odkurzacz Dolphin Niya Tracker 35", price: FIXED.niya35 });
+    if (state.niya55) tech.push({ nm: "Odkurzacz Dolphin Niya Tracker 55", price: FIXED.niya55 });
+    if (tech.length) G.push({ label: "Technika i wyposażenie", rows: tech });
+    const gr = [];
+    if (state.slab) gr.push({ nm: "Płyta fundamentowa ENERGO STANDARD PLUS", price: s.slab });
+    if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
+    if (state.techRoomUnder) gr.push({ nm: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
+    if (gr.length) G.push({ label: "Prace ziemne i budowlane", rows: gr });
+    return G;
+  }
+  // Realne zdjęcia wybranego wyposażenia (folia + do 4 pozycji).
+  function offerPicksData() {
+    const out = [];
+    const foil = (typeof FOILS !== "undefined") ? FOILS.find((f) => f.name === state.foil) : null;
+    if (foil) out.push({ img: foil.img, cap: `Folia RENOLIT ${state.foil}`, fit: "cover" });
+    if (state.heat === "std") out.push({ img: IMG.heatStd, cap: "Pompa ciepła INVER X13" });
+    else if (state.heat === "prem") out.push({ img: IMG.heatPrem, cap: "Pompa ciepła INVER X20" });
+    if (state.electro) out.push({ img: IMG.electro, cap: "Elektrolizer soli InverPure" });
+    if (state.uv) out.push({ img: IMG.uv, cap: "Stacja UV Quantum Q-65" });
+    if (state.cf === "ext") out.push({ img: IMG.cfExt, cap: "Przeciwprąd Swim Jet M" });
+    else if (state.cf === "in") out.push({ img: IMG.cfIn, cap: "Przeciwprąd Swim Jet F" });
+    if (state.iwash) out.push({ img: IMG.iwash, cap: "Zawór płukania iWASH" });
+    if (state.niya35) out.push({ img: IMG.niya35, cap: "Odkurzacz Dolphin Niya 35" });
+    if (state.niya55) out.push({ img: IMG.niya55, cap: "Odkurzacz Dolphin Niya 55" });
+    return out.slice(0, 4);
+  }
+  function newExternalId() {
+    try { return crypto.randomUUID(); } catch { return String(Date.now()) + Math.random().toString(36).slice(2); }
+  }
+
+  function orderPayload(lead) {
     const s = SIZES[state.size];
     const items = buildItems();
-    const total = items.reduce((a, b) => a + b.price, 0);
+    const gross = items.reduce((a, b) => a + b.price, 0);
+    const net = Math.round(gross / 1.23);
+    const vat = gross - net;
     state._lastItems = items;
-    state._lastTotal = total;
+    state._lastTotal = gross;
+    const client = { name: lead.name, email: lead.email, phone: lead.phone, location: lead.location };
     return {
       action: "order",
-      size: s.label,
-      foil: state.foil,
-      total: fmt(total),
-      totalNum: total,
+      external_id: newExternalId(),
+      name: lead.name, email: lead.email, phone: lead.phone, location: lead.location,
+      size: s.label, foil: state.foil,
+      total: fmt(gross), totalNum: gross, net, vat, gross,
       items: items.map((it) => ({ name: it.name, price: it.price })),
-      config: quoteText()
+      config: quoteText(),
+      offer: {
+        sizeLabel: s.label,
+        area: String(s.area).replace(".", ","),
+        depth: String(s.depth).replace(".", ","),
+        filter: s.filter, pump: s.pump,
+        skimmer: s.skimmer, dysze: s.dysze, lampy: s.lampy,
+        foil: state.foil,
+        groups: offerGroupsData(s),
+        picks: offerPicksData(),
+        net, vat, gross,
+        client
+      }
     };
   }
 
@@ -392,7 +457,7 @@
     const t0 = btn.innerHTML;
     btn.disabled = true;
     btn.textContent = "Wysyłanie…";
-    const payload = { ...orderPayload(), ...lead };
+    const payload = orderPayload(lead);
     try {
       if (gateConfigured()) {
         const res = await api(payload);
