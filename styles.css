@@ -192,8 +192,10 @@ a{color:inherit;text-decoration:none}
 .summary-note{padding:0 1.4rem 1.3rem;font-size:.72rem;color:var(--ink-soft)}
 
 /* --- Zamówienie wyceny (pełna szerokość, ciemna karta) --- */
-.order-cta{margin-top:3rem;background:var(--ink);color:#fff;padding:clamp(2rem,4vw,3.6rem)}
-.order-inner{max-width:880px}
+.order-cta{margin-top:3rem;background:var(--ink);color:#fff;padding:clamp(2rem,4vw,3.6rem);display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,40%);gap:clamp(2rem,4vw,3.5rem);align-items:stretch;overflow:hidden}
+.order-inner{min-width:0;max-width:760px}
+.order-media{position:relative;background:url('assets/img_003.jpeg') center/cover;min-height:360px;margin:calc(-1*clamp(2rem,4vw,3.6rem)) calc(-1*clamp(2rem,4vw,3.6rem)) calc(-1*clamp(2rem,4vw,3.6rem)) 0}
+.order-media::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ink),rgba(12,35,48,0) 32%)}
 .order-head .section-kicker{color:var(--teal-l)}
 .order-head h3{font-family:'Montserrat',sans-serif;font-weight:600;font-size:clamp(1.5rem,3vw,2rem);margin:.5rem 0 .7rem;color:#fff}
 .order-head p{color:rgba(255,255,255,.72);line-height:1.65;max-width:60ch}
@@ -214,6 +216,7 @@ a{color:inherit;text-decoration:none}
 .order-done-ic{width:60px;height:60px;border:2px solid var(--teal-l);color:var(--teal-l);display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin:0 auto 1.2rem}
 .order-done h3{font-family:'Montserrat',sans-serif;font-weight:600;font-size:1.5rem;color:#fff;margin-bottom:.6rem}
 .order-done p{color:rgba(255,255,255,.72);line-height:1.6;max-width:56ch;margin:0 auto}
+@media(max-width:900px){.order-cta{grid-template-columns:1fr}.order-media{display:none}}
 @media(max-width:640px){.order-fields{grid-template-columns:1fr}}
 
 /* ---------- payments ---------- */
