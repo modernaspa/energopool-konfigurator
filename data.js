@@ -121,20 +121,14 @@ const FIXED = {
 };
 
 /* ==========================================================================
-   Bramka wyceny (lead gate) — EmailJS (https://www.emailjs.com)
-   Po założeniu darmowego konta wklej poniżej 4 wartości. Dopóki publicKey
-   jest pusty, bramka działa w trybie uproszczonym: walidacja formatu danych
-   bez wysyłki kodu i bez powiadomienia leadowego.
-   - publicKey : EmailJS → Account → General → Public Key
-   - serviceId : EmailJS → Email Services (np. Gmail/SMTP biuro@moderna-spa.pl)
-   - tplCode   : szablon e-maila z kodem dla klienta (zmienne: to_email, to_name, code)
-   - tplLead   : szablon powiadomienia dla biura (zmienne: name, email, phone, size, total, config)
+   Bramka wyceny (lead gate) — Google Apps Script + Arkusz Google.
+   Po wdrożeniu skryptu (apps-script/Kod.gs) wklej tu adres Web App (/exec).
+   Pusty endpoint = tryb uproszczony: walidacja formatu danych bez wysyłki
+   kodu i bez zapisu leada (strona nie jest zepsuta — po prostu odblokowuje
+   od razu po poprawnym wypełnieniu formularza).
    ========================================================================== */
 const LEADS = {
-  publicKey: "",
-  serviceId: "",
-  tplCode: "",
-  tplLead: ""
+  endpoint: ""
 };
 
 /* Kolory folii RENOLIT ALKORPLAN TOUCH / VOGUE (2,0 mm) — wybór bez dopłaty */

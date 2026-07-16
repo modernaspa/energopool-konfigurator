@@ -633,8 +633,8 @@
   }
 
   /* =================== MODAL ODBLOKOWANIA (kod e-mail) =================== */
-  let pendingCode = null, codeExpiry = 0, codeAttempts = 0, resendAt = 0, leadDraft = null;
-  const gateConfigured = () => !!(LEADS.publicKey && LEADS.serviceId && LEADS.tplCode);
+  let resendAt = 0, leadDraft = null;
+  const gateConfigured = () => !!(LEADS && LEADS.endpoint);
 
   function openLead() {
     // teksty zależne od konfiguracji EmailJS: z kodem e-mail lub bez
@@ -679,41 +679,22 @@
     return { lead: { name, email, phone } };
   }
 
-  // EmailJS REST — bez SDK
-  function ejsSend(templateId, params) {
-    return fetch("https://api.emailjs.com/api/v1.0/email/send", {
+  // Wywołanie Apps Script (application/x-www-form-urlencoded — bez preflightu CORS)
+  function api(payload) {
+    return fetch(LEADS.endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ service_id: LEADS.serviceId, template_id: templateId, user_id: LEADS.publicKey, template_params: params })
-    }).then((r) => { if (!r.ok) throw new Error("send-failed"); });
+      body: new URLSearchParams({ data: JSON.stringify(payload) })
+    }).then((r) => r.json());
   }
-
-  function notifyLead(lead) {
-    if (!LEADS.publicKey || !LEADS.tplLead) return;
+  function leadConfigPayload() {
     const s = SIZES[state.size];
-    ejsSend(LEADS.tplLead, {
-      name: lead.name, email: lead.email, phone: lead.phone,
-      size: s.label, total: fmt(state._lastTotal), config: quoteText()
-    }).catch(() => {}); // powiadomienie nie może blokować klienta
+    return { size: s.label, total: fmt(state._lastTotal), config: quoteText() };
   }
 
   function unlock(lead) {
     saveLead({ ...lead, ts: Date.now() });
-    notifyLead(lead);
     closeLead();
     renderAll();
-  }
-
-  function newCode() {
-    pendingCode = String(Math.floor(100000 + Math.random() * 900000));
-    codeExpiry = Date.now() + 10 * 60 * 1000;
-    codeAttempts = 0;
-  }
-
-  async function sendCodeTo(lead) {
-    newCode();
-    await ejsSend(LEADS.tplCode, { to_email: lead.email, to_name: lead.name, code: pendingCode });
-    resendAt = Date.now() + 45 * 1000;
   }
 
   async function onLeadSend() {
@@ -721,31 +702,42 @@
     const v = validLead();
     if (v.err) return leadError(1, v.err);
     leadDraft = v.lead;
-    if (!gateConfigured()) { unlock(leadDraft); return; } // tryb uproszczony do czasu konfiguracji EmailJS
+    if (!gateConfigured()) { unlock(leadDraft); return; } // tryb uproszczony (brak endpointu)
     const btn = $("#leadSend");
+    const t0 = btn.textContent;
     btn.disabled = true; btn.textContent = "Wysyłanie…";
     try {
-      await sendCodeTo(leadDraft);
+      const res = await api({ action: "send", ...leadDraft });
+      if (!res || !res.ok) throw new Error(res && res.error);
       $("#leadSentTo").textContent = leadDraft.email;
       $("#leadCode").value = "";
+      resendAt = Date.now() + 45 * 1000;
       showLeadStep(2);
       $("#leadCode").focus();
     } catch {
       leadError(1, "Nie udało się wysłać kodu. Sprawdź adres e-mail i spróbuj ponownie.");
     } finally {
-      btn.disabled = false; btn.textContent = "Wyślij kod na e-mail";
+      btn.disabled = false; btn.textContent = t0;
     }
   }
 
-  function onLeadVerify() {
+  async function onLeadVerify() {
     leadError(2, "");
     const code = $("#leadCode").value.trim();
     if (!/^\d{6}$/.test(code)) return leadError(2, "Wpisz 6-cyfrowy kod z e-maila.");
-    if (Date.now() > codeExpiry) return leadError(2, "Kod wygasł — wyślij nowy.");
-    codeAttempts++;
-    if (codeAttempts > 5) return leadError(2, "Zbyt wiele prób — wyślij nowy kod.");
-    if (code !== pendingCode) return leadError(2, "Nieprawidłowy kod. Sprawdź e-mail i spróbuj ponownie.");
-    unlock(leadDraft);
+    const btn = $("#leadVerify");
+    const t0 = btn.textContent;
+    btn.disabled = true; btn.textContent = "Sprawdzanie…";
+    try {
+      const res = await api({ action: "verify", ...leadDraft, code, ...leadConfigPayload() });
+      if (res && res.ok) { unlock(leadDraft); return; }
+      const map = { expired: "Kod wygasł — wyślij nowy.", "bad-code": "Nieprawidłowy kod. Sprawdź e-mail i spróbuj ponownie." };
+      leadError(2, map[res && res.error] || "Nieprawidłowy kod. Spróbuj ponownie.");
+    } catch {
+      leadError(2, "Błąd połączenia — spróbuj ponownie.");
+    } finally {
+      btn.disabled = false; btn.textContent = t0;
+    }
   }
 
   async function onLeadResend() {
@@ -754,8 +746,9 @@
     const btn = $("#leadResend");
     btn.disabled = true;
     try {
-      await sendCodeTo(leadDraft);
-      leadError(2, "");
+      const res = await api({ action: "send", ...leadDraft });
+      if (!res || !res.ok) throw new Error();
+      resendAt = Date.now() + 45 * 1000;
     } catch {
       leadError(2, "Nie udało się wysłać kodu. Spróbuj ponownie za chwilę.");
     } finally {
