@@ -119,9 +119,9 @@
   function renderStairs() {
     const s = SIZES[state.size];
     const opts = [
-      { id: "corner",   img: IMG.stairsCorner,   name: "Schody narożne", desc: "Oszczędność miejsca w narożniku", price: 0, free: true },
-      { id: "straight", img: IMG.stairsStraight, name: "Schody proste", desc: "Na całą szerokość basenu", price: s.stairs.straight },
-      { id: "shelf",    img: IMG.stairsShelf,    name: "Proste z półką", desc: "Z praktyczną półką do odpoczynku", price: s.stairs.shelf }
+      { id: "corner",   img: IMG.stairsCorner,   name: "Schody narożne", hint: "Wygodne wejście schowane w rogu basenu — nie zabiera miejsca do pływania. Wersja w cenie pakietu.", desc: "Wbudowane w narożnik · w cenie", price: 0, free: true },
+      { id: "straight", img: IMG.stairsStraight, name: "Schody proste", hint: "Szerokie schody na całą ścianę basenu — najłatwiejsze i najbezpieczniejsze zejście, także dla dzieci i seniorów.", desc: "Na całą szerokość ściany", price: s.stairs.straight },
+      { id: "shelf",    img: IMG.stairsShelf,    name: "Proste z półką", hint: "Schody z szeroką półką (ławeczką) tuż pod lustrem wody — miejsce do siedzenia, relaksu i bezpiecznej zabawy dzieci.", desc: "Z półką do siedzenia i relaksu", price: s.stairs.shelf }
     ];
     $("#stairsGrid").innerHTML = opts.map((o) => optCard("stairs", o, state.stairs === o.id)).join("");
     bindRadio("#stairsGrid", "stairs");
@@ -131,8 +131,8 @@
   function renderHeat() {
     const s = SIZES[state.size];
     const opts = [
-      { id: "std",  img: IMG.heatStd,  name: "Standard — Fairland INVER X13", desc: "Full-Inverter · " + s.heatStd.kw + " · Wi-Fi", price: s.heatStd.price },
-      { id: "prem", img: IMG.heatPrem, name: "Premium — Fairland INVER X20", desc: "Turbo Boost + chłodzenie · " + s.heatPrem.kw, price: s.heatPrem.price }
+      { id: "std",  img: IMG.heatStd,  name: "Standard — Fairland INVER X13", hint: "Ogrzewa wodę, żeby pływać już od wiosny aż do jesieni. Cicha i oszczędna (technologia Full-Inverter), sterowana z telefonu przez Wi-Fi.", desc: "Full-Inverter · " + s.heatStd.kw + " · Wi-Fi", price: s.heatStd.price },
+      { id: "prem", img: IMG.heatPrem, name: "Premium — Fairland INVER X20", hint: "Mocniejsza i najoszczędniejsza pompa — szybciej nagrzewa wodę, a w upały potrafi ją też schłodzić. Najdłuższy komfortowy sezon kąpielowy.", desc: "Grzanie + chłodzenie · Turbo · " + s.heatPrem.kw, price: s.heatPrem.price }
     ];
     $("#heatGrid").innerHTML = opts.map((o) => optCard("heat", o, state.heat === o.id)).join("");
     bindRadio("#heatGrid", "heat", true);
@@ -143,9 +143,11 @@
     const s = SIZES[state.size];
     const cards = [
       checkCard("electro", IMG.electro, "Elektrolizer soli Fairland InverPure Pro",
-        "Zasolenie tylko 1 g/l · tryb Turbo 120% · " + s.electro.cap, s.electro.price, state.electro),
+        "Zasolenie tylko 1 g/l · tryb Turbo 120% · " + s.electro.cap, s.electro.price, state.electro,
+        "Sam wytwarza środek do dezynfekcji ze zwykłej soli — koniec z kupowaniem i dozowaniem chloru. Woda miękka, bezzapachowa i przyjazna dla skóry i oczu."),
       checkCard("uv", IMG.uv, "Stacja UV Elecro Quantum Q-65",
-        "Technologia Nano Crystal · woda o diamentowym połysku", s.uv, state.uv)
+        "Technologia Nano Crystal · woda o diamentowym połysku", s.uv, state.uv,
+        "Lampa UV niszczy bakterie i glony światłem, bez chemii. Woda jest krystalicznie czysta i zdrowsza — świetne uzupełnienie do elektrolizera.")
     ];
     $("#waterGrid").innerHTML = cards.join("");
     bindCheck("#waterGrid");
@@ -155,8 +157,8 @@
   function renderCf() {
     const s = SIZES[state.size];
     const opts = [
-      { id: "ext",  img: IMG.cfExt, name: "Fairland Swim Jet M — zewnętrzny", desc: "Plug & Play · " + s.cfExt.spec, price: s.cfExt.price },
-      { id: "in",   img: IMG.cfIn,  name: "Fairland Swim Jet F — do zabudowy", desc: "Płynna regulacja mocy (InverTurbo) · " + s.cfIn.spec, price: s.cfIn.price }
+      { id: "ext",  img: IMG.cfExt, name: "Fairland Swim Jet M — zewnętrzny", hint: "Tworzy silny strumień wody, w którym pływasz w miejscu — trening bez końca nawet w krótkim basenie. Montowany na krawędzi, bez przeróbek niecki (Plug & Play).", desc: "Zawieszany na ścianie · " + s.cfExt.spec, price: s.cfExt.price },
+      { id: "in",   img: IMG.cfIn,  name: "Fairland Swim Jet F — do zabudowy", hint: "To samo pływanie pod prąd, ale dysza ukryta w ścianie basenu — efektowny, zabudowany wygląd i płynna regulacja siły strumienia.", desc: "Wbudowany w ścianę · " + s.cfIn.spec, price: s.cfIn.price }
     ];
     $("#cfGrid").innerHTML = opts.map((o) => optCard("cf", o, state.cf === o.id)).join("");
     bindRadio("#cfGrid", "cf", true);
@@ -166,11 +168,14 @@
   function renderExtras() {
     const cards = [
       checkCard("iwash", IMG.iwash, "Automatyczny zawór płukania iWASH",
-        "Dotykowe sterowanie · InverClear Tech · gwarancja 5 lat", FIXED.iwash, state.iwash),
+        "Dotykowe sterowanie · InverClear Tech · gwarancja 5 lat", FIXED.iwash, state.iwash,
+        "Automatycznie płucze filtr — czynność, którą normalnie trzeba robić ręcznie co tydzień. Mniej obsługi, czystsza woda, wszystko sterowane dotykowo."),
       checkCard("robotInverbot", IMG.robotInverbot, "Odkurzacz Fairland Inverbot 60",
-        "Bezprzewodowy · AI · czyści baseny do 120 m²", FIXED.robotInverbot, state.robotInverbot),
+        "Bezprzewodowy · AI · czyści baseny do 120 m²", FIXED.robotInverbot, state.robotInverbot,
+        "Bezprzewodowy robot, który sam czyści dno, ściany i linię wody — wrzucasz do basenu i zapominasz. Najwyższa półka, do dużych basenów."),
       checkCard("robotK60", IMG.robotK60, "Odkurzacz Fairland K60",
-        "Bateria 7500 mAh · do 6 h pracy · tryb Turbo 200%", FIXED.robotK60, state.robotK60)
+        "Bateria 7500 mAh · do 6 h pracy · tryb Turbo 200%", FIXED.robotK60, state.robotK60,
+        "Prostszy bezprzewodowy odkurzacz na baterię — szybko zbiera osad z dna i ścian bez podłączania do instalacji. Wygodny wybór do mniejszych basenów.")
     ];
     $("#extrasGrid").innerHTML = cards.join("");
     bindCheck("#extrasGrid");
@@ -181,9 +186,11 @@
     const s = SIZES[state.size];
     const cards = [
       checkCard("slab", IMG.slab, "Płyta fundamentowa ENERGO STANDARD PLUS",
-        "Zbrojona, 20 cm, beton C30/37 W10 · materiał i robocizna", s.slab, state.slab),
+        "Zbrojona, 20 cm, beton C30/37 W10 · materiał i robocizna", s.slab, state.slab,
+        "Solidny betonowy fundament, na którym stanie basen — podstawa trwałej i stabilnej konstrukcji na lata. Cena obejmuje materiał i robociznę."),
       checkCard("techRoom", IMG.techRoom, "Pomieszczenie techniczne wolnostojące",
-        "209 × 102 × 115 cm · płyta warstwowa 40 mm · z montażem", FIXED.techRoom, state.techRoom)
+        "209 × 102 × 115 cm · płyta warstwowa 40 mm · z montażem", FIXED.techRoom, state.techRoom,
+        "Gotowy, zamykany domek obok basenu na pompę, filtr i sterowanie — chroni urządzenia przed pogodą i ukrywa całą technikę. Dostarczany z montażem.")
     ];
     $("#groundGrid").innerHTML = cards.join("");
     bindCheck("#groundGrid");
@@ -215,6 +222,7 @@
         ${img}
         <div class="opt-body">
           <div class="opt-name">${o.name}</div>
+          ${o.hint ? `<div class="opt-hint">${o.hint}</div>` : ""}
           ${o.desc ? `<div class="opt-desc">${o.desc}</div>` : ""}
         </div>
         ${price}
@@ -222,7 +230,7 @@
       </label>`;
   }
 
-  function checkCard(key, img, name, desc, price, active) {
+  function checkCard(key, img, name, desc, price, active, hint) {
     const priceHtml = isUnlocked()
       ? `<div class="opt-price">+ ${fmt(price)}</div>`
       : `<div class="opt-price olock" title="Cena po odblokowaniu wyceny">${ICONS.lock}</div>`;
@@ -231,6 +239,7 @@
         <img class="opt-img" src="${img}" alt="" loading="lazy">
         <div class="opt-body">
           <div class="opt-name">${name}</div>
+          ${hint ? `<div class="opt-hint">${hint}</div>` : ""}
           <div class="opt-desc">${desc}</div>
         </div>
         ${priceHtml}
