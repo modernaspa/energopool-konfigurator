@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENERGOPOOL — Konfigurator basenu | Moderna Pool&amp;Spa</title>
-<meta name="description" content="Skonfiguruj swój energooszczędny basen bloczkowo-betonowy ENERGOPOOL i poznaj cenę online. Moderna Pool&Spa — baseny, zadaszenia i strefa SPA.">
+<meta name="description" content="Skonfiguruj swój energooszczędny basen bloczkowo-betonowy ENERGOPOOL i zamów spersonalizowaną wycenę na e-mail. Moderna Pool&Spa — baseny, zadaszenia i strefa SPA.">
 <link rel="stylesheet" href="assets/fonts/fonts.css">
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="oferta.css">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
@@ -40,7 +39,7 @@
       <span class="hero-kicker">Basen bloczkowo-betonowy</span>
       <h1>ENERGOPOOL</h1>
       <p class="hero-lead">Ekstremalnie energooszczędny, wyjątkowo trwały i w pełni konfigurowalny basen,
-        który zbudujesz dokładnie pod swoje potrzeby — a cenę poznasz od razu.</p>
+        który zbudujesz dokładnie pod swoje potrzeby — a spersonalizowaną wycenę otrzymasz na e-mail.</p>
       <div class="hero-cta">
         <a href="#konfigurator" class="btn btn-primary btn-lg">Skonfiguruj i wyceń basen</a>
         <a href="#technologia" class="btn btn-ghost btn-lg">Poznaj technologię</a>
@@ -109,9 +108,10 @@
   <div class="container">
     <div class="section-head">
       <span class="section-kicker">Konfigurator online</span>
-      <h2>Skonfiguruj Twój basen i poznaj cenę</h2>
-      <p>Wybierz rozmiar, a następnie dołóż wyposażenie opcjonalne. Cena aktualizuje się na bieżąco —
-        każdy element pochodzi z aktualnej oferty Moderna&nbsp;Pool&amp;Spa.</p>
+      <h2>Skonfiguruj Twój basen</h2>
+      <p>Wybierz rozmiar i dołóż wyposażenie opcjonalne, a na końcu zostaw dane —
+        przygotujemy spersonalizowaną ofertę PDF z pełną wyceną Twojej konfiguracji
+        i wyślemy ją na Twój e-mail.</p>
     </div>
 
     <div class="config-layout">
@@ -177,27 +177,46 @@
         </div>
 
       </div>
+    </div>
 
-      <!-- PRAWA KOLUMNA: podsumowanie -->
-      <aside class="config-summary" id="summaryCard">
-        <div class="summary-inner">
-          <div class="summary-head">
-            <span>Twoja konfiguracja</span>
-            <strong id="summarySize">—</strong>
-          </div>
-          <ul class="summary-items" id="summaryItems"><!-- JS --></ul>
-          <div class="summary-total">
-            <span>Cena całkowita brutto</span>
-            <strong id="summaryTotal">—</strong>
-          </div>
-          <div class="summary-actions">
-            <button class="btn btn-primary btn-block" id="btnUnlock"><span class="ico" data-icon="lock"></span> Odblokuj wycenę</button>
-            <button class="btn btn-primary btn-block" id="btnEmail"><span class="ico" data-icon="mail"></span> Zamów wycenę e-mailem</button>
-            <button class="btn btn-ghost btn-block" id="btnPrint"><span class="ico" data-icon="printer"></span> Drukuj / zapisz PDF</button>
-          </div>
-          <p class="summary-note" id="summaryNote">Ceny zobaczysz po podaniu danych kontaktowych.</p>
+    <!-- ZAMÓWIENIE WYCENY -->
+    <div class="order-cta" id="zamow">
+      <div class="order-inner">
+        <div class="order-head">
+          <span class="section-kicker">Twoja wycena</span>
+          <h3>Zamów wycenę na e-mail</h3>
+          <p>Zostaw dane kontaktowe — przygotujemy spersonalizowaną ofertę PDF z pełną wyceną
+            Twojej konfiguracji i wyślemy ją prosto na Twoją skrzynkę.</p>
         </div>
-      </aside>
+
+        <form class="order-form" id="orderForm" novalidate>
+          <div class="order-fields">
+            <label class="fld"><span>Imię i nazwisko *</span>
+              <input type="text" id="ordName" autocomplete="name" placeholder="Jan Kowalski"></label>
+            <label class="fld"><span>Adres e-mail *</span>
+              <input type="email" id="ordEmail" autocomplete="email" placeholder="jan@przyklad.pl"></label>
+            <label class="fld"><span>Telefon *</span>
+              <input type="tel" id="ordPhone" autocomplete="tel" placeholder="+48 600 000 000"></label>
+            <label class="fld"><span>Miejscowość inwestycji</span>
+              <input type="text" id="ordLoc" autocomplete="address-level2" placeholder="np. Łódź"></label>
+          </div>
+          <label class="consent"><input type="checkbox" id="ordRodo">
+            <span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez Moderna Pool&amp;Spa Sp. z o.o.
+            w celu przygotowania i przedstawienia wyceny. *</span></label>
+          <div class="lead-err" id="ordErr" hidden></div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" id="ordSubmit">
+            <span class="ico" data-icon="mail"></span> Zamów wycenę na e-mail</button>
+          <p class="order-note">Administratorem danych jest Moderna Pool&amp;Spa Sp. z o.o.,
+            ul. św. Teresy od Dzieciątka Jezus 91, 91-341 Łódź. Dane przetwarzamy wyłącznie
+            w celu kontaktu i przygotowania wyceny.</p>
+        </form>
+
+        <div class="order-done" id="orderDone" hidden>
+          <div class="order-done-ic">✓</div>
+          <h3>Dziękujemy! Wycena jest w drodze.</h3>
+          <p id="orderDoneMsg">Ofertę PDF wyślemy na wskazany adres e-mail. Sprawdź skrzynkę (także folder SPAM) za kilka minut.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -284,58 +303,6 @@
   </div>
   <div class="footer-bottom"><div class="container">© <span id="year"></span> Moderna Pool&amp;Spa Sp. z o.o. — Konfigurator pakietu ENERGOPOOL. Ceny brutto, informacyjne.</div></div>
 </footer>
-
-<!-- ================= MODAL ODBLOKOWANIA WYCENY (lead gate) ================= -->
-<div class="modal" id="leadModal" aria-hidden="true">
-  <div class="modal-backdrop" data-lclose></div>
-  <div class="modal-box lead-box" role="dialog" aria-modal="true">
-    <button class="modal-close" data-lclose aria-label="Zamknij">×</button>
-
-    <div id="leadStep1">
-      <h3 class="lead-h">Odblokuj wycenę</h3>
-      <p class="lead-sub" id="leadSub">Podaj dane kontaktowe, aby zobaczyć ceny i pobrać ofertę PDF.</p>
-      <label class="fld"><span>Imię i nazwisko *</span>
-        <input type="text" id="leadName" autocomplete="name" placeholder="Jan Kowalski"></label>
-      <label class="fld"><span>Adres e-mail *</span>
-        <input type="email" id="leadEmail" autocomplete="email" placeholder="jan@przyklad.pl"></label>
-      <label class="fld"><span>Telefon *</span>
-        <input type="tel" id="leadPhone" autocomplete="tel" placeholder="+48 600 000 000"></label>
-      <label class="consent"><input type="checkbox" id="leadRodo">
-        <span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez Moderna Pool&amp;Spa Sp. z o.o.
-        w celu przygotowania i przedstawienia wyceny. *</span></label>
-      <div class="lead-err" id="leadErr1" hidden></div>
-      <button class="btn btn-primary btn-block" id="leadSend">Odblokuj wycenę</button>
-      <p class="lead-note">Administratorem danych jest Moderna Pool&amp;Spa Sp. z o.o.,
-        ul. św. Teresy od Dzieciątka Jezus 91, 91-341 Łódź. Dane przetwarzamy wyłącznie
-        w celu kontaktu i przygotowania wyceny.</p>
-    </div>
-
-    <div id="leadStep2" hidden>
-      <h3 class="lead-h">Wpisz kod z e-maila</h3>
-      <p class="lead-sub">Wysłaliśmy 6-cyfrowy kod na adres <b id="leadSentTo"></b>.
-        Jeśli nie widzisz wiadomości, sprawdź folder SPAM.</p>
-      <input inputmode="numeric" autocomplete="one-time-code" maxlength="6" id="leadCode" class="code-input" placeholder="••••••">
-      <div class="lead-err" id="leadErr2" hidden></div>
-      <button class="btn btn-primary btn-block" id="leadVerify">Potwierdź kod</button>
-      <button class="btn btn-ghost btn-block" id="leadResend">Wyślij kod ponownie</button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= NAKŁADKA PODGLĄDU OFERTY (PDF) ================= -->
-<div class="offer-overlay" id="offerOverlay" aria-hidden="true">
-  <div class="offer-toolbar">
-    <button class="ob-close" id="offerClose">✕ Zamknij</button>
-    <span class="sp"></span>
-    <button class="ob-ghost" id="offerEmail"><span class="ico" data-icon="mail"></span> Wyślij e-mailem</button>
-    <button class="ob-primary" id="offerPrint"><span class="ico" data-icon="printer"></span> Drukuj / zapisz PDF</button>
-  </div>
-  <div class="offer-scroll">
-    <div class="offer-scale" id="offerScale">
-      <div class="offer shadow" id="offerDoc"><!-- JS --></div>
-    </div>
-  </div>
-</div>
 
 <script src="data.js"></script>
 <script src="app.js"></script>
