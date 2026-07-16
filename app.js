@@ -342,7 +342,9 @@
     email: "biuro@moderna-spa.pl",
     web: "moderna-baseny.pl",
     web2: "moderna-spa.pl",
-    hours: "Pon–Pt 10:00–17:00 · Sob 10:00–14:00"
+    hours: "Pon–Pt 10:00–17:00 · Sob 10:00–14:00",
+    bank: "PL37 1140 2004 0000 3802 8300 3692",
+    swift: "BREXPLPWMBK"
   };
   const OA = {
     hero: "assets/img_001.jpeg",     // okładka — basen infinity
@@ -548,6 +550,7 @@
               <div class="pay" style="margin-top:11mm">
                 <div class="eyebrow">Harmonogram płatności (transze)</div>
                 <div class="pay-rows">${pay.map((p) => `<div class="pay-row"><b>${p[0]}</b><span>${p[1]}</span></div>`).join("")}</div>
+                <div class="pay-bank">Forma płatności: przelew na rachunek <b>${COMPANY.bank}</b> · BIC/SWIFT ${COMPANY.swift}</div>
               </div>
               <div class="terms" style="margin-top:13mm">
                 <div><div class="th">Warunki oferty</div>Oferta ważna do ${plDate(valid)}. Ceny zawierają podatek VAT. Realizacja po potwierdzeniu zamówienia i podpisaniu umowy. Ceny mają charakter informacyjny i nie stanowią oferty w rozumieniu art. 66 §1 K.C.</div>
