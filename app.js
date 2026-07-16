@@ -641,7 +641,6 @@
     const v = validOrder();
     if (v.err) return orderErr(v.err);
     const lead = v.lead;
-    saveLead({ ...lead, ts: Date.now() });
     const btn = $("#ordSubmit");
     const t0 = btn.innerHTML;
     btn.disabled = true;
@@ -668,14 +667,15 @@
     hydrateIcons();
     renderAll();
 
-    // Prefill formularza danymi z poprzedniej wizyty
-    const kl = getLead();
-    if (kl) {
-      if (kl.name) $("#ordName").value = kl.name;
-      if (kl.email) $("#ordEmail").value = kl.email;
-      if (kl.phone) $("#ordPhone").value = kl.phone;
-      if (kl.location) $("#ordLoc").value = kl.location;
-    }
+    // Zawsze pusty formularz po wejściu/odświeżeniu — czyść wartości
+    // przywrócone przez przeglądarkę (reload oraz powrót z bfcache).
+    const clearOrderForm = () => {
+      $("#orderForm").reset();
+      ["ordName", "ordEmail", "ordPhone"].forEach((id) => $("#" + id).classList.remove("bad"));
+      orderErr("");
+    };
+    clearOrderForm();
+    window.addEventListener("pageshow", clearOrderForm);
 
     // formularz zamówienia wyceny
     $("#orderForm").addEventListener("submit", onOrderSubmit);
