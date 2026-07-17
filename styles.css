@@ -337,6 +337,8 @@ a{color:inherit;text-decoration:none}
 }
 @media(max-width:560px){
   .feature-grid{grid-template-columns:1fr}
+  .step{padding:1.8rem 1rem}
+  .foil-grid{grid-template-columns:repeat(2,1fr)}
   .hero h1{font-size:2.5rem;letter-spacing:.02em}
   .hero-lead{font-size:1.08rem}
   .hero-badges{gap:.8rem 1.2rem;font-size:.85rem}
