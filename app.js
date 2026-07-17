@@ -2,6 +2,36 @@
 (function () {
   "use strict";
 
+  /* =================== META PIXEL + ZGODA (RODO) ===================
+     Pixel laduje sie DOPIERO po zgodzie marketingowej (baner). Bez zgody nie
+     wysylamy nic do Meta — landing i wycena dzialaja normalnie. */
+  const META_PIXEL_ID = "1041475871607656";
+  const CONSENT_KEY = "moderna_consent";
+  const getConsent = () => { try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; } };
+  const setConsent = (v) => { try { localStorage.setItem(CONSENT_KEY, v); } catch (e) {} };
+  const mktGranted = () => getConsent() === "granted";
+  const getCookie = (n) => { const p = document.cookie.split("; ").find((r) => r.startsWith(n + "=")); return p ? p.split("=")[1] : null; };
+  let _pixelLoaded = false;
+  function loadPixel() {
+    if (_pixelLoaded) return;
+    _pixelLoaded = true;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", META_PIXEL_ID);
+    window.fbq("track", "PageView");
+  }
+  function initConsent() {
+    const choice = getConsent();
+    if (choice === "granted") { loadPixel(); return; }
+    if (choice === "denied") return;
+    const banner = document.getElementById("ccBanner");
+    if (!banner) return;
+    banner.hidden = false;
+    const accept = document.getElementById("ccAccept");
+    const deny = document.getElementById("ccDeny");
+    if (accept) accept.addEventListener("click", () => { setConsent("granted"); loadPixel(); banner.hidden = true; });
+    if (deny) deny.addEventListener("click", () => { setConsent("denied"); banner.hidden = true; });
+  }
+
   // ---- format ceny ----
   const PLN = new Intl.NumberFormat("pl-PL");
   // spacje niełamiące ( ), aby cena nigdy nie dzieliła się między wiersze
@@ -406,7 +436,7 @@
     state._lastItems = items;
     state._lastTotal = gross;
     const client = { name: lead.name, email: lead.email, phone: lead.phone, location: lead.location };
-    return {
+    const payload = {
       action: "order",
       external_id: newExternalId(),
       name: lead.name, email: lead.email, phone: lead.phone, location: lead.location,
@@ -427,6 +457,19 @@
         client
       }
     };
+
+    // Meta: zgoda marketingowa + dedup Pixel<->CAPI (wspolny event_id).
+    payload.mkt_consent = mktGranted();
+    if (payload.mkt_consent) {
+      const eventId = newExternalId();
+      payload.event_id = eventId;
+      payload.fbp = getCookie("_fbp");
+      payload.fbc = getCookie("_fbc");
+      if (window.fbq) window.fbq("track", "Lead",
+        { value: gross, currency: "PLN", content_category: "basen", content_name: s.label },
+        { eventID: eventId });
+    }
+    return payload;
   }
 
   function validOrder() {
@@ -491,6 +534,7 @@
   /* =================== INIT =================== */
   document.addEventListener("DOMContentLoaded", () => {
     $("#year").textContent = "2026";
+    initConsent();
     hydrateIcons();
     renderAll();
 
