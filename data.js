@@ -2,6 +2,8 @@
    ENERGOPOOL — dane konfiguratora
    Źródło: oferty PDF "2026 Pakiet basenowy ENERGOPOOL" (Moderna Pool&Spa Sp. z o.o.)
    Wszystkie ceny w PLN brutto.
+   Podwyżki (2026-07): schody proste/z półką +15%, wyposażenie techniczne
+   (poza pakietem, bez odkurzaczy) +10%, płyta fundamentowa +20%.
    ========================================================================== */
 
 const SIZES = {
@@ -11,14 +13,14 @@ const SIZES = {
     filter: "ASTER 500 z zaworem bocznym",
     pump: "FAIRLAND INVERPRO · 19,5 m³/h · 0,75 kW",
     skimmer: 1, dysze: 2, lampy: 2,
-    stairs: { straight: 4000, shelf: 3000 },
-    electro: { cap: "do 40 m³", price: 11800 },
-    uv: 9700,
-    heatStd: { kw: "10 kW", price: 7900 },
-    heatPrem: { kw: "11,5 kW", price: 10700 },
-    cfExt: { spec: "120 m³/h · 0,5 kW", price: 11800 },
-    cfIn: { spec: "120 m³/h · 0,5 kW", price: 18900 },
-    slab: 14500
+    stairs: { straight: 4600, shelf: 3450 },
+    electro: { cap: "do 40 m³", price: 12980 },
+    uv: 10670,
+    heatStd: { kw: "10 kW", price: 8690 },
+    heatPrem: { kw: "11,5 kW", price: 11770 },
+    cfExt: { spec: "120 m³/h · 0,5 kW", price: 12980 },
+    cfIn: { spec: "120 m³/h · 0,5 kW", price: 20790 },
+    slab: 17400
   },
   "3x7": {
     label: "3 × 7 m", len: 7, wid: 3, depth: 1.5, area: 21,
@@ -26,14 +28,14 @@ const SIZES = {
     filter: "ASTER 600 z zaworem bocznym",
     pump: "FAIRLAND INVERPRO IP25 · 1,05 kW · 230 V",
     skimmer: 1, dysze: 2, lampy: 2,
-    stairs: { straight: 4000, shelf: 3000 },
-    electro: { cap: "do 40 m³", price: 11800 },
-    uv: 9700,
-    heatStd: { kw: "13,5 kW", price: 9700 },
-    heatPrem: { kw: "14 kW", price: 13200 },
-    cfExt: { spec: "180 m³/h · 0,8 kW", price: 13800 },
-    cfIn: { spec: "180 m³/h · 0,8 kW", price: 20900 },
-    slab: 16200
+    stairs: { straight: 4600, shelf: 3450 },
+    electro: { cap: "do 40 m³", price: 12980 },
+    uv: 10670,
+    heatStd: { kw: "13,5 kW", price: 10670 },
+    heatPrem: { kw: "14 kW", price: 14520 },
+    cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
+    cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
+    slab: 19440
   },
   "3.5x7": {
     label: "3,5 × 7 m", len: 7, wid: 3.5, depth: 1.5, area: 24.5,
@@ -41,14 +43,14 @@ const SIZES = {
     filter: "ASTER 600 z zaworem bocznym",
     pump: "FAIRLAND INVERPRO IP25 · 1,05 kW · 230 V",
     skimmer: 1, dysze: 2, lampy: 2,
-    stairs: { straight: 4500, shelf: 3000 },
-    electro: { cap: "do 75 m³", price: 12800 },
-    uv: 9700,
-    heatStd: { kw: "13,5 kW", price: 9700 },
-    heatPrem: { kw: "14 kW", price: 13200 },
-    cfExt: { spec: "180 m³/h · 0,8 kW", price: 13800 },
-    cfIn: { spec: "180 m³/h · 0,8 kW", price: 20900 },
-    slab: 17600
+    stairs: { straight: 5175, shelf: 3450 },
+    electro: { cap: "do 75 m³", price: 14080 },
+    uv: 10670,
+    heatStd: { kw: "13,5 kW", price: 10670 },
+    heatPrem: { kw: "14 kW", price: 14520 },
+    cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
+    cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
+    slab: 21120
   },
   "4x8": {
     label: "4 × 8 m", len: 8, wid: 4, depth: 1.5, area: 32,
@@ -56,14 +58,14 @@ const SIZES = {
     filter: "ASTER 600 z zaworem bocznym",
     pump: "FAIRLAND INVERPRO IP25 · 1,05 kW · 230 V",
     skimmer: 2, dysze: 4, lampy: 3,
-    stairs: { straight: 5000, shelf: 3000 },
-    electro: { cap: "do 75 m³", price: 12800 },
-    uv: 9700,
-    heatStd: { kw: "13,5 kW", price: 9700 },
-    heatPrem: { kw: "17,5 kW", price: 14800 },
-    cfExt: { spec: "180 m³/h · 0,8 kW", price: 13800 },
-    cfIn: { spec: "180 m³/h · 0,8 kW", price: 20900 },
-    slab: 21000
+    stairs: { straight: 5750, shelf: 3450 },
+    electro: { cap: "do 75 m³", price: 14080 },
+    uv: 10670,
+    heatStd: { kw: "13,5 kW", price: 10670 },
+    heatPrem: { kw: "17,5 kW", price: 16280 },
+    cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
+    cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
+    slab: 25200
   },
   "4x10": {
     label: "4 × 10 m", len: 10, wid: 4, depth: 1.5, area: 40,
@@ -71,14 +73,14 @@ const SIZES = {
     filter: "ASTER 650 z zaworem bocznym",
     pump: "FAIRLAND INVERPRO IP30 · 1,4 kW · 230 V",
     skimmer: 2, dysze: 4, lampy: 3,
-    stairs: { straight: 5000, shelf: 3000 },
-    electro: { cap: "do 75 m³", price: 12800 },
-    uv: 12500,
-    heatStd: { kw: "17,5 kW", price: 15700 },
-    heatPrem: { kw: "22 kW", price: 21200 },
-    cfExt: { spec: "230 m³/h · 1,2 kW", price: 16200 },
-    cfIn: { spec: "230 m³/h · 1,2 kW", price: 22900 },
-    slab: 24800
+    stairs: { straight: 5750, shelf: 3450 },
+    electro: { cap: "do 75 m³", price: 14080 },
+    uv: 13750,
+    heatStd: { kw: "17,5 kW", price: 17270 },
+    heatPrem: { kw: "22 kW", price: 23320 },
+    cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
+    cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
+    slab: 29760
   },
   "4x12": {
     label: "4 × 12 m", len: 12, wid: 4, depth: 1.5, area: 48,
@@ -86,14 +88,14 @@ const SIZES = {
     filter: "ASTER 650 z zaworem bocznym",
     pump: "FAIRLAND INVERPRO IP40 · 1,75 kW · 230 V",
     skimmer: 2, dysze: 4, lampy: 3,
-    stairs: { straight: 5000, shelf: 3000 },
-    electro: { cap: "do 75 m³", price: 12800 },
-    uv: 12500,
-    heatStd: { kw: "20 kW", price: 14500 },
-    heatPrem: { kw: "26,5 kW", price: 24600 },
-    cfExt: { spec: "230 m³/h · 1,2 kW", price: 16200 },
-    cfIn: { spec: "230 m³/h · 1,2 kW", price: 22900 },
-    slab: 31000
+    stairs: { straight: 5750, shelf: 3450 },
+    electro: { cap: "do 75 m³", price: 14080 },
+    uv: 13750,
+    heatStd: { kw: "20 kW", price: 15950 },
+    heatPrem: { kw: "26,5 kW", price: 27060 },
+    cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
+    cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
+    slab: 37200
   },
   "5x10": {
     label: "5 × 10 m", len: 10, wid: 5, depth: 1.5, area: 50,
@@ -101,32 +103,31 @@ const SIZES = {
     filter: "ASTER 650 z zaworem bocznym",
     pump: "FAIRLAND INVERPRO IP40 · 1,75 kW · 230 V",
     skimmer: 2, dysze: 4, lampy: 3,
-    stairs: { straight: 6000, shelf: 4000 },
-    electro: { cap: "do 75 m³", price: 12800 },
-    uv: 12500,
-    heatStd: { kw: "20 kW", price: 14500 },
-    heatPrem: { kw: "26,5 kW", price: 24600 },
-    cfExt: { spec: "230 m³/h · 1,2 kW", price: 16200 },
-    cfIn: { spec: "230 m³/h · 1,2 kW", price: 22900 },
-    slab: 31000
+    stairs: { straight: 6900, shelf: 4600 },
+    electro: { cap: "do 75 m³", price: 14080 },
+    uv: 13750,
+    heatStd: { kw: "20 kW", price: 15950 },
+    heatPrem: { kw: "26,5 kW", price: 27060 },
+    cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
+    cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
+    slab: 37200
   }
 };
 
 /* Ceny stałe (niezależne od rozmiaru) */
 const FIXED = {
-  iwash: 5400,          // Automatyczny zawór płukania FAIRLAND iWASH (z montażem)
-  niya35: 2261,         // Odkurzacz DOLPHIN NIYA TRACKER 35 (553,50 € brutto − 5% × kurs 4,30)
-  niya55: 2673,         // Odkurzacz DOLPHIN NIYA TRACKER 55 (654,36 € brutto − 5% × kurs 4,30)
-  techRoom: 8600,       // Pomieszczenie techniczne wolnostojące 209×102×115 cm (z montażem)
-  techRoomUnder: 12000  // Pomieszczenie techniczne podziemne (z montażem)
+  iwash: 5940,          // Automatyczny zawór płukania FAIRLAND iWASH (z montażem) — +10%
+  niya35: 2261,         // Odkurzacz DOLPHIN NIYA TRACKER 35 (bez zmian)
+  niya55: 2673,         // Odkurzacz DOLPHIN NIYA TRACKER 55 (bez zmian)
+  heatPedestal: 1450,   // Postument pod pompę ciepła — płyta 120×80×10 cm
+  techRoom: 10500,      // Pomieszczenie techniczne wolnostojące 209×102×115 cm (z montażem)
+  slabTech: 1700,       // Płyta pod pomieszczenie techniczne wolnostojące — 210×105×10 cm
+  techRoomUnder: 14500  // Pomieszczenie techniczne podziemne (z montażem)
 };
 
 /* ==========================================================================
-   Bramka wyceny (lead gate) — Google Apps Script + Arkusz Google.
-   Po wdrożeniu skryptu (apps-script/Kod.gs) wklej tu adres Web App (/exec).
-   Pusty endpoint = tryb uproszczony: walidacja formatu danych bez wysyłki
-   kodu i bez zapisu leada (strona nie jest zepsuta — po prostu odblokowuje
-   od razu po poprawnym wypełnieniu formularza).
+   Endpoint wyceny — backend w moderna-system (Next.js/VPS): zapis leada + oferta
+   PDF na e-mail + szansa w CRM. Pusty endpoint = tryb demo (bez wysyłki).
    ========================================================================== */
 const LEADS = {
   endpoint: "https://moderna-wellness.cloud/api/energopool/wycena"

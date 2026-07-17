@@ -46,8 +46,10 @@
     iwash:          "assets/img_047.png",
     niya35:         "assets/niya35.png",
     niya55:         "assets/niya55.png",
+    heatPedestal:   "assets/img_053.jpeg",
     slab:           "assets/img_053.jpeg",
     techRoom:       "assets/img_051.png",
+    slabTech:       "assets/img_053.jpeg",
     techRoomUnder:  "assets/techroom-underground.jpg"
   };
 
@@ -56,6 +58,7 @@
     size: "3x6",
     stairs: "corner",
     heat: "none",
+    heatPedestal: false,
     electro: false,
     uv: false,
     cf: "none",
@@ -64,6 +67,7 @@
     niya55: false,
     slab: false,
     techRoom: false,
+    slabTech: false,
     techRoomUnder: false,
     foil: "Vanity"
   };
@@ -126,6 +130,10 @@
     ];
     $("#heatGrid").innerHTML = opts.map((o) => optCard("heat", o, state.heat === o.id)).join("");
     bindRadio("#heatGrid", "heat", true);
+    $("#heatAddonGrid").innerHTML = checkCard("heatPedestal", IMG.heatPedestal, "Postument pod pompę ciepła",
+      "Betonowa płyta 120 × 80 × 10 cm", FIXED.heatPedestal, state.heatPedestal,
+      "Betonowy postument pod jednostkę pompy ciepła — stabilne, równe podłoże chroniące przed osiadaniem i wilgocią, z wygodnym dostępem serwisowym.");
+    bindCheck("#heatAddonGrid");
   }
 
   /* =================== KROK 4: UZDATNIANIE WODY =================== */
@@ -181,6 +189,9 @@
       checkCard("techRoom", IMG.techRoom, "Pomieszczenie techniczne wolnostojące",
         "209 × 102 × 115 cm · płyta warstwowa 40 mm · z montażem", FIXED.techRoom, state.techRoom,
         "Gotowy, zamykany domek obok basenu na pompę, filtr i sterowanie — chroni urządzenia przed pogodą i ukrywa całą technikę. Dostarczany z montażem."),
+      checkCard("slabTech", IMG.slabTech, "Płyta pod pomieszczenie techniczne",
+        "Betonowa płyta 210 × 105 × 10 cm", FIXED.slabTech, state.slabTech,
+        "Betonowa płyta pod wolnostojące pomieszczenie techniczne — trwałe, wypoziomowane podłoże pod skrzynię z techniką."),
       checkCard("techRoomUnder", IMG.techRoomUnder, "Pomieszczenie techniczne podziemne",
         "Podziemna komora na całą technikę basenu · z montażem", FIXED.techRoomUnder, state.techRoomUnder,
         "Podziemna komora tuż przy basenie mieszcząca pompy, filtrację i sterowanie — cała technika schowana pod ziemią, niewidoczna w ogrodzie, z wygodnym dostępem serwisowym.")
@@ -265,6 +276,7 @@
 
     if (state.heat === "std") items.push({ name: `Pompa ciepła Fairland INVER X13 (${s.heatStd.kw})`, price: s.heatStd.price });
     else if (state.heat === "prem") items.push({ name: `Pompa ciepła Fairland INVER X20 (${s.heatPrem.kw})`, price: s.heatPrem.price });
+    if (state.heatPedestal) items.push({ name: "Postument pod pompę ciepła (120 × 80 × 10 cm)", price: FIXED.heatPedestal });
 
     if (state.electro) items.push({ name: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
     if (state.uv) items.push({ name: "Stacja UV Elecro Quantum Q-65", price: s.uv });
@@ -278,6 +290,7 @@
 
     if (state.slab) items.push({ name: "Płyta fundamentowa ENERGO STANDARD PLUS", price: s.slab });
     if (state.techRoom) items.push({ name: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
+    if (state.slabTech) items.push({ name: "Płyta pod pomieszczenie techniczne (210 × 105 × 10 cm)", price: FIXED.slabTech });
     if (state.techRoomUnder) items.push({ name: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
 
     return items;
@@ -347,6 +360,7 @@
     const tech = [];
     if (state.heat === "std") tech.push({ nm: `Pompa ciepła Fairland INVER X13 · ${s.heatStd.kw}`, price: s.heatStd.price });
     else if (state.heat === "prem") tech.push({ nm: `Pompa ciepła Fairland INVER X20 · ${s.heatPrem.kw}`, price: s.heatPrem.price });
+    if (state.heatPedestal) tech.push({ nm: "Postument pod pompę ciepła · 120 × 80 × 10 cm", price: FIXED.heatPedestal });
     if (state.electro) tech.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
     if (state.uv) tech.push({ nm: "Stacja UV Elecro Quantum Q-65", price: s.uv });
     if (state.cf === "ext") tech.push({ nm: `Przeciwprąd zewnętrzny Swim Jet M · ${s.cfExt.spec}`, price: s.cfExt.price });
@@ -358,6 +372,7 @@
     const gr = [];
     if (state.slab) gr.push({ nm: "Płyta fundamentowa ENERGO STANDARD PLUS", price: s.slab });
     if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
+    if (state.slabTech) gr.push({ nm: "Płyta pod pomieszczenie techniczne · 210 × 105 × 10 cm", price: FIXED.slabTech });
     if (state.techRoomUnder) gr.push({ nm: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
     if (gr.length) G.push({ label: "Prace ziemne i budowlane", rows: gr });
     return G;
