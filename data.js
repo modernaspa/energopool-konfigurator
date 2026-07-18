@@ -5,7 +5,7 @@
    Podwyżki (2026-07): schody proste/z półką +15%, wyposażenie techniczne
    (poza pakietem, bez odkurzaczy) +10%, płyta fundamentowa +20%.
    slabTechUnder = płyta pod podziemne pomieszczenie techniczne, liczona z m²:
-   szerokość basenu × 2,5 m (stała długość) × ~800 zł/m² (śr. z płyt fundamentowych).
+   szerokość basenu × 2,5 m (stała długość) × 700 zł/m².
    ========================================================================== */
 
 const SIZES = {
@@ -23,7 +23,7 @@ const SIZES = {
     cfExt: { spec: "120 m³/h · 0,5 kW", price: 12980 },
     cfIn: { spec: "120 m³/h · 0,5 kW", price: 20790 },
     slab: 17400,
-    slabTechUnder: 6000
+    slabTechUnder: 5250
   },
   "3x7": {
     label: "3 × 7 m", len: 7, wid: 3, depth: 1.5, area: 21,
@@ -39,7 +39,7 @@ const SIZES = {
     cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
     cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
     slab: 19440,
-    slabTechUnder: 6000
+    slabTechUnder: 5250
   },
   "3.5x7": {
     label: "3,5 × 7 m", len: 7, wid: 3.5, depth: 1.5, area: 24.5,
@@ -55,7 +55,7 @@ const SIZES = {
     cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
     cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
     slab: 21120,
-    slabTechUnder: 7000
+    slabTechUnder: 6125
   },
   "4x8": {
     label: "4 × 8 m", len: 8, wid: 4, depth: 1.5, area: 32,
@@ -71,7 +71,7 @@ const SIZES = {
     cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
     cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
     slab: 25200,
-    slabTechUnder: 8000
+    slabTechUnder: 7000
   },
   "4x10": {
     label: "4 × 10 m", len: 10, wid: 4, depth: 1.5, area: 40,
@@ -87,7 +87,7 @@ const SIZES = {
     cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
     cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
     slab: 29760,
-    slabTechUnder: 8000
+    slabTechUnder: 7000
   },
   "4x12": {
     label: "4 × 12 m", len: 12, wid: 4, depth: 1.5, area: 48,
@@ -103,7 +103,7 @@ const SIZES = {
     cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
     cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
     slab: 37200,
-    slabTechUnder: 8000
+    slabTechUnder: 7000
   },
   "5x10": {
     label: "5 × 10 m", len: 10, wid: 5, depth: 1.5, area: 50,
@@ -119,7 +119,7 @@ const SIZES = {
     cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
     cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
     slab: 37200,
-    slabTechUnder: 10000
+    slabTechUnder: 8750
   }
 };
 
