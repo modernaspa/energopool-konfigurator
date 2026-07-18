@@ -45,13 +45,15 @@
   .lp-chk svg{width:20px;height:20px;color:var(--teal);flex:none;margin-top:.15rem}
   .lp-chk b{font-weight:600}
 
-  /* sprzęt / marki */
+  /* sprzęt / marki — 4 karty ze zdjęciami producentów */
   .lp-brands{padding:5rem 0;background:#fff}
-  .lp-brand-media{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.6rem}
-  .lp-brand-media .im{height:clamp(220px,26vw,360px);background-size:cover;background-position:center;border:1px solid var(--line)}
-  .lp-brand-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6rem 2rem;margin-top:2.4rem}
-  .lp-brand h3{font-family:'Montserrat',sans-serif;font-size:1.12rem;font-weight:700;color:var(--teal-d);padding-bottom:.55rem;margin-bottom:.65rem;border-bottom:2px solid var(--teal)}
-  .lp-brand p{font-size:.9rem;color:var(--ink-soft);line-height:1.55}
+  .lp-brand-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:1.8rem}
+  .lp-brand{display:flex;gap:1.4rem;border:1px solid var(--line);background:#fff;padding:1.3rem}
+  .lp-brand img{width:190px;height:190px;object-fit:cover;flex:none;background:#0a1a24;border:1px solid var(--line)}
+  .lp-brand .bd{display:flex;flex-direction:column}
+  .lp-brand .bd h3{font-family:'Montserrat',sans-serif;font-size:1.15rem;font-weight:700;color:var(--teal-d);padding-bottom:.5rem;margin-bottom:.65rem;border-bottom:2px solid var(--teal)}
+  .lp-brand .bd p{font-size:.88rem;color:var(--ink-soft);line-height:1.55}
+  .lp-brand .bd p b{color:var(--ink);font-weight:600}
 
   /* kolory folii */
   .lp-foil{padding:5rem 0;background:var(--bg)}
@@ -82,11 +84,13 @@
     .lp-benefits .container{grid-template-columns:repeat(2,1fr)}
     .lp-benefit{border-left:1px solid rgba(255,255,255,.1)}
     .lp-benefit:nth-child(odd){border-left:none}
-    .lp-brand-grid{grid-template-columns:repeat(2,1fr)}
+    .lp-brand-grid{grid-template-columns:1fr}
     .lp-foil-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media(max-width:640px){
-    .lp-steps-grid,.lp-brand-media,.lp-brand-grid,.lp-checks,.lp-pay-grid{grid-template-columns:1fr}
+    .lp-steps-grid,.lp-brand-grid,.lp-checks,.lp-pay-grid{grid-template-columns:1fr}
+    .lp-brand{flex-direction:column}
+    .lp-brand img{width:100%;height:200px}
     .lp-benefits .container{grid-template-columns:1fr}
     .lp-benefit,.lp-benefit:nth-child(odd){border-left:none;border-top:1px solid rgba(255,255,255,.1)}
     .lp-benefit:first-child{border-top:none}
@@ -220,15 +224,35 @@
         przeciwprąd, automatykę, roboty czyszczące Dolphin i&nbsp;kolor folii — z&nbsp;pełnym wyborem opcji i&nbsp;cenami —
         dobierzesz w&nbsp;konfiguratorze.</p>
     </div>
-    <div class="lp-brand-media">
-      <div class="im" style="background-image:url('assets/lead-evening.jpg')" role="img" aria-label="Basen ENERGOPOOL wieczorem z podświetleniem RGB-LED na drewnianym tarasie"></div>
-      <div class="im" style="background-image:url('assets/lead-water.jpg')" role="img" aria-label="Krystalicznie czysta, turkusowa woda w basenie ENERGOPOOL"></div>
-    </div>
     <div class="lp-brand-grid">
-      <div class="lp-brand"><h3>Fairland</h3><p>Pompy ciepła i&nbsp;pompy obiegowe Full-Inverter, przeciwprąd Swim Jet i&nbsp;automatyka iWASH. Cicha praca, bardzo niskie zużycie energii i&nbsp;sterowanie przez Wi-Fi — komfortowa woda przez cały sezon.</p></div>
-      <div class="lp-brand"><h3>AstralPool</h3><p>Filtracja ze złożem AFM, skimmery, dysze i&nbsp;oświetlenie RGB-LED LUMIPLUS. Sprawdzona hydraulika basenowa i&nbsp;efektowne podświetlenie niecki po zmroku.</p></div>
-      <div class="lp-brand"><h3>Elecro</h3><p>Stacje UV Quantum — dezynfekcja światłem, bez chemii. Krystalicznie czysta, zdrowa woda o&nbsp;diamentowym połysku, przyjazna dla skóry i&nbsp;oczu.</p></div>
-      <div class="lp-brand"><h3>RENOLIT</h3><p>Zgrzewana folia ALKORPLAN 2,0&nbsp;mm — najmocniejsza wykładzina basenowa, odporna na UV i&nbsp;mróz, w&nbsp;10 kolorach imitujących naturalny kamień.</p></div>
+      <div class="lp-brand">
+        <img src="assets/brand-fairland.jpg" alt="Fairland — pompa ciepła Full-Inverter ze sterowaniem przez aplikację" loading="lazy">
+        <div class="bd">
+          <h3>Fairland</h3>
+          <p>Światowy lider technologii <b>Full-Inverter</b> dla basenów. Pompy ciepła i&nbsp;pompy obiegowe płynnie dobierają moc do potrzeb — bardzo cicha praca i&nbsp;nawet kilkukrotnie niższe zużycie prądu niż układy ON/OFF, ze sterowaniem przez Wi-Fi. U&nbsp;nas także przeciwprąd Swim&nbsp;Jet i&nbsp;automatyka płukania iWASH.</p>
+        </div>
+      </div>
+      <div class="lp-brand">
+        <img src="assets/brand-astralpool.jpg" alt="AstralPool LumiPlus — kolorowe oświetlenie RGB-LED basenu" loading="lazy">
+        <div class="bd">
+          <h3>AstralPool</h3>
+          <p>Marka grupy <b>Fluidra</b> — jednego z&nbsp;największych producentów sprzętu basenowego na świecie. Filtracja ze złożem AFM, skimmery, dysze i&nbsp;oświetlenie RGB-LED <b>LumiPlus</b>. Sprawdzona hydraulika i&nbsp;efektowne, barwne podświetlenie niecki po&nbsp;zmroku.</p>
+        </div>
+      </div>
+      <div class="lp-brand">
+        <img src="assets/brand-elecro.jpg" alt="Elecro Engineering — sterownik lampy UV do basenu" loading="lazy">
+        <div class="bd">
+          <h3>Elecro</h3>
+          <p>Brytyjski producent (<b>Elecro Engineering, England</b>) stacji UV i&nbsp;wymienników ciepła. Lampy UV <b>Quantum</b> z&nbsp;technologią Nano&nbsp;Crystal niszczą bakterie, wirusy i&nbsp;glony światłem — dezynfekcja bez chemii, woda krystalicznie czysta i&nbsp;o&nbsp;diamentowym połysku.</p>
+        </div>
+      </div>
+      <div class="lp-brand">
+        <img src="assets/brand-renolit.jpg" alt="RENOLIT ALKORPLAN — zgrzewanie folii basenowej przez montażystę" loading="lazy">
+        <div class="bd">
+          <h3>RENOLIT</h3>
+          <p>Niemiecki producent membran basenowych <b>ALKORPLAN</b>. Zgrzewana folia 2,0&nbsp;mm to najmocniejsza wykładzina basenowa — odporna na UV, chemię i&nbsp;mróz, z&nbsp;wieloletnią gwarancją, w&nbsp;10 kolorach imitujących naturalny kamień.</p>
+        </div>
+      </div>
     </div>
     <div style="margin-top:2.5rem"><a href="index.html#konfigurator" class="btn btn-primary btn-lg">Skonfiguruj i poznaj cenę</a></div>
   </div>
