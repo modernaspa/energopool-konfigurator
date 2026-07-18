@@ -37,14 +37,13 @@
   .lp-chk svg{width:20px;height:20px;color:var(--teal);flex:none;margin-top:.15rem}
   .lp-chk b{font-weight:600}
 
-  /* opcje rozbudowy */
-  .lp-opts{padding:5rem 0;background:#fff}
-  .lp-opts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:1rem}
-  .lp-opt{border:1px solid var(--line);background:#fff;display:flex;flex-direction:column}
-  .lp-opt .im{height:150px;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:#fff;border-bottom:1px solid var(--line)}
-  .lp-opt .bd{padding:1.3rem 1.4rem}
-  .lp-opt h3{font-size:1.02rem;font-weight:600;margin-bottom:.4rem}
-  .lp-opt p{font-size:.88rem;color:var(--ink-soft);line-height:1.5}
+  /* sprzęt / marki */
+  .lp-brands{padding:5rem 0;background:#fff}
+  .lp-brand-media{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.6rem}
+  .lp-brand-media .im{height:clamp(220px,26vw,360px);background-size:cover;background-position:center;border:1px solid var(--line)}
+  .lp-brand-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6rem 2rem;margin-top:2.4rem}
+  .lp-brand h3{font-family:'Montserrat',sans-serif;font-size:1.12rem;font-weight:700;color:var(--teal-d);padding-bottom:.55rem;margin-bottom:.65rem;border-bottom:2px solid var(--teal)}
+  .lp-brand p{font-size:.9rem;color:var(--ink-soft);line-height:1.55}
 
   /* kolory folii */
   .lp-foil{padding:5rem 0;background:var(--bg)}
@@ -75,11 +74,11 @@
     .lp-benefits .container{grid-template-columns:repeat(2,1fr)}
     .lp-benefit{border-left:1px solid rgba(255,255,255,.1)}
     .lp-benefit:nth-child(odd){border-left:none}
-    .lp-opts-grid{grid-template-columns:1fr 1fr}
+    .lp-brand-grid{grid-template-columns:repeat(2,1fr)}
     .lp-foil-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media(max-width:640px){
-    .lp-steps-grid,.lp-opts-grid,.lp-checks,.lp-pay-grid{grid-template-columns:1fr}
+    .lp-steps-grid,.lp-brand-media,.lp-brand-grid,.lp-checks,.lp-pay-grid{grid-template-columns:1fr}
     .lp-benefits .container{grid-template-columns:1fr}
     .lp-benefit,.lp-benefit:nth-child(odd){border-left:none;border-top:1px solid rgba(255,255,255,.1)}
     .lp-benefit:first-child{border-top:none}
@@ -200,21 +199,25 @@
   </div>
 </section>
 
-<!-- OPCJE ROZBUDOWY -->
-<section class="lp-opts" id="opcje">
+<!-- SPRZĘT / MARKI -->
+<section class="lp-brands" id="opcje">
   <div class="container">
     <div class="section-head">
-      <span class="section-kicker">Wyposażenie opcjonalne</span>
-      <h2>Rozbuduj basen dokładnie tak, jak chcesz</h2>
-      <p>W konfiguratorze dobierzesz dowolne opcje, a pełną wycenę wybranej konfiguracji otrzymasz w&nbsp;eleganckiej ofercie PDF na&nbsp;e-mail.</p>
+      <span class="section-kicker">Sprzęt, na którym pracujemy</span>
+      <h2>Renomowane marki, sprawdzona technologia</h2>
+      <p>Basen ENERGOPOOL budujemy wyłącznie na komponentach uznanych producentów. Pompę ciepła, uzdatnianie,
+        przeciwprąd, automatykę, roboty czyszczące Dolphin i&nbsp;kolor folii — z&nbsp;pełnym wyborem opcji i&nbsp;cenami —
+        dobierzesz w&nbsp;konfiguratorze.</p>
     </div>
-    <div class="lp-opts-grid">
-      <div class="lp-opt"><div class="im" style="background-image:url('assets/img_040.png')"></div><div class="bd"><h3>Pompa ciepła Fairland INVER</h3><p>Cichy, energooszczędny system grzewczy Full-Inverter z tytanowym wymiennikiem. Sterowanie przez Wi-Fi. Wersja Premium z funkcją chłodzenia.</p></div></div>
-      <div class="lp-opt"><div class="im" style="background-image:url('assets/img_037.png')"></div><div class="bd"><h3>Elektrolizer soli InverPure Pro</h3><p>Krystalicznie czysta woda przy zasoleniu tylko 1 g/l. Inteligentna regulacja chloru i pH, tryb TURBO 120%, sterowanie z aplikacji.</p></div></div>
-      <div class="lp-opt"><div class="im" style="background-image:url('assets/img_036.png')"></div><div class="bd"><h3>Stacja UV Elecro Quantum</h3><p>Technologia Nano Crystal zwalcza bakterie i zanieczyszczenia, nadając wodzie diamentowy połysk i naturalnie czystą strukturę.</p></div></div>
-      <div class="lp-opt"><div class="im" style="background-image:url('assets/img_042.png')"></div><div class="bd"><h3>Przeciwprąd Fairland Swim Jet</h3><p>Pływanie w miejscu i profesjonalny trening. Technologia InverTurbo, płynna regulacja mocy, sterowanie pilotem lub aplikacją.</p></div></div>
-      <div class="lp-opt"><div class="im" style="background-image:url('assets/img_047.png')"></div><div class="bd"><h3>Automatyczny zawór iWASH</h3><p>W pełni dotykowa obsługa filtracji i płukania wstecznego, automatyczna kontrola poziomu wody, aplikacja mobilna, 5 lat gwarancji.</p></div></div>
-      <div class="lp-opt"><div class="im" style="background-image:url('assets/niya55.png')"></div><div class="bd"><h3>Robot Dolphin Niya</h3><p>Najnowsze bezprzewodowe roboty Maytronics (Niya Tracker 35 i 55) — same czyszczą dno i ściany, tryby ECO/Standard, sterowanie aplikacją, kosz filtracyjny 150 µm, gwarancja 24 miesiące.</p></div></div>
+    <div class="lp-brand-media">
+      <div class="im" style="background-image:url('assets/lead-evening.jpg')" role="img" aria-label="Basen ENERGOPOOL wieczorem z podświetleniem RGB-LED na drewnianym tarasie"></div>
+      <div class="im" style="background-image:url('assets/lead-water.jpg')" role="img" aria-label="Krystalicznie czysta, turkusowa woda w basenie ENERGOPOOL"></div>
+    </div>
+    <div class="lp-brand-grid">
+      <div class="lp-brand"><h3>Fairland</h3><p>Pompy ciepła i&nbsp;pompy obiegowe Full-Inverter, przeciwprąd Swim Jet i&nbsp;automatyka iWASH. Cicha praca, bardzo niskie zużycie energii i&nbsp;sterowanie przez Wi-Fi — komfortowa woda przez cały sezon.</p></div>
+      <div class="lp-brand"><h3>AstralPool</h3><p>Filtracja ze złożem AFM, skimmery, dysze i&nbsp;oświetlenie RGB-LED LUMIPLUS. Sprawdzona hydraulika basenowa i&nbsp;efektowne podświetlenie niecki po zmroku.</p></div>
+      <div class="lp-brand"><h3>Elecro</h3><p>Stacje UV Quantum — dezynfekcja światłem, bez chemii. Krystalicznie czysta, zdrowa woda o&nbsp;diamentowym połysku, przyjazna dla skóry i&nbsp;oczu.</p></div>
+      <div class="lp-brand"><h3>RENOLIT</h3><p>Zgrzewana folia ALKORPLAN 2,0&nbsp;mm — najmocniejsza wykładzina basenowa, odporna na UV i&nbsp;mróz, w&nbsp;10 kolorach imitujących naturalny kamień.</p></div>
     </div>
     <div style="margin-top:2.5rem"><a href="index.html#konfigurator" class="btn btn-primary btn-lg">Skonfiguruj i poznaj cenę</a></div>
   </div>
