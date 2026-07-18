@@ -12,6 +12,11 @@
   .hero h1.lp-title{text-transform:uppercase;font-size:clamp(2.2rem,4vw,3.3rem);letter-spacing:.02em;line-height:1.06;text-wrap:balance;max-width:760px}
   .hero-lead.lp-lead{font-size:1.24rem;max-width:600px}
 
+  /* mikro-kotwica pod CTA w hero: cena + czas + brak zobowiązań */
+  .hero-anchor{margin-top:1.25rem;font-size:.95rem;font-weight:500;color:rgba(255,255,255,.8);display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
+  .hero-anchor b{color:#fff;font-family:'Montserrat',sans-serif;font-weight:700}
+  .hero-anchor .dot{width:4px;height:4px;border-radius:50%;background:var(--teal-l);flex:none}
+
   /* Pierwszy ekran = hero + pasek 5 zalet razem w jednym widoku (nagłówek 99px + fold = 100vh).
      Hero elastycznie wypełnia resztę, pasek zalet siada na dole. Tylko desktop —
      na mobile zalety rozwijają się w kolumnę, więc układ pozostaje naturalny. */
@@ -191,6 +196,9 @@
       <div class="hero-cta">
         <a href="index.html#konfigurator" class="btn btn-primary btn-lg">Skonfiguruj i poznaj cenę</a>
         <a href="#jak" class="btn btn-ghost btn-lg">Jak to działa?</a>
+      </div>
+      <div class="hero-anchor">
+        <span><b>od 108&nbsp;500&nbsp;zł</b></span><span class="dot"></span><span>wycena PDF w&nbsp;2&nbsp;min</span><span class="dot"></span><span>bez zobowiązań</span>
       </div>
     </div>
   </div>
