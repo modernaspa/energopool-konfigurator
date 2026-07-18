@@ -174,6 +174,9 @@ a{color:inherit;text-decoration:none}
 .opt-addon .opt-name{font-size:.9rem}
 .opt-addon .opt-desc{margin-top:.1rem;font-size:.77rem}
 .opt-addon .opt-check{width:20px;height:20px}
+/* Pozycja wymuszona (płyta pod pomieszczenie podziemne) — zawsze zaznaczona, nieklikalna. */
+.opt-locked{cursor:default}
+.opt-auto{display:inline-block;margin-left:.45rem;padding:.08rem .45rem;border-radius:2px;font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--teal);color:#fff;vertical-align:middle}
 #heatAddonGrid{margin-top:.9rem}
 
 /* foil grid */

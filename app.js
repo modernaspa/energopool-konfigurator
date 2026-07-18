@@ -226,10 +226,16 @@
         "Betonowa płyta 210 × 105 × 10 cm — wypoziomowane podłoże pod skrzynię techniczną.", state.slabTech),
       checkCard("techRoomUnder", IMG.techRoomUnder, "Pomieszczenie techniczne podziemne",
         "Podziemna komora na całą technikę basenu · z montażem", FIXED.techRoomUnder, state.techRoomUnder,
-        "Podziemna komora tuż przy basenie mieszcząca pompy, filtrację i sterowanie — cała technika schowana pod ziemią, niewidoczna w ogrodzie, z wygodnym dostępem serwisowym."),
-      addonCard("slabTechUnder", "Płyta pod pomieszczenie techniczne podziemne",
-        `Betonowa płyta ${String(s.wid).replace(".", ",")} × 2,5 m · ${String(s.wid * 2.5).replace(".", ",")} m² — podłoże pod podziemną komorę.`, state.slabTechUnder)
+        "Podziemna komora tuż przy basenie mieszcząca pompy, filtrację i sterowanie — cała technika schowana pod ziemią, niewidoczna w ogrodzie, z wygodnym dostępem serwisowym.")
     ];
+    // Płyta pod pomieszczenie podziemne — konieczna pod komorę, więc dołączana automatycznie
+    // razem z pomieszczeniem podziemnym (nie do samodzielnego wyboru). Pokazujemy ją jako
+    // zablokowaną tylko wtedy, gdy wybrano pomieszczenie podziemne.
+    if (state.techRoomUnder) {
+      cards.push(addonCard("slabTechUnder", "Płyta pod pomieszczenie techniczne podziemne",
+        `Betonowa płyta ${String(s.wid).replace(".", ",")} × 2,5 m · ${String(s.wid * 2.5).replace(".", ",")} m² — konieczne podłoże, dodawana automatycznie do pomieszczenia podziemnego.`,
+        true, true));
+    }
     $("#groundGrid").innerHTML = cards.join("");
     bindCheck("#groundGrid");
   }
@@ -277,11 +283,13 @@
   }
 
   // Kompaktowa pod-opcja (dodatek do pozycji głównej) — mniejsza, bez zdjęcia.
-  function addonCard(key, name, desc, active) {
+  // locked = pozycja wymuszona (np. płyta pod pomieszczenie podziemne) — zawsze zaznaczona,
+  // niereagująca na kliknięcie; sterowana wyłącznie przez pozycję nadrzędną.
+  function addonCard(key, name, desc, active, locked) {
     return `
-      <label class="opt opt-addon${active ? " active" : ""}" data-key="${key}">
+      <label class="opt opt-addon${active ? " active" : ""}${locked ? " opt-locked" : ""}" data-key="${key}"${locked ? " data-locked=\"1\"" : ""}>
         <div class="opt-body">
-          <div class="opt-name">${name}</div>
+          <div class="opt-name">${name}${locked ? ` <span class="opt-auto">w komplecie</span>` : ""}</div>
           <div class="opt-desc">${desc}</div>
         </div>
         <span class="opt-check"></span>
@@ -300,7 +308,24 @@
     document.querySelectorAll(sel + " .opt").forEach((el) =>
       el.addEventListener("click", () => {
         const k = el.dataset.key;
+        // Pozycja zablokowana (np. płyta pod podziemne) — sterowana tylko przez nadrzędną, klik ignoruj.
+        if (el.dataset.locked) return;
         state[k] = !state[k];
+        // Dwa pomieszczenia techniczne wykluczają się — wybór jednego odznacza drugie.
+        // Pomieszczenie podziemne wymusza płytę pod nie (komory nie da się postawić bez płyty).
+        if (k === "techRoom" || k === "techRoomUnder") {
+          if (k === "techRoom" && state.techRoom) {
+            state.techRoomUnder = false;
+            state.slabTechUnder = false;
+          }
+          if (k === "techRoomUnder") {
+            if (state.techRoomUnder) state.techRoom = false;
+            state.slabTechUnder = state.techRoomUnder;
+          }
+          renderGround();
+          recalc();
+          return;
+        }
         el.classList.toggle("active", state[k]);
         recalc();
       }));
@@ -394,37 +419,56 @@
   }
 
   // Pogrupowane pozycje oferty (dla PDF w moderna-system).
+  // Grupy do oferty PDF — 1:1 kolejność, numery i nazwy modułów jak w konfiguratorze.
+  // Moduł bez wybranej pozycji jest pomijany (nie trafia do PDF). Wyjątek: moduł 1 —
+  // w konfiguratorze to wybór rozmiaru, w ofercie „Pakiet podstawowy ENERGOPOOL".
   function offerGroupsData(s) {
     const G = [];
-    G.push({ label: "Pakiet podstawowy", rows: [
+    // 1. Pakiet podstawowy (zawsze)
+    G.push({ num: 1, label: "Pakiet podstawowy ENERGOPOOL", rows: [
       { nm: `Basen ENERGOPOOL ${s.label}`, sub: "Niecka bloczkowo-betonowa · folia · filtracja · instalacja PVC-U + elektryka", price: s.base, base: true }
     ] });
-    const fin = [];
-    if (state.stairs === "corner") fin.push({ nm: "Schody narożne", price: 0, free: true });
-    else if (state.stairs === "straight") fin.push({ nm: "Schody proste", price: s.stairs.straight });
-    else if (state.stairs === "shelf") fin.push({ nm: "Schody proste z półką", price: s.stairs.shelf });
-    fin.push({ nm: `Folia RENOLIT ALKORPLAN — ${state.foil}`, price: 0, free: true });
-    G.push({ label: "Wykończenie i schody", rows: fin });
-    const tech = [];
-    if (state.heat === "std") tech.push({ nm: `Pompa ciepła Fairland INVER X13 · ${s.heatStd.kw}`, price: s.heatStd.price });
-    else if (state.heat === "prem") tech.push({ nm: `Pompa ciepła Fairland INVER X20 · ${s.heatPrem.kw}`, price: s.heatPrem.price });
-    if (state.heatPedestal) tech.push({ nm: "Postument pod pompę ciepła · 120 × 80 × 10 cm", price: FIXED.heatPedestal });
-    if (state.electro) tech.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
-    if (state.uv) tech.push({ nm: "Stacja UV Elecro Quantum Q-65", price: s.uv });
-    if (state.autofill) tech.push({ nm: "Automatyczne uzupełnianie wody", price: FIXED.autofill });
-    if (state.cf === "ext") tech.push({ nm: `Przeciwprąd zewnętrzny Swim Jet M · ${s.cfExt.spec}`, price: s.cfExt.price });
-    else if (state.cf === "in") tech.push({ nm: `Przeciwprąd do zabudowy Swim Jet F · ${s.cfIn.spec}`, price: s.cfIn.price });
-    if (state.iwash) tech.push({ nm: "Automatyczny zawór płukania iWASH", price: FIXED.iwash });
-    if (state.niya35) tech.push({ nm: "Odkurzacz Dolphin Niya Tracker 35", price: FIXED.niya35 });
-    if (state.niya55) tech.push({ nm: "Odkurzacz Dolphin Niya Tracker 55", price: FIXED.niya55 });
-    if (tech.length) G.push({ label: "Technika i wyposażenie", rows: tech });
+    // 2. Płyta i pomieszczenie techniczne
     const gr = [];
     if (state.slab) gr.push({ nm: "Płyta fundamentowa ENERGO STANDARD PLUS", price: s.slab });
     if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
     if (state.slabTech) gr.push({ nm: "Płyta pod pomieszczenie techniczne · 210 × 105 × 10 cm", price: FIXED.slabTech });
     if (state.techRoomUnder) gr.push({ nm: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
     if (state.slabTechUnder) gr.push({ nm: `Płyta pod pomieszczenie techniczne podziemne · ${String(s.wid).replace(".", ",")} × 2,5 m`, price: s.slabTechUnder });
-    if (gr.length) G.push({ label: "Prace ziemne i budowlane", rows: gr });
+    if (gr.length) G.push({ num: 2, label: "Płyta i pomieszczenie techniczne", rows: gr });
+    // 3. Kolor folii (zawsze — domyślnie bez dopłaty)
+    G.push({ num: 3, label: "Kolor folii basenowej", rows: [
+      { nm: `Folia RENOLIT ALKORPLAN — ${state.foil}`, price: 0, free: true }
+    ] });
+    // 4. Schody (zawsze — domyślnie narożne w cenie)
+    const st = [];
+    if (state.stairs === "corner") st.push({ nm: "Schody narożne", price: 0, free: true });
+    else if (state.stairs === "straight") st.push({ nm: "Schody proste", price: s.stairs.straight });
+    else if (state.stairs === "shelf") st.push({ nm: "Schody proste z półką", price: s.stairs.shelf });
+    if (st.length) G.push({ num: 4, label: "Schody basenowe", rows: st });
+    // 5. Podgrzewanie wody — pompa ciepła
+    const ht = [];
+    if (state.heat === "std") ht.push({ nm: `Pompa ciepła Fairland INVER X13 · ${s.heatStd.kw}`, price: s.heatStd.price });
+    else if (state.heat === "prem") ht.push({ nm: `Pompa ciepła Fairland INVER X20 · ${s.heatPrem.kw}`, price: s.heatPrem.price });
+    if (state.heatPedestal) ht.push({ nm: "Postument pod pompę ciepła · 120 × 80 × 10 cm", price: FIXED.heatPedestal });
+    if (ht.length) G.push({ num: 5, label: "Podgrzewanie wody — pompa ciepła", rows: ht });
+    // 6. Automatyczne uzdatnianie wody
+    const wt = [];
+    if (state.electro) wt.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
+    if (state.uv) wt.push({ nm: "Stacja UV Elecro Quantum Q-65", price: s.uv });
+    if (state.autofill) wt.push({ nm: "Automatyczne uzupełnianie wody", price: FIXED.autofill });
+    if (wt.length) G.push({ num: 6, label: "Automatyczne uzdatnianie wody", rows: wt });
+    // 7. Przeciwprąd basenowy
+    const cf = [];
+    if (state.cf === "ext") cf.push({ nm: `Przeciwprąd zewnętrzny Swim Jet M · ${s.cfExt.spec}`, price: s.cfExt.price });
+    else if (state.cf === "in") cf.push({ nm: `Przeciwprąd do zabudowy Swim Jet F · ${s.cfIn.spec}`, price: s.cfIn.price });
+    if (cf.length) G.push({ num: 7, label: "Przeciwprąd basenowy", rows: cf });
+    // 8. Wyposażenie dodatkowe
+    const ex = [];
+    if (state.iwash) ex.push({ nm: "Automatyczny zawór płukania iWASH", price: FIXED.iwash });
+    if (state.niya35) ex.push({ nm: "Odkurzacz Dolphin Niya Tracker 35", price: FIXED.niya35 });
+    if (state.niya55) ex.push({ nm: "Odkurzacz Dolphin Niya Tracker 55", price: FIXED.niya55 });
+    if (ex.length) G.push({ num: 8, label: "Wyposażenie dodatkowe", rows: ex });
     return G;
   }
   // Realne zdjęcia wybranego wyposażenia (folia + do 4 pozycji).
