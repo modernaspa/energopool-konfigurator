@@ -249,6 +249,21 @@
       </div>`).join("");
     $("#foilGrid").querySelectorAll(".foil").forEach((el) =>
       el.addEventListener("click", () => { state.foil = el.dataset.foil; renderFoil(); recalc(); }));
+    renderFoilExample();
+  }
+  // Zdjęcie przykładowej realizacji pod siatką sampli — dla wybranego koloru.
+  // Jeśli pliku brak (np. brak zdjęcia dla koloru), panel chowa się (onerror).
+  function renderFoilExample() {
+    const el = $("#foilExample");
+    if (!el) return;
+    const f = FOILS.find((x) => x.name === state.foil);
+    if (!f || !f.ex) { el.innerHTML = ""; return; }
+    el.innerHTML = `
+      <figure class="foil-ex">
+        <img src="${f.ex}" alt="Przykładowa realizacja basenu z folią RENOLIT ${f.name}" loading="lazy"
+             onerror="this.closest('.foil-ex').style.display='none'">
+        <figcaption>RENOLIT ALKORPLAN ${f.series} · <strong>${f.name}</strong> — przykładowa realizacja</figcaption>
+      </figure>`;
   }
 
   /* =================== KOMPONENTY KART =================== */

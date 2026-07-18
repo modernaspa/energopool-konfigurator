@@ -159,16 +159,21 @@ const LEADS = {
   endpoint: "https://moderna-wellness.cloud/api/energopool/wycena"
 };
 
-/* Kolory folii RENOLIT ALKORPLAN TOUCH / VOGUE (2,0 mm) — wybór bez dopłaty */
+/* Kolory folii RENOLIT ALKORPLAN 2,0 mm — wybór bez dopłaty.
+   Posortowane seriami (najpierw TOUCH, potem VOGUE — bez mieszania).
+   img = sampel na kafelek, ex = zdjęcie realizacji (1400×500) pokazywane pod siatką.
+   Uwaga: sampel „Relax" ma podwójny myślnik w nazwie pliku, „Origin" to .webp. */
 const FOILS = [
-  { name: "Vanity",    img: "assets/img_021.jpeg" },
-  { name: "Prestige",  img: "assets/img_022.jpeg" },
-  { name: "Elegance",  img: "assets/img_023.jpeg" },
-  { name: "Tropical",  img: "assets/img_024.jpeg" },
-  { name: "Vintage",   img: "assets/img_025.jpeg" },
-  { name: "Relax",     img: "assets/img_026.jpeg" },
-  { name: "Sublime",   img: "assets/img_028.jpeg" },
-  { name: "Authentic", img: "assets/img_029.jpeg" },
-  { name: "Urban",     img: "assets/img_030.jpeg" },
-  { name: "Summer",    img: "assets/img_031.jpeg" }
+  // — seria TOUCH —
+  { name: "Vanity",   series: "TOUCH", img: "assets/renolit-vanity.jpeg",   ex: "assets/renolit-examples/renolit-touch-vanity.png" },
+  { name: "Elegance", series: "TOUCH", img: "assets/renolit-elegance.jpeg", ex: "assets/renolit-examples/renolit-touch-elegance.png" },
+  { name: "Origin",   series: "TOUCH", img: "assets/renolit-origin.webp",   ex: "assets/renolit-examples/renolit-touch-origin.png" },
+  { name: "Prestige", series: "TOUCH", img: "assets/renolit-prestige.jpeg", ex: "assets/renolit-examples/renolit-touch-prestige.png" },
+  { name: "Relax",    series: "TOUCH", img: "assets/renolit--relax.jpeg",   ex: "assets/renolit-examples/renolit-touch-relax.png" },
+  { name: "Sublime",  series: "TOUCH", img: "assets/renolit-sublime.jpeg",  ex: "assets/renolit-examples/renolit-touch-sublime.png" },
+  // — seria VOGUE —
+  { name: "Tropical", series: "VOGUE", img: "assets/renolit-tropical.jpeg", ex: "assets/renolit-examples/renolit-vogue-tropical.png" },
+  { name: "Vintage",  series: "VOGUE", img: "assets/renolit-vintage.jpeg",  ex: "assets/renolit-examples/renolit-vogue-vintage.png" },
+  { name: "Urban",    series: "VOGUE", img: "assets/renolit-urban.jpeg",    ex: "assets/renolit-examples/renolit-vogue-urban.png" },
+  { name: "Summer",   series: "VOGUE", img: "assets/renolit-summer.jpeg",   ex: "assets/renolit-examples/renolit-vogue-summer.png" }
 ];
