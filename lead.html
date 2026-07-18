@@ -80,7 +80,62 @@
   .lp-cta .btn-primary{background:var(--teal-d);border-color:var(--teal-d);color:#fff}
   .lp-cta .btn-primary:hover{background:var(--teal);border-color:var(--teal)}
 
+  /* pas zaufania — statystyki */
+  .lp-trust{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .lp-trust-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .lp-stat{padding:2.1rem 1rem;text-align:center;border-left:1px solid var(--line)}
+  .lp-stat:first-child{border-left:none}
+  .lp-stat .v{font-family:'Montserrat',sans-serif;font-size:1.9rem;font-weight:700;color:var(--teal-d);line-height:1}
+  .lp-stat .l{margin-top:.5rem;font-size:.85rem;color:var(--ink-soft)}
+
+  /* kotwica ceny */
+  .lp-anchor{background:var(--navy,#112232);color:#fff;padding:1.7rem 0}
+  .lp-anchor .container{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+  .lp-anchor .t{font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:600}
+  .lp-anchor .t b{color:var(--teal-l)}
+  .lp-anchor .s{font-size:.88rem;color:rgba(255,255,255,.6);margin-top:.3rem;max-width:520px}
+  .lp-anchor .btn-primary{background:var(--teal-d);border-color:var(--teal-d);color:#fff;white-space:nowrap}
+  .lp-anchor .btn-primary:hover{background:var(--teal);border-color:var(--teal)}
+
+  /* realizacje + opinie */
+  .lp-proof{padding:5rem 0;background:#fff}
+  .lp-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.6rem}
+  .lp-gallery .im{height:230px;background-size:cover;background-position:center;border:1px solid var(--line)}
+  .lp-reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.4rem}
+  .lp-review{border:1px solid var(--line);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem}
+  .lp-stars{color:#f5a623;letter-spacing:2px;font-size:1rem}
+  .lp-review p{font-size:.92rem;color:var(--ink);line-height:1.6;flex:1;margin:0}
+  .lp-review .who{font-size:.85rem;color:var(--ink-soft)}
+  .lp-review .who b{color:var(--ink);font-weight:600;font-family:'Montserrat',sans-serif}
+
+  /* bezpieczeństwo / gwarancja */
+  .lp-safe{padding:5rem 0;background:var(--bg)}
+  .lp-safe-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:1.6rem}
+  .lp-safe-item{background:#fff;border:1px solid var(--line);padding:1.5rem}
+  .lp-safe-item .ico{color:var(--teal);display:inline-flex}
+  .lp-safe-item .ico svg{width:26px;height:26px}
+  .lp-safe-item h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:600;margin:.8rem 0 .4rem}
+  .lp-safe-item p{font-size:.86rem;color:var(--ink-soft);line-height:1.5}
+
+  /* FAQ */
+  .lp-faq{padding:5rem 0;background:#fff}
+  .lp-faq-list{max-width:840px;margin-top:1.2rem}
+  .lp-faq details{border-bottom:1px solid var(--line)}
+  .lp-faq summary{list-style:none;cursor:pointer;padding:1.2rem 0;font-family:'Montserrat',sans-serif;font-weight:600;font-size:1.02rem;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  .lp-faq summary::-webkit-details-marker{display:none}
+  .lp-faq summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--teal);font-weight:400;flex:none}
+  .lp-faq details[open] summary::after{content:"\2212"}
+  .lp-faq details>p{margin:-.2rem 0 1.2rem;font-size:.94rem;color:var(--ink-soft);line-height:1.6;max-width:740px}
+
+  /* mikro-zaufanie przy CTA */
+  .lp-microtrust{margin-top:1.2rem;font-size:.85rem;display:flex;gap:1.3rem;flex-wrap:wrap;align-items:center;color:rgba(255,255,255,.72)}
+  .lp-microtrust span{display:inline-flex;align-items:center;gap:.45rem}
+  .lp-microtrust svg{width:16px;height:16px;color:var(--teal-l);flex:none}
+
   @media(max-width:960px){
+    .lp-trust-grid,.lp-safe-grid{grid-template-columns:repeat(2,1fr)}
+    .lp-stat:nth-child(3){border-left:none}
+    .lp-reviews{grid-template-columns:1fr}
     .lp-benefits .container{grid-template-columns:repeat(2,1fr)}
     .lp-benefit{border-left:1px solid rgba(255,255,255,.1)}
     .lp-benefit:nth-child(odd){border-left:none}
@@ -88,7 +143,10 @@
     .lp-foil-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media(max-width:640px){
-    .lp-steps-grid,.lp-brand-grid,.lp-checks,.lp-pay-grid{grid-template-columns:1fr}
+    .lp-steps-grid,.lp-brand-grid,.lp-checks,.lp-pay-grid,.lp-gallery,.lp-safe-grid{grid-template-columns:1fr}
+    .lp-trust-grid{grid-template-columns:1fr 1fr}
+    .lp-stat{border-top:1px solid var(--line)}
+    .lp-stat:nth-child(-n+2){border-top:none}
     .lp-brand{flex-direction:column}
     .lp-brand img{width:100%;height:200px}
     .lp-benefits .container{grid-template-columns:1fr}
@@ -107,6 +165,8 @@
       <a href="#jak">Jak to działa</a>
       <a href="#technologia">Technologia</a>
       <a href="#opcje">Wyposażenie</a>
+      <a href="#realizacje">Opinie</a>
+      <a href="#faq">FAQ</a>
     </nav>
     <div class="header-actions">
       <a href="tel:+48500560245" class="header-phone">
@@ -148,6 +208,16 @@
 </section>
 </div><!-- /lp-fold -->
 
+<!-- PAS ZAUFANIA (statystyki) — DANE PRZYKŁADOWE, PODMIENIĆ NA PRAWDZIWE -->
+<section class="lp-trust">
+  <div class="container lp-trust-grid">
+    <div class="lp-stat"><div class="v">16 lat</div><div class="l">na rynku basenowym</div></div>
+    <div class="lp-stat"><div class="v">250+</div><div class="l">zrealizowanych basenów</div></div>
+    <div class="lp-stat"><div class="v">4,9 ★</div><div class="l">średnia ocen klientów</div></div>
+    <div class="lp-stat"><div class="v">2 lata</div><div class="l">gwarancji + serwis w Łodzi</div></div>
+  </div>
+</section>
+
 <!-- JAK TO DZIAŁA -->
 <section class="lp-steps" id="jak">
   <div class="container">
@@ -161,7 +231,17 @@
       <div class="lp-step"><div class="n">2</div><h3>Wypełniasz formularz</h3><p>Kilka pól i gotowe — przygotujemy wycenę dopasowaną dokładnie do Twojej konfiguracji. Bez zakładania konta, bez haseł, bez zobowiązań.</p></div>
       <div class="lp-step"><div class="n">3</div><h3>Otrzymujesz ofertę PDF</h3><p>Elegancką ofertę PDF z pełną wyceną Twojej konfiguracji wysyłamy prosto na Twój e-mail — zwykle w kilka minut. My w tym czasie otrzymujemy Twoje zgłoszenie.</p></div>
     </div>
-    <div style="margin-top:2.5rem"><a href="index.html#konfigurator" class="btn btn-primary btn-lg">Rozpocznij konfigurację</a></div>
+  </div>
+</section>
+
+<!-- KOTWICA CENY -->
+<section class="lp-anchor">
+  <div class="container">
+    <div>
+      <div class="t">Kompletne baseny ENERGOPOOL już <b>od 108&nbsp;500&nbsp;zł brutto</b></div>
+      <div class="s">Cena pakietu podstawowego (basen 3&nbsp;×&nbsp;6&nbsp;m). Dokładną cenę Twojej konfiguracji dostajesz w&nbsp;ofercie PDF w&nbsp;kilka minut.</div>
+    </div>
+    <a href="index.html#konfigurator" class="btn btn-primary btn-lg">Poznaj cenę swojego basenu</a>
   </div>
 </section>
 
@@ -281,12 +361,72 @@
   </div>
 </section>
 
+<!-- REALIZACJE + OPINIE — ZDJĘCIA I OPINIE PRZYKŁADOWE, PODMIENIĆ NA PRAWDZIWE PRZED PROMOCJĄ -->
+<section class="lp-proof" id="realizacje">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-kicker">Zaufali nam</span>
+      <h2>Baseny, które już cieszą naszych klientów</h2>
+      <p>Kilka z&nbsp;ponad 250 zrealizowanych basenów ENERGOPOOL — od projektu po pierwsze kąpiele.</p>
+    </div>
+    <div class="lp-gallery">
+      <div class="im" style="background-image:url('assets/real-1.jpg')" role="img" aria-label="Realizacja basenu ENERGOPOOL z widokiem na góry"></div>
+      <div class="im" style="background-image:url('assets/real-2.jpg')" role="img" aria-label="Realizacja basenu ENERGOPOOL nad morzem"></div>
+      <div class="im" style="background-image:url('assets/real-3.jpg')" role="img" aria-label="Realizacja basenu ENERGOPOOL z wieczornym podświetleniem"></div>
+    </div>
+    <div class="lp-reviews">
+      <div class="lp-review"><div class="lp-stars">★★★★★</div><p>„Cały proces — od wyceny po uruchomienie — przebiegł sprawnie i&nbsp;bez niespodzianek. Woda krystalicznie czysta, a&nbsp;rachunki za prąd naprawdę niskie."</p><div class="who"><b>Marta i&nbsp;Paweł</b> · Konstantynów Łódzki</div></div>
+      <div class="lp-review"><div class="lp-stars">★★★★★</div><p>„Wycenę PDF dostaliśmy w&nbsp;kilka minut, bez nachalnych telefonów. Ekipa terminowa, basen wygląda dokładnie jak na&nbsp;wizualizacji."</p><div class="who"><b>Tomasz W.</b> · Pabianice</div></div>
+      <div class="lp-review"><div class="lp-stars">★★★★★</div><p>„Doradztwo na&nbsp;najwyższym poziomie — pomogli dobrać wyposażenie pod nasz ogród i&nbsp;budżet. Serwis zawsze pod telefonem."</p><div class="who"><b>Anna K.</b> · Łódź</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BEZPIECZEŃSTWO / GWARANCJA -->
+<section class="lp-safe">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-kicker">Bezpieczeństwo i spokój</span>
+      <h2>Budujesz z pewnością, nie na słowo</h2>
+    </div>
+    <div class="lp-safe-grid">
+      <div class="lp-safe-item"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 5.8V11c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V5.8L12 3z"/></svg></span><h3>Gwarancja i&nbsp;serwis</h3><p>2 lata gwarancji na&nbsp;prace i&nbsp;instalacje, wyposażenie na&nbsp;gwarancji producentów. Serwis i&nbsp;części w&nbsp;Łodzi.</p></div>
+      <div class="lp-safe-item"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4"/></svg></span><h3>Umowa i&nbsp;harmonogram</h3><p>Jasna umowa z&nbsp;zakresem prac i&nbsp;terminami — wiesz dokładnie, co, kiedy i&nbsp;za&nbsp;ile.</p></div>
+      <div class="lp-safe-item"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 7.5 12 12l9-4.5L12 3zM3 12l9 4.5L21 12M3 16.5 12 21l9-4.5"/></svg></span><h3>Płatność etapami</h3><p>Płacisz w&nbsp;transzach za&nbsp;faktycznie wykonane prace — nie z&nbsp;góry za&nbsp;całość.</p></div>
+      <div class="lp-safe-item"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a3.5 3.5 0 0 0-4.9 4.2L4 16.3V20h3.7l5.8-5.8a3.5 3.5 0 0 0 4.2-4.9l-2.3 2.3-2-2 2.3-2.3z"/></svg></span><h3>Kompleksowo od&nbsp;A do&nbsp;Z</h3><p>Projekt, budowa, technika i&nbsp;uruchomienie — jeden wykonawca, jedna odpowiedzialność.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="lp-faq" id="faq">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-kicker">Najczęstsze pytania</span>
+      <h2>Dobrze wiedzieć, zanim zaczniesz</h2>
+    </div>
+    <div class="lp-faq-list">
+      <details><summary>Czy poznam cenę bez rozmowy z&nbsp;handlowcem?</summary><p>Tak. Konfigurujesz basen online, a&nbsp;pełną, spersonalizowaną wycenę dostajesz w&nbsp;ofercie PDF na&nbsp;e-mail — zwykle w&nbsp;kilka minut. Bez telefonów, chyba że sam poprosisz o&nbsp;kontakt.</p></details>
+      <details><summary>Czy prace ziemne są w&nbsp;cenie basenu?</summary><p>Wykop, przygotowanie podłoża, zasypanie i&nbsp;wywóz ziemi są po&nbsp;stronie Inwestora. W&nbsp;wybranych lokalizacjach możemy wycenić ten zakres indywidualnie — po&nbsp;zapoznaniu się z&nbsp;warunkami miejscowymi i&nbsp;badaniami gruntu.</p></details>
+      <details><summary>Ile trwa budowa basenu?</summary><p>Zależnie od&nbsp;zakresu i&nbsp;warunków na&nbsp;działce zwykle kilka tygodni — od&nbsp;prac konstrukcyjnych po&nbsp;uruchomienie. Dokładny harmonogram ustalamy w&nbsp;umowie. <!-- doprecyzuj realne widełki --></p></details>
+      <details><summary>W&nbsp;jakim regionie budujecie?</summary><p>Działamy z&nbsp;Łodzi i&nbsp;realizujemy baseny w&nbsp;województwie łódzkim oraz okolicach. Zasięg dla Twojej lokalizacji potwierdzimy indywidualnie. <!-- doprecyzuj realny zasięg --></p></details>
+      <details><summary>Jaka jest gwarancja i&nbsp;serwis?</summary><p>2 lata gwarancji na&nbsp;prace budowlane i&nbsp;montażowe oraz instalację elektryczną, a&nbsp;wyposażenie objęte jest gwarancją producentów. Serwis, części i&nbsp;wsparcie techniczne prowadzimy z&nbsp;Łodzi.</p></details>
+      <details><summary>Czy da się rozłożyć płatność?</summary><p>Płatność jest rozłożona na&nbsp;transze powiązane z&nbsp;etapami budowy — płacisz za&nbsp;faktycznie wykonane prace. Opcje finansowania omówimy indywidualnie. <!-- doprecyzuj: raty/leasing jeśli oferujecie --></p></details>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="lp-cta">
   <div class="container lp-cta-inner">
     <div>
       <h2>Gotowy na własny basen ENERGOPOOL?</h2>
       <p>Skonfiguruj basen online i&nbsp;zamów wycenę na e-mail — albo zadzwoń i&nbsp;odwiedź nasz showroom w&nbsp;Łodzi.</p>
+      <div class="lp-microtrust">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4 4 10-10.5"/></svg>2 minuty, bez zobowiązań</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4 4 10-10.5"/></svg>Bez nachalnych telefonów</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Twoje dane są bezpieczne</span>
+      </div>
     </div>
     <div class="hero-cta">
       <a href="index.html#konfigurator" class="btn btn-primary btn-lg">Skonfiguruj i wyceń</a>
