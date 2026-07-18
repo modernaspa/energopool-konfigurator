@@ -58,6 +58,9 @@
   .lp-warr li{display:flex;gap:.7rem;padding:.55rem 0;font-size:.95rem;color:var(--ink-soft);line-height:1.5}
   .lp-warr svg{width:19px;height:19px;color:var(--teal);flex:none;margin-top:.15rem}
 
+  /* pełnoszerokościowy pas ze zdjęciem */
+  .lp-band{height:clamp(340px,46vw,640px);background-size:cover;background-position:center}
+
   /* CTA band */
   .lp-cta{padding:4.5rem 0;background:var(--navy,#112232)}
   .lp-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
@@ -144,7 +147,7 @@
       <div class="lp-step"><div class="n">2</div><h3>Podajesz dane</h3><p>Zostawiasz imię, e-mail i telefon. Na tej podstawie przygotowujemy Twoją spersonalizowaną wycenę — bez kodów i logowania.</p></div>
       <div class="lp-step"><div class="n">3</div><h3>Otrzymujesz ofertę PDF</h3><p>Elegancką ofertę PDF z pełną wyceną Twojej konfiguracji wysyłamy prosto na Twój e-mail — zwykle w kilka minut. My w tym czasie otrzymujemy Twoje zgłoszenie.</p></div>
     </div>
-    <div style="text-align:center;margin-top:2.5rem"><a href="index.html#konfigurator" class="btn btn-primary btn-lg">Rozpocznij konfigurację</a></div>
+    <div style="margin-top:2.5rem"><a href="index.html#konfigurator" class="btn btn-primary btn-lg">Rozpocznij konfigurację</a></div>
   </div>
 </section>
 
@@ -173,11 +176,14 @@
   </div>
 </section>
 
-<!-- W STANDARDZIE -->
+<!-- ZDJĘCIE PEŁNA SZEROKOŚĆ — basen ENERGOPOOL nad polskim morzem -->
+<section class="lp-band" style="background-image:url('assets/lead-sea.jpg')" role="img" aria-label="Basen ENERGOPOOL z turkusową wodą na drewnianym tarasie nad polskim morzem"></section>
+
+<!-- ZAWARTOŚĆ PAKIETU -->
 <section class="lp-std">
   <div class="container">
     <div class="section-head">
-      <span class="section-kicker">W cenie pakietu</span>
+      <span class="section-kicker">Zawartość pakietu</span>
       <h2>Bogate wyposażenie w standardzie</h2>
       <p>Każdy basen ENERGOPOOL w konfiguracji podstawowej to kompletny, gotowy do kąpieli system.</p>
     </div>
@@ -200,7 +206,7 @@
     <div class="section-head">
       <span class="section-kicker">Wyposażenie opcjonalne</span>
       <h2>Rozbuduj basen dokładnie tak, jak chcesz</h2>
-      <p>W konfiguratorze dobierzesz dowolne opcje i od razu zobaczysz, jak wpływają na cenę.</p>
+      <p>W konfiguratorze dobierzesz dowolne opcje, a pełną wycenę wybranej konfiguracji otrzymasz w&nbsp;eleganckiej ofercie PDF na&nbsp;e-mail.</p>
     </div>
     <div class="lp-opts-grid">
       <div class="lp-opt"><div class="im" style="background-image:url('assets/img_040.png')"></div><div class="bd"><h3>Pompa ciepła Fairland INVER</h3><p>Cichy, energooszczędny system grzewczy Full-Inverter z tytanowym wymiennikiem. Sterowanie przez Wi-Fi. Wersja Premium z funkcją chłodzenia.</p></div></div>
@@ -210,7 +216,7 @@
       <div class="lp-opt"><div class="im" style="background-image:url('assets/img_047.png')"></div><div class="bd"><h3>Automatyczny zawór iWASH</h3><p>W pełni dotykowa obsługa filtracji i płukania wstecznego, automatyczna kontrola poziomu wody, aplikacja mobilna, 5 lat gwarancji.</p></div></div>
       <div class="lp-opt"><div class="im" style="background-image:url('assets/niya55.png')"></div><div class="bd"><h3>Robot Dolphin Niya</h3><p>Najnowsze bezprzewodowe roboty Maytronics (Niya Tracker 35 i 55) — same czyszczą dno i ściany, tryby ECO/Standard, sterowanie aplikacją, kosz filtracyjny 150 µm, gwarancja 24 miesiące.</p></div></div>
     </div>
-    <div style="text-align:center;margin-top:2.5rem"><a href="index.html#konfigurator" class="btn btn-primary btn-lg">Skonfiguruj i poznaj cenę</a></div>
+    <div style="margin-top:2.5rem"><a href="index.html#konfigurator" class="btn btn-primary btn-lg">Skonfiguruj i poznaj cenę</a></div>
   </div>
 </section>
 
