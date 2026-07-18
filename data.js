@@ -105,6 +105,22 @@ const SIZES = {
     slab: 37200,
     slabTechUnder: 7000
   },
+  "4x12.5": {
+    label: "4 × 12,5 m", len: 12.5, wid: 4, depth: 1.5, area: 50,
+    base: 154000,
+    filter: "ASTER 650 z zaworem bocznym",
+    pump: "FAIRLAND INVERPRO IP40 · 1,75 kW · 230 V",
+    skimmer: 2, dysze: 4, lampy: 3,
+    stairs: { straight: 6900, shelf: 4600 },
+    electro: { cap: "do 75 m³", price: 14080 },
+    uv: 13750,
+    heatStd: { kw: "20 kW", price: 15950 },
+    heatPrem: { kw: "26,5 kW", price: 27060 },
+    cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
+    cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
+    slab: 37200,
+    slabTechUnder: 7000
+  },
   "5x10": {
     label: "5 × 10 m", len: 10, wid: 5, depth: 1.5, area: 50,
     base: 154000,
