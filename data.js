@@ -4,6 +4,8 @@
    Wszystkie ceny w PLN brutto.
    Podwyżki (2026-07): schody proste/z półką +15%, wyposażenie techniczne
    (poza pakietem, bez odkurzaczy) +10%, płyta fundamentowa +20%.
+   slabTechUnder = płyta pod podziemne pomieszczenie techniczne, liczona z m²:
+   szerokość basenu × 2,5 m (stała długość) × ~800 zł/m² (śr. z płyt fundamentowych).
    ========================================================================== */
 
 const SIZES = {
@@ -20,7 +22,8 @@ const SIZES = {
     heatPrem: { kw: "11,5 kW", price: 11770 },
     cfExt: { spec: "120 m³/h · 0,5 kW", price: 12980 },
     cfIn: { spec: "120 m³/h · 0,5 kW", price: 20790 },
-    slab: 17400
+    slab: 17400,
+    slabTechUnder: 6000
   },
   "3x7": {
     label: "3 × 7 m", len: 7, wid: 3, depth: 1.5, area: 21,
@@ -35,7 +38,8 @@ const SIZES = {
     heatPrem: { kw: "14 kW", price: 14520 },
     cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
     cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
-    slab: 19440
+    slab: 19440,
+    slabTechUnder: 6000
   },
   "3.5x7": {
     label: "3,5 × 7 m", len: 7, wid: 3.5, depth: 1.5, area: 24.5,
@@ -50,7 +54,8 @@ const SIZES = {
     heatPrem: { kw: "14 kW", price: 14520 },
     cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
     cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
-    slab: 21120
+    slab: 21120,
+    slabTechUnder: 7000
   },
   "4x8": {
     label: "4 × 8 m", len: 8, wid: 4, depth: 1.5, area: 32,
@@ -65,7 +70,8 @@ const SIZES = {
     heatPrem: { kw: "17,5 kW", price: 16280 },
     cfExt: { spec: "180 m³/h · 0,8 kW", price: 15180 },
     cfIn: { spec: "180 m³/h · 0,8 kW", price: 22990 },
-    slab: 25200
+    slab: 25200,
+    slabTechUnder: 8000
   },
   "4x10": {
     label: "4 × 10 m", len: 10, wid: 4, depth: 1.5, area: 40,
@@ -80,7 +86,8 @@ const SIZES = {
     heatPrem: { kw: "22 kW", price: 23320 },
     cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
     cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
-    slab: 29760
+    slab: 29760,
+    slabTechUnder: 8000
   },
   "4x12": {
     label: "4 × 12 m", len: 12, wid: 4, depth: 1.5, area: 48,
@@ -95,7 +102,8 @@ const SIZES = {
     heatPrem: { kw: "26,5 kW", price: 27060 },
     cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
     cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
-    slab: 37200
+    slab: 37200,
+    slabTechUnder: 8000
   },
   "5x10": {
     label: "5 × 10 m", len: 10, wid: 5, depth: 1.5, area: 50,
@@ -110,7 +118,8 @@ const SIZES = {
     heatPrem: { kw: "26,5 kW", price: 27060 },
     cfExt: { spec: "230 m³/h · 1,2 kW", price: 17820 },
     cfIn: { spec: "230 m³/h · 1,2 kW", price: 25190 },
-    slab: 37200
+    slab: 37200,
+    slabTechUnder: 10000
   }
 };
 

@@ -169,6 +169,13 @@ a{color:inherit;text-decoration:none}
 .opt.active .opt-check{background:var(--teal);border-color:var(--teal)}
 .opt.active .opt-check::after{content:"✓"}
 
+/* pod-opcja (dodatek podpięty pod pozycję główną): mniejsza, wcięta, bez zdjęcia */
+.opt-addon{margin-top:-.5rem;margin-left:2.6rem;padding:.6rem 1.1rem;border:1px solid var(--line);border-left:2px solid var(--teal);background:#fbfcfd;gap:.9rem}
+.opt-addon .opt-name{font-size:.9rem}
+.opt-addon .opt-desc{margin-top:.1rem;font-size:.77rem}
+.opt-addon .opt-check{width:20px;height:20px}
+#heatAddonGrid{margin-top:.9rem}
+
 /* foil grid */
 .foil-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem}
 .foil{cursor:pointer;border-radius:0;overflow:hidden;border:3px solid transparent;transition:.16s;background:#fff}
@@ -343,6 +350,7 @@ a{color:inherit;text-decoration:none}
 @media(max-width:560px){
   .feature-grid{grid-template-columns:1fr}
   .step{padding:1.8rem 1rem}
+  .opt-addon{margin-left:1rem}
   .foil-grid{grid-template-columns:repeat(2,1fr)}
   .hero h1{font-size:2.5rem;letter-spacing:.02em}
   .hero-lead{font-size:1.08rem}

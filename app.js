@@ -76,10 +76,8 @@
     iwash:          "assets/img_047.png",
     niya35:         "assets/niya35.png",
     niya55:         "assets/niya55.png",
-    heatPedestal:   "assets/img_053.jpeg",
     slab:           "assets/img_053.jpeg",
     techRoom:       "assets/img_051.png",
-    slabTech:       "assets/img_053.jpeg",
     techRoomUnder:  "assets/techroom-underground.jpg"
   };
 
@@ -99,6 +97,7 @@
     techRoom: false,
     slabTech: false,
     techRoomUnder: false,
+    slabTechUnder: false,
     foil: "Vanity"
   };
 
@@ -160,9 +159,8 @@
     ];
     $("#heatGrid").innerHTML = opts.map((o) => optCard("heat", o, state.heat === o.id)).join("");
     bindRadio("#heatGrid", "heat", true);
-    $("#heatAddonGrid").innerHTML = checkCard("heatPedestal", IMG.heatPedestal, "Postument pod pompę ciepła",
-      "Betonowa płyta 120 × 80 × 10 cm", FIXED.heatPedestal, state.heatPedestal,
-      "Betonowy postument pod jednostkę pompy ciepła — stabilne, równe podłoże chroniące przed osiadaniem i wilgocią, z wygodnym dostępem serwisowym.");
+    $("#heatAddonGrid").innerHTML = addonCard("heatPedestal", "Postument pod pompę ciepła",
+      "Betonowa płyta 120 × 80 × 10 cm — stabilne, równe podłoże pod jednostkę zewnętrzną.", state.heatPedestal);
     bindCheck("#heatAddonGrid");
   }
 
@@ -219,12 +217,13 @@
       checkCard("techRoom", IMG.techRoom, "Pomieszczenie techniczne wolnostojące",
         "209 × 102 × 115 cm · płyta warstwowa 40 mm · z montażem", FIXED.techRoom, state.techRoom,
         "Gotowy, zamykany domek obok basenu na pompę, filtr i sterowanie — chroni urządzenia przed pogodą i ukrywa całą technikę. Dostarczany z montażem."),
-      checkCard("slabTech", IMG.slabTech, "Płyta pod pomieszczenie techniczne",
-        "Betonowa płyta 210 × 105 × 10 cm", FIXED.slabTech, state.slabTech,
-        "Betonowa płyta pod wolnostojące pomieszczenie techniczne — trwałe, wypoziomowane podłoże pod skrzynię z techniką."),
+      addonCard("slabTech", "Płyta pod pomieszczenie techniczne",
+        "Betonowa płyta 210 × 105 × 10 cm — wypoziomowane podłoże pod skrzynię techniczną.", state.slabTech),
       checkCard("techRoomUnder", IMG.techRoomUnder, "Pomieszczenie techniczne podziemne",
         "Podziemna komora na całą technikę basenu · z montażem", FIXED.techRoomUnder, state.techRoomUnder,
-        "Podziemna komora tuż przy basenie mieszcząca pompy, filtrację i sterowanie — cała technika schowana pod ziemią, niewidoczna w ogrodzie, z wygodnym dostępem serwisowym.")
+        "Podziemna komora tuż przy basenie mieszcząca pompy, filtrację i sterowanie — cała technika schowana pod ziemią, niewidoczna w ogrodzie, z wygodnym dostępem serwisowym."),
+      addonCard("slabTechUnder", "Płyta pod pomieszczenie techniczne podziemne",
+        `Betonowa płyta ${String(s.wid).replace(".", ",")} × 2,5 m · ${String(s.wid * 2.5).replace(".", ",")} m² — podłoże pod podziemną komorę.`, state.slabTechUnder)
     ];
     $("#groundGrid").innerHTML = cards.join("");
     bindCheck("#groundGrid");
@@ -266,6 +265,18 @@
         <div class="opt-body">
           <div class="opt-name">${name}</div>
           ${hint ? `<div class="opt-hint">${hint}</div>` : ""}
+          <div class="opt-desc">${desc}</div>
+        </div>
+        <span class="opt-check"></span>
+      </label>`;
+  }
+
+  // Kompaktowa pod-opcja (dodatek do pozycji głównej) — mniejsza, bez zdjęcia.
+  function addonCard(key, name, desc, active) {
+    return `
+      <label class="opt opt-addon${active ? " active" : ""}" data-key="${key}">
+        <div class="opt-body">
+          <div class="opt-name">${name}</div>
           <div class="opt-desc">${desc}</div>
         </div>
         <span class="opt-check"></span>
@@ -322,6 +333,7 @@
     if (state.techRoom) items.push({ name: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
     if (state.slabTech) items.push({ name: "Płyta pod pomieszczenie techniczne (210 × 105 × 10 cm)", price: FIXED.slabTech });
     if (state.techRoomUnder) items.push({ name: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
+    if (state.slabTechUnder) items.push({ name: `Płyta pod pomieszczenie techniczne podziemne (${String(s.wid).replace(".", ",")} × 2,5 m)`, price: s.slabTechUnder });
 
     return items;
   }
@@ -404,6 +416,7 @@
     if (state.techRoom) gr.push({ nm: "Pomieszczenie techniczne wolnostojące", price: FIXED.techRoom });
     if (state.slabTech) gr.push({ nm: "Płyta pod pomieszczenie techniczne · 210 × 105 × 10 cm", price: FIXED.slabTech });
     if (state.techRoomUnder) gr.push({ nm: "Pomieszczenie techniczne podziemne", price: FIXED.techRoomUnder });
+    if (state.slabTechUnder) gr.push({ nm: `Płyta pod pomieszczenie techniczne podziemne · ${String(s.wid).replace(".", ",")} × 2,5 m`, price: s.slabTechUnder });
     if (gr.length) G.push({ label: "Prace ziemne i budowlane", rows: gr });
     return G;
   }
