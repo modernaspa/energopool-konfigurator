@@ -111,7 +111,7 @@
     grid.innerHTML = Object.entries(SIZES).map(([key, s]) => `
       <div class="size-tile${key === state.size ? " active" : ""}" data-size="${key}">
         <div class="st-dim">${s.label}</div>
-        <div class="st-area">${String(s.area).replace(".", ",")} m² wody</div>
+        <div class="st-area">${String(s.area).replace(".", ",")} m² / ${String(+(s.area * s.depth).toFixed(2)).replace(".", ",")} m³ wody</div>
       </div>`).join("");
     grid.querySelectorAll(".size-tile").forEach((t) =>
       t.addEventListener("click", () => { state.size = t.dataset.size; renderAll(); }));
