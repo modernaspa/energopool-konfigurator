@@ -88,10 +88,12 @@
   /* pas zaufania — statystyki */
   .lp-trust{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .lp-trust-grid{display:grid;grid-template-columns:repeat(4,1fr)}
-  .lp-stat{padding:2.1rem 1rem;text-align:center;border-left:1px solid var(--line)}
+  .lp-stat{padding:2rem 1.2rem;text-align:center;border-left:1px solid var(--line)}
   .lp-stat:first-child{border-left:none}
-  .lp-stat .v{font-family:'Montserrat',sans-serif;font-size:1.9rem;font-weight:700;color:var(--teal-d);line-height:1}
-  .lp-stat .l{margin-top:.5rem;font-size:.85rem;color:var(--ink-soft)}
+  .lp-stat .ico{color:var(--teal);display:inline-flex}
+  .lp-stat .ico svg{width:26px;height:26px}
+  .lp-stat .v{font-family:'Montserrat',sans-serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-top:.7rem;line-height:1.2}
+  .lp-stat .l{margin-top:.35rem;font-size:.84rem;color:var(--ink-soft);line-height:1.4}
 
   /* kotwica ceny */
   .lp-anchor{background:var(--navy,#112232);color:#fff;padding:1.7rem 0}
@@ -132,6 +134,15 @@
   .lp-faq details[open] summary::after{content:"\2212"}
   .lp-faq details>p{margin:-.2rem 0 1.2rem;font-size:.94rem;color:var(--ink-soft);line-height:1.6;max-width:740px}
 
+  /* szwedzki rodowód */
+  .lp-origin{padding:5rem 0;background:var(--bg)}
+  .lp-origin h2{max-width:640px}
+  .lp-origin-lead{margin-top:1rem;max-width:770px;font-size:1.05rem;color:var(--ink-soft);line-height:1.7}
+  .lp-origin-points{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:2.4rem}
+  .lp-origin-pt{border-left:2px solid var(--teal);padding-left:1.1rem}
+  .lp-origin-pt b{display:block;font-family:'Montserrat',sans-serif;font-size:1.1rem;color:var(--teal-d)}
+  .lp-origin-pt span{display:block;margin-top:.3rem;font-size:.9rem;color:var(--ink-soft);line-height:1.5}
+
   /* mikro-zaufanie przy CTA */
   .lp-microtrust{margin-top:1.2rem;font-size:.85rem;display:flex;gap:1.3rem;flex-wrap:wrap;align-items:center;color:rgba(255,255,255,.72)}
   .lp-microtrust span{display:inline-flex;align-items:center;gap:.45rem}
@@ -148,7 +159,7 @@
     .lp-foil-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media(max-width:640px){
-    .lp-steps-grid,.lp-brand-grid,.lp-checks,.lp-pay-grid,.lp-gallery,.lp-safe-grid{grid-template-columns:1fr}
+    .lp-steps-grid,.lp-brand-grid,.lp-checks,.lp-pay-grid,.lp-gallery,.lp-safe-grid,.lp-origin-points{grid-template-columns:1fr}
     .lp-trust-grid{grid-template-columns:1fr 1fr}
     .lp-stat{border-top:1px solid var(--line)}
     .lp-stat:nth-child(-n+2){border-top:none}
@@ -216,13 +227,13 @@
 </section>
 </div><!-- /lp-fold -->
 
-<!-- PAS ZAUFANIA (statystyki) — DANE PRZYKŁADOWE, PODMIENIĆ NA PRAWDZIWE -->
+<!-- PAS ZAUFANIA — filary oparte na faktach -->
 <section class="lp-trust">
   <div class="container lp-trust-grid">
-    <div class="lp-stat"><div class="v">16 lat</div><div class="l">na rynku basenowym</div></div>
-    <div class="lp-stat"><div class="v">250+</div><div class="l">zrealizowanych basenów</div></div>
-    <div class="lp-stat"><div class="v">4,9 ★</div><div class="l">średnia ocen klientów</div></div>
-    <div class="lp-stat"><div class="v">2 lata</div><div class="l">gwarancji + serwis w Łodzi</div></div>
+    <div class="lp-stat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"/></svg></span><div class="v">Szwedzki rodowód</div><div class="l">Setki basenów doświadczenia założyciela w&nbsp;Szwecji</div></div>
+    <div class="lp-stat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6.5-5 6.5-10.5a6.5 6.5 0 0 0-13 0C5.5 16 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/></svg></span><div class="v">Cała Polska</div><div class="l">Realizujemy baseny w&nbsp;całym kraju</div></div>
+    <div class="lp-stat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-6M4 11V3M12 21v-8M12 9V3M20 21v-5M20 12V3M1.5 15h5M9.5 9h5M17.5 16h5"/></svg></span><div class="v">Sprawdzona technologia</div><div class="l">Fairland · AstralPool · Elecro · RENOLIT</div></div>
+    <div class="lp-stat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 5.8V11c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V5.8L12 3z"/></svg></span><div class="v">Gwarancja i&nbsp;serwis</div><div class="l">2 lata + wsparcie techniczne z&nbsp;Łodzi</div></div>
   </div>
 </section>
 
@@ -250,6 +261,20 @@
       <div class="s">Cena pakietu podstawowego (basen 3&nbsp;×&nbsp;6&nbsp;m). Dokładną cenę Twojej konfiguracji dostajesz w&nbsp;ofercie PDF w&nbsp;kilka minut.</div>
     </div>
     <a href="index.html#konfigurator" class="btn btn-primary btn-lg">Poznaj cenę swojego basenu</a>
+  </div>
+</section>
+
+<!-- SZWEDZKI RODOWÓD -->
+<section class="lp-origin" id="rodowod">
+  <div class="container">
+    <span class="section-kicker">Szwedzki rodowód</span>
+    <h2>Skandynawskie doświadczenie, polskie realizacje</h2>
+    <p class="lp-origin-lead">Za marką Moderna stoi wieloletnie doświadczenie ze&nbsp;Szwecji — jeden z&nbsp;założycieli od&nbsp;lat prowadzi tam firmę basenową i&nbsp;ma na&nbsp;koncie setki zrealizowanych basenów. To skandynawskie know-how — z&nbsp;naciskiem na&nbsp;energooszczędność i&nbsp;trwałość, sprawdzone w&nbsp;wymagającym klimacie — przenosimy na&nbsp;polski rynek od&nbsp;2022&nbsp;roku.</p>
+    <div class="lp-origin-points">
+      <div class="lp-origin-pt"><b>Setki basenów</b><span>doświadczenia założyciela w&nbsp;Szwecji</span></div>
+      <div class="lp-origin-pt"><b>Standard skandynawski</b><span>energooszczędność i&nbsp;długa żywotność niecki</span></div>
+      <div class="lp-origin-pt"><b>Osobiste podejście</b><span>młody, właścicielski zespół prowadzi każdy projekt</span></div>
+    </div>
   </div>
 </section>
 
@@ -417,7 +442,7 @@
       <details><summary>Czy poznam cenę bez rozmowy z&nbsp;handlowcem?</summary><p>Tak. Konfigurujesz basen online, a&nbsp;pełną, spersonalizowaną wycenę dostajesz w&nbsp;ofercie PDF na&nbsp;e-mail — zwykle w&nbsp;kilka minut. Bez telefonów, chyba że sam poprosisz o&nbsp;kontakt.</p></details>
       <details><summary>Czy prace ziemne są w&nbsp;cenie basenu?</summary><p>Wykop, przygotowanie podłoża, zasypanie i&nbsp;wywóz ziemi są po&nbsp;stronie Inwestora. W&nbsp;wybranych lokalizacjach możemy wycenić ten zakres indywidualnie — po&nbsp;zapoznaniu się z&nbsp;warunkami miejscowymi i&nbsp;badaniami gruntu.</p></details>
       <details><summary>Ile trwa budowa basenu?</summary><p>Zależnie od&nbsp;zakresu i&nbsp;warunków na&nbsp;działce zwykle kilka tygodni — od&nbsp;prac konstrukcyjnych po&nbsp;uruchomienie. Dokładny harmonogram ustalamy w&nbsp;umowie. <!-- doprecyzuj realne widełki --></p></details>
-      <details><summary>W&nbsp;jakim regionie budujecie?</summary><p>Działamy z&nbsp;Łodzi i&nbsp;realizujemy baseny w&nbsp;województwie łódzkim oraz okolicach. Zasięg dla Twojej lokalizacji potwierdzimy indywidualnie. <!-- doprecyzuj realny zasięg --></p></details>
+      <details><summary>W&nbsp;jakim regionie budujecie?</summary><p>Realizujemy baseny w&nbsp;całej Polsce. Siedzibę i&nbsp;showroom mamy w&nbsp;Łodzi, a&nbsp;nasze ekipy pracują na&nbsp;terenie całego kraju — szczegóły dojazdu i&nbsp;logistyki ustalamy indywidualnie.</p></details>
       <details><summary>Jaka jest gwarancja i&nbsp;serwis?</summary><p>2 lata gwarancji na&nbsp;prace budowlane i&nbsp;montażowe oraz instalację elektryczną, a&nbsp;wyposażenie objęte jest gwarancją producentów. Serwis, części i&nbsp;wsparcie techniczne prowadzimy z&nbsp;Łodzi.</p></details>
       <details><summary>Czy da się rozłożyć płatność?</summary><p>Płatność jest rozłożona na&nbsp;transze powiązane z&nbsp;etapami budowy — płacisz za&nbsp;faktycznie wykonane prace. Opcje finansowania omówimy indywidualnie. <!-- doprecyzuj: raty/leasing jeśli oferujecie --></p></details>
     </div>
