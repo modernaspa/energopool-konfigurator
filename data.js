@@ -125,6 +125,7 @@ const SIZES = {
 
 /* Ceny stałe (niezależne od rozmiaru) */
 const FIXED = {
+  autofill: 7995,       // System automatycznego uzupełniania wody (czujnik poziomu + zawór)
   iwash: 5940,          // Automatyczny zawór płukania FAIRLAND iWASH (z montażem) — +10%
   niya35: 2261,         // Odkurzacz DOLPHIN NIYA TRACKER 35 (bez zmian)
   niya55: 2673,         // Odkurzacz DOLPHIN NIYA TRACKER 55 (bez zmian)

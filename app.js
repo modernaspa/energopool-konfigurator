@@ -70,6 +70,7 @@
     heatPrem:       "assets/img_041.jpeg",
     electro:        "assets/img_037.png",
     uv:             "assets/img_036.png",
+    autofill:       "assets/autofill.jpg",
     cfNone:         "assets/img_043.jpeg",
     cfExt:          "assets/img_042.png",
     cfIn:           "assets/img_046.png",
@@ -89,6 +90,7 @@
     heatPedestal: false,
     electro: false,
     uv: false,
+    autofill: false,
     cf: "none",
     iwash: false,
     niya35: false,
@@ -173,7 +175,10 @@
         "Sam wytwarza środek do dezynfekcji ze zwykłej soli — koniec z kupowaniem i dozowaniem chloru. Woda miękka, bezzapachowa i przyjazna dla skóry i oczu."),
       checkCard("uv", IMG.uv, "Stacja UV Elecro Quantum Q-65",
         "Technologia Nano Crystal · woda o diamentowym połysku", s.uv, state.uv,
-        "Lampa UV niszczy bakterie i glony światłem, bez chemii. Woda jest krystalicznie czysta i zdrowsza — świetne uzupełnienie do elektrolizera.")
+        "Lampa UV niszczy bakterie i glony światłem, bez chemii. Woda jest krystalicznie czysta i zdrowsza — świetne uzupełnienie do elektrolizera."),
+      checkCard("autofill", IMG.autofill, "Automatyczne uzupełnianie wody",
+        "Czujnik poziomu + zawór · automatyczny dolew", FIXED.autofill, state.autofill,
+        "System sam utrzymuje właściwy poziom wody w basenie — dolewa ją automatycznie, gdy odparuje. Koniec z ręcznym pilnowaniem poziomu i ryzykiem odsłonięcia skimmera.")
     ];
     $("#waterGrid").innerHTML = cards.join("");
     bindCheck("#waterGrid");
@@ -321,6 +326,7 @@
 
     if (state.electro) items.push({ name: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
     if (state.uv) items.push({ name: "Stacja UV Elecro Quantum Q-65", price: s.uv });
+    if (state.autofill) items.push({ name: "Automatyczne uzupełnianie wody", price: FIXED.autofill });
 
     if (state.cf === "ext") items.push({ name: `Przeciwprąd zewnętrzny Swim Jet M (${s.cfExt.spec})`, price: s.cfExt.price });
     else if (state.cf === "in") items.push({ name: `Przeciwprąd do zabudowy Swim Jet F (${s.cfIn.spec})`, price: s.cfIn.price });
@@ -405,6 +411,7 @@
     if (state.heatPedestal) tech.push({ nm: "Postument pod pompę ciepła · 120 × 80 × 10 cm", price: FIXED.heatPedestal });
     if (state.electro) tech.push({ nm: `Elektrolizer soli InverPure Pro (${s.electro.cap})`, price: s.electro.price });
     if (state.uv) tech.push({ nm: "Stacja UV Elecro Quantum Q-65", price: s.uv });
+    if (state.autofill) tech.push({ nm: "Automatyczne uzupełnianie wody", price: FIXED.autofill });
     if (state.cf === "ext") tech.push({ nm: `Przeciwprąd zewnętrzny Swim Jet M · ${s.cfExt.spec}`, price: s.cfExt.price });
     else if (state.cf === "in") tech.push({ nm: `Przeciwprąd do zabudowy Swim Jet F · ${s.cfIn.spec}`, price: s.cfIn.price });
     if (state.iwash) tech.push({ nm: "Automatyczny zawór płukania iWASH", price: FIXED.iwash });
@@ -429,6 +436,7 @@
     else if (state.heat === "prem") out.push({ img: IMG.heatPrem, cap: "Pompa ciepła INVER X20" });
     if (state.electro) out.push({ img: IMG.electro, cap: "Elektrolizer soli InverPure" });
     if (state.uv) out.push({ img: IMG.uv, cap: "Stacja UV Quantum Q-65" });
+    if (state.autofill) out.push({ img: IMG.autofill, cap: "Automatyczne uzupełnianie wody" });
     if (state.cf === "ext") out.push({ img: IMG.cfExt, cap: "Przeciwprąd Swim Jet M" });
     else if (state.cf === "in") out.push({ img: IMG.cfIn, cap: "Przeciwprąd Swim Jet F" });
     if (state.iwash) out.push({ img: IMG.iwash, cap: "Zawór płukania iWASH" });
