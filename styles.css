@@ -255,6 +255,18 @@ a{color:inherit;text-decoration:none}
 @media(max-width:900px){.order-cta{grid-template-columns:1fr}.order-media{display:none}}
 @media(max-width:640px){.order-fields{grid-template-columns:1fr}}
 
+/* Kwalifikacja przed wyceną — „dopasujmy ofertę" (kafle w stylu size-tile) */
+.qualify{margin-top:3rem;background:#fff;border:1px solid var(--line);padding:clamp(1.6rem,3.5vw,2.6rem);box-shadow:var(--shadow-sm)}
+.qualify-inner{max-width:900px;margin:0 auto}
+.qualify h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:clamp(1.3rem,2.4vw,1.7rem);color:var(--ink);margin:.2rem 0}
+.qualify-sub{color:var(--ink-soft);margin-bottom:1.4rem}
+.qualify-q{margin-top:1.4rem}
+.qualify-label{font-weight:600;color:var(--ink);margin-bottom:.7rem}
+.qualify-tiles{display:flex;flex-wrap:wrap;gap:.6rem}
+.qualify-tile{border:2px solid var(--line);background:#fff;color:var(--ink);padding:.72rem 1.1rem;font-size:.92rem;font-weight:600;cursor:pointer;transition:.16s;font-family:inherit}
+.qualify-tile:hover{border-color:var(--teal-l)}
+.qualify-tile.active{border-color:var(--teal);background:var(--teal-bg);color:var(--teal-d)}
+
 /* ---------- payments ---------- */
 .payments{padding:5rem 0;background:var(--bg)}
 .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem}

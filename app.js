@@ -121,7 +121,9 @@
     slabTech: false,
     techRoomUnder: false,
     slabTechUnder: false,
-    foil: "Vanity"
+    foil: "Vanity",
+    housing: null, // kwalifikacja: gdzie stanie basen (dom_ogrod|dzialka_mam|dzialka_szukam|apartament)
+    stage: null    // kwalifikacja: etap inwestycji (pomysly|sezon|zdecydowany)
   };
 
   const $ = (s) => document.querySelector(s);
@@ -563,6 +565,10 @@
     Object.assign(payload, getAttribution());
     if (!payload.landing_url) payload.landing_url = location.href;
 
+    // Kwalifikatory z konfiguratora (obiektywne sygnały do scoringu leada w CRM).
+    payload.housing_type = state.housing;
+    payload.investment_stage = state.stage;
+
     // Meta: zgoda marketingowa + dedup Pixel<->CAPI (wspolny event_id).
     payload.mkt_consent = mktGranted();
     if (payload.mkt_consent) {
@@ -652,6 +658,20 @@
     };
     clearOrderForm();
     window.addEventListener("pageshow", clearOrderForm);
+
+    // Kwalifikacja: kafle „gdzie stanie basen" + „etap inwestycji" (obiektywne sygnały do CRM).
+    // Single-select w grupie; ponowny klik odznacza. Nie blokuje wyceny (opcjonalne).
+    document.querySelectorAll(".qualify-tiles").forEach((group) => {
+      const q = group.dataset.q; // 'housing' | 'stage'
+      group.querySelectorAll(".qualify-tile").forEach((tile) => {
+        tile.addEventListener("click", () => {
+          const wasOn = tile.classList.contains("active");
+          group.querySelectorAll(".qualify-tile").forEach((t) => t.classList.remove("active"));
+          if (!wasOn) { tile.classList.add("active"); state[q] = tile.dataset.v; }
+          else { state[q] = null; }
+        });
+      });
+    });
 
     // formularz zamówienia wyceny
     $("#orderForm").addEventListener("submit", onOrderSubmit);
