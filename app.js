@@ -349,17 +349,14 @@
         // Pozycja zablokowana (np. płyta pod podziemne) — sterowana tylko przez nadrzędną, klik ignoruj.
         if (el.dataset.locked) return;
         state[k] = !state[k];
-        // Dwa pomieszczenia techniczne wykluczają się — wybór jednego odznacza drugie.
-        // Pomieszczenie podziemne wymusza płytę pod nie (komory nie da się postawić bez płyty).
+        // Dwa pomieszczenia techniczne wykluczają się — wybór jednego odznacza CAŁY komplet drugiego.
+        // Płyta pod wolnostojące tylko z wolnostojącym; płyta pod podziemne sprzężona z podziemnym
+        // (komory nie da się postawić bez płyty).
         if (k === "techRoom" || k === "techRoomUnder") {
-          if (k === "techRoom" && state.techRoom) {
-            state.techRoomUnder = false;
-            state.slabTechUnder = false;
-          }
-          if (k === "techRoomUnder") {
-            if (state.techRoomUnder) state.techRoom = false;
-            state.slabTechUnder = state.techRoomUnder;
-          }
+          if (k === "techRoom" && state.techRoom) state.techRoomUnder = false;
+          if (k === "techRoomUnder" && state.techRoomUnder) state.techRoom = false;
+          if (!state.techRoom) state.slabTech = false;        // płyta pod wolnostojące znika razem z nim
+          state.slabTechUnder = state.techRoomUnder;          // płyta pod podziemne = stan podziemnego
           renderGround();
           recalc();
           return;
