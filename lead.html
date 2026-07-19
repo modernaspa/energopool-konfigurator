@@ -35,10 +35,12 @@
   .lp-benefit h3{font-size:.98rem;font-weight:600;margin:.9rem 0 .35rem}
   .lp-benefit p{font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.5}
 
-  /* jak to działa */
+  /* jak to działa — kafle w formie strzałek (flow: krok prowadzi do następnego) */
   .lp-steps{padding:5rem 0;background:#fff}
-  .lp-steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:1rem}
-  .lp-step{border:1px solid var(--line);padding:2rem 1.6rem}
+  .lp-steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1.4rem}
+  .lp-step{background:var(--teal-bg);padding:2rem 3rem;clip-path:polygon(0 0,calc(100% - 30px) 0,100% 50%,calc(100% - 30px) 100%,0 100%,30px 50%)}
+  .lp-step:first-child{padding-left:2rem;clip-path:polygon(0 0,calc(100% - 30px) 0,100% 50%,calc(100% - 30px) 100%,0 100%)}
+  .lp-step:last-child{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,30px 50%)}
   .lp-step .n{width:40px;height:40px;display:grid;place-items:center;background:var(--teal);color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.05rem}
   .lp-step h3{font-size:1.1rem;margin:1.1rem 0 .5rem;font-weight:600}
   .lp-step p{font-size:.92rem;color:var(--ink-soft);line-height:1.55}
@@ -160,6 +162,8 @@
   }
   @media(max-width:640px){
     .lp-steps-grid,.lp-brand-grid,.lp-checks,.lp-pay-grid,.lp-gallery,.lp-safe-grid,.lp-origin-points{grid-template-columns:1fr}
+    .lp-steps-grid{gap:1rem}
+    .lp-step,.lp-step:first-child,.lp-step:last-child{clip-path:none;padding:1.8rem 1.6rem}
     .lp-trust-grid{grid-template-columns:1fr 1fr}
     .lp-stat{border-top:1px solid var(--line)}
     .lp-stat:nth-child(-n+2){border-top:none}
