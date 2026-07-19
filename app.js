@@ -275,18 +275,29 @@
     renderFoilExample();
   }
   // Zdjęcie przykładowej realizacji pod siatką sampli — dla wybranego koloru.
-  // Jeśli pliku brak (np. brak zdjęcia dla koloru), panel chowa się (onerror).
+  // Figurę budujemy RAZ; przy zmianie koloru tylko podmieniamy src/podpis, z preloadem
+  // i fade — bez rebuildu i bez skoku wysokości (stała proporcja trzyma miejsce w CSS).
   function renderFoilExample() {
     const el = $("#foilExample");
     if (!el) return;
     const f = FOILS.find((x) => x.name === state.foil);
     if (!f || !f.ex) { el.innerHTML = ""; return; }
-    el.innerHTML = `
-      <figure class="foil-ex">
-        <img src="${f.ex}" alt="Przykładowa realizacja basenu z folią RENOLIT ${f.name}" loading="lazy"
-             onerror="this.closest('.foil-ex').style.display='none'">
-        <figcaption>RENOLIT ALKORPLAN ${f.series} · <strong>${f.name}</strong> — przykładowa realizacja</figcaption>
-      </figure>`;
+    if (!el.querySelector(".foil-ex")) {
+      el.innerHTML = `<figure class="foil-ex"><img alt="" decoding="async"><figcaption></figcaption></figure>`;
+    }
+    const fig = el.querySelector(".foil-ex");
+    const img = fig.querySelector("img");
+    const cap = fig.querySelector("figcaption");
+    fig.style.display = "";
+    img.alt = `Przykładowa realizacja basenu z folią RENOLIT ${f.name}`;
+    cap.innerHTML = `RENOLIT ALKORPLAN ${f.series} · <strong>${f.name}</strong> — przykładowa realizacja`;
+    if (img.getAttribute("src") === f.ex) return;
+    // Preload nowego zdjęcia; podmieniamy dopiero po załadowaniu (płynny fade, bez pustki).
+    img.classList.add("is-loading");
+    const pre = new Image();
+    pre.onload = () => { img.src = f.ex; requestAnimationFrame(() => img.classList.remove("is-loading")); };
+    pre.onerror = () => { fig.style.display = "none"; };
+    pre.src = f.ex;
   }
 
   /* =================== KOMPONENTY KART =================== */
