@@ -11,6 +11,27 @@
   const setConsent = (v) => { try { localStorage.setItem(CONSENT_KEY, v); } catch (e) {} };
   const mktGranted = () => getConsent() === "granted";
   const getCookie = (n) => { const p = document.cookie.split("; ").find((r) => r.startsWith(n + "=")); return p ? p.split("=")[1] : null; };
+
+  /* =================== ATRYBUCJA MARKETINGOWA ===================
+     Przechwytujemy parametry z URL (klik z reklamy: utm_*, fbclid, gclid) i trzymamy w localStorage,
+     żeby dotrwały do wysłania wyceny (nawet po nawigacji). „Last paid touch": nadpisujemy tylko, gdy
+     w URL faktycznie są parametry. Dzięki temu CRM dopasuje leada do kampanii Meta = realny ROAS. */
+  const ATTR_KEY = "moderna_attribution";
+  const ATTR_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+  function captureAttribution() {
+    try {
+      const q = new URLSearchParams(location.search);
+      const found = {};
+      let has = false;
+      for (const f of ATTR_FIELDS) { const v = q.get(f); if (v) { found[f] = v; has = true; } }
+      if (has) { found.landing_url = location.href; localStorage.setItem(ATTR_KEY, JSON.stringify(found)); }
+    } catch (e) {}
+  }
+  function getAttribution() {
+    try { return JSON.parse(localStorage.getItem(ATTR_KEY) || "{}") || {}; } catch (e) { return {}; }
+  }
+  captureAttribution();
+
   let _pixelLoaded = false;
   function loadPixel() {
     if (_pixelLoaded) return;
@@ -537,6 +558,10 @@
         client
       }
     };
+
+    // Atrybucja marketingowa (utm/fbclid/gclid + landing_url) → CRM dopasuje leada do kampanii = ROAS.
+    Object.assign(payload, getAttribution());
+    if (!payload.landing_url) payload.landing_url = location.href;
 
     // Meta: zgoda marketingowa + dedup Pixel<->CAPI (wspolny event_id).
     payload.mkt_consent = mktGranted();
