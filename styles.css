@@ -390,6 +390,25 @@ a{color:inherit;text-decoration:none}
   .footer-cta .btn{flex:1 1 auto;justify-content:center}
 }
 
+/* ---------- WhatsApp (Faza 0 — deep-link wa.me) ---------- */
+.btn-wa{background:#25D366;color:#fff;border-color:#25D366}
+.btn-wa:hover{background:#1EBE5A;border-color:#1EBE5A}
+.btn-wa svg{width:20px;height:20px;flex:none}
+
+.wa-fab{position:fixed;right:22px;bottom:22px;z-index:60;display:inline-flex;align-items:center;gap:.55rem;
+  padding:.78rem 1.15rem;background:#25D366;color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem;line-height:1;
+  text-decoration:none;box-shadow:0 16px 34px -12px rgba(8,28,38,.5);transition:transform .16s ease,background .16s ease,box-shadow .16s ease}
+.wa-fab:hover{transform:translateY(-2px);background:#1EBE5A;box-shadow:0 20px 40px -12px rgba(8,28,38,.55)}
+.wa-fab svg{width:23px;height:23px;flex:none}
+.wa-fab .wa-fab-t{white-space:nowrap}
+/* Nie nakładaj FAB na pasek zgody cookie (widoczny tylko przy 1. wizycie) */
+#ccBanner:not([hidden]) ~ .wa-fab{display:none}
+@media (max-width:560px){
+  .wa-fab{right:14px;bottom:14px;padding:.85rem;gap:0}
+  .wa-fab .wa-fab-t{display:none}
+  .wa-fab svg{width:26px;height:26px}
+}
+
 /* ---------- print ---------- */
 /* Druk oferty obsługuje oferta.css (nakładka #offerOverlay). Poza trybem
    oferty nie drukujemy strony konfiguratora. */
