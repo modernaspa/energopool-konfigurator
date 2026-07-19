@@ -162,8 +162,11 @@
   }
   @media(max-width:640px){
     .lp-steps-grid,.lp-brand-grid,.lp-checks,.lp-pay-grid,.lp-gallery,.lp-safe-grid,.lp-origin-points{grid-template-columns:1fr}
-    .lp-steps-grid{gap:1rem}
-    .lp-step,.lp-step:first-child,.lp-step:last-child{clip-path:none;padding:1.8rem 1.6rem}
+    .lp-steps-grid{gap:14px}
+    /* na mobile chevrony w dół — flow pionowy krok ↓ krok */
+    .lp-step{padding:2.6rem 1.6rem;clip-path:polygon(0 0,50% 30px,100% 0,100% calc(100% - 30px),50% 100%,0 calc(100% - 30px))}
+    .lp-step:first-child{padding:1.8rem 1.6rem 2.6rem;clip-path:polygon(0 0,100% 0,100% calc(100% - 30px),50% 100%,0 calc(100% - 30px))}
+    .lp-step:last-child{padding:2.6rem 1.6rem 1.8rem;clip-path:polygon(0 0,50% 30px,100% 0,100% 100%,0 100%)}
     .lp-trust-grid{grid-template-columns:1fr 1fr}
     .lp-stat{border-top:1px solid var(--line)}
     .lp-stat:nth-child(-n+2){border-top:none}
