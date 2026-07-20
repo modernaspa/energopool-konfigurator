@@ -510,5 +510,26 @@
   <span class="wa-fab-t">Napisz na WhatsApp</span>
 </a>
 
+<!-- Atrybucja: przekaż utm/fbclid/gclid z reklamy do konfiguratora (index.html), żeby dotarły do
+     formularza i domknęły ROAS. lead.html nie ma własnego formularza — kieruje do index.html. -->
+<script>
+(function () {
+  try {
+    var keep = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid'];
+    var cur = new URLSearchParams(location.search), pass = new URLSearchParams();
+    keep.forEach(function (k) { var v = cur.get(k); if (v) pass.set(k, v); });
+    if (!pass.toString()) return;
+    document.querySelectorAll('a[href*="index.html"]').forEach(function (a) {
+      var href = a.getAttribute('href') || '', hash = '', hi = href.indexOf('#');
+      if (hi >= 0) { hash = href.slice(hi); href = href.slice(0, hi); }
+      var qi = href.indexOf('?'), base = qi >= 0 ? href.slice(0, qi) : href, q = qi >= 0 ? href.slice(qi + 1) : '';
+      var sp = new URLSearchParams(q);
+      pass.forEach(function (v, k) { sp.set(k, v); });
+      a.setAttribute('href', base + '?' + sp.toString() + hash);
+    });
+  } catch (e) {}
+})();
+</script>
+
 </body>
 </html>
