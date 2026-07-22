@@ -629,9 +629,16 @@
   function showOrderDone(email, real) {
     $("#orderForm").hidden = true;
     $("#orderDone").hidden = false;
-    $("#orderDoneMsg").textContent = real
-      ? `Ofertę PDF z pełną wyceną Twojej konfiguracji wyślemy na adres ${email} w ciągu kilku minut. Sprawdź też folder SPAM.`
-      : `Twoja konfiguracja została zapisana. Ofertę PDF na adres ${email} wyślemy po uruchomieniu automatycznej wysyłki wycen.`;
+    const head = $("#orderDoneHead");
+    if (real) {
+      if (head) head.textContent = "Sprawdź skrzynkę e-mail";
+      $("#orderDoneMsg").textContent =
+        `Na adres ${email} wysłaliśmy e-mail z linkiem potwierdzającym. Kliknij go — od razu po potwierdzeniu prześlemy Ci pełną ofertę PDF Twojej konfiguracji. Sprawdź też folder SPAM.`;
+    } else {
+      if (head) head.textContent = "Dziękujemy!";
+      $("#orderDoneMsg").textContent =
+        `Twoja konfiguracja została zapisana. Ofertę PDF na adres ${email} wyślemy po uruchomieniu automatycznej wysyłki wycen.`;
+    }
     $("#orderDone").scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
