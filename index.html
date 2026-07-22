@@ -245,6 +245,9 @@
         </div>
 
         <form class="order-form" id="orderForm" novalidate>
+          <!-- honeypot anty-bot: niewidoczny dla ludzi; boty wypełniają to pole → serwer odrzuca -->
+          <input type="text" id="ordCompany" name="company" tabindex="-1" autocomplete="off" aria-hidden="true"
+                 style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
           <div class="order-fields">
             <label class="fld"><span>Imię i nazwisko *</span>
               <input type="text" id="ordName" autocomplete="name" placeholder="Jan Kowalski"></label>
@@ -341,6 +344,6 @@
 </a>
 
 <script src="data.js?v=8"></script>
-<script src="app.js?v=11"></script>
+<script src="app.js?v=12"></script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 /* ====================== ENERGOPOOL — logika konfiguratora ====================== */
 (function () {
   "use strict";
+  const PAGE_T0 = Date.now(); // znacznik czasu strony — time-trap (anty-bot: zbyt szybkie wysłanie)
 
   /* =================== META PIXEL + ZGODA (RODO) ===================
      Pixel laduje sie DOPIERO po zgodzie marketingowej (baner). Bez zgody nie
@@ -577,6 +578,10 @@
     payload.housing_type = state.housing;
     payload.investment_stage = state.stage;
 
+    // Anty-spam: honeypot (ukryte pole) + czas wypełniania formularza (time-trap).
+    payload.hp = ($("#ordCompany") && $("#ordCompany").value) || "";
+    payload.form_ms = Date.now() - PAGE_T0;
+
     // Meta: zgoda marketingowa + dedup Pixel<->CAPI (wspolny event_id).
     payload.mkt_consent = mktGranted();
     if (payload.mkt_consent) {
@@ -598,13 +603,19 @@
     const loc = $("#ordLoc").value.trim();
     const rodo = $("#ordRodo").checked;
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-    const phoneOk = /^(\+48)?\d{9}$/.test(phone.replace(/[\s-]/g, ""));
-    $("#ordName").classList.toggle("bad", name.length < 3);
+    // Telefon: 9 cyfr PL (opcjonalnie +48), nie sekwencja (123456789), nie powtórzenia (111…).
+    const digits = phone.replace(/\D/g, "");
+    const pl = digits.startsWith("48") && digits.length === 11 ? digits.slice(2) : digits;
+    const seq = (d) => { let a = true, b = true; for (let i = 1; i < d.length; i++) { if (+d[i] !== +d[i - 1] + 1) a = false; if (+d[i] !== +d[i - 1] - 1) b = false; } return a || b; };
+    const phoneOk = pl.length === 9 && new Set(pl).size > 2 && !seq(pl);
+    // Nazwa: imię i nazwisko (spacja), nie oczywiste fejki.
+    const nameOk = name.length >= 3 && /\s/.test(name) && !/\b(test\w*|asdf\w*|qwerty|xxx+|abc+)\b/i.test(name);
+    $("#ordName").classList.toggle("bad", !nameOk);
     $("#ordEmail").classList.toggle("bad", !emailOk);
     $("#ordPhone").classList.toggle("bad", !phoneOk);
-    if (name.length < 3) return { err: "Podaj imię i nazwisko." };
+    if (!nameOk) return { err: "Podaj prawdziwe imię i nazwisko." };
     if (!emailOk) return { err: "Podaj poprawny adres e-mail." };
-    if (!phoneOk) return { err: "Podaj poprawny numer telefonu (9 cyfr, opcjonalnie +48)." };
+    if (!phoneOk) return { err: "Podaj poprawny numer telefonu (9 cyfr, np. 600 100 200)." };
     if (!rodo) return { err: "Zaznacz zgodę na przetwarzanie danych osobowych." };
     return { lead: { name, email, phone, location: loc } };
   }
