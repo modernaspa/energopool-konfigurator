@@ -6,7 +6,7 @@
 <title>ENERGOPOOL — Konfigurator basenu | Moderna Pool&amp;Spa</title>
 <meta name="description" content="Skonfiguruj swój energooszczędny basen bloczkowo-betonowy ENERGOPOOL i zamów spersonalizowaną wycenę na e-mail. Moderna Pool&Spa — baseny, zadaszenia i strefa SPA.">
 <link rel="stylesheet" href="assets/fonts/fonts.css">
-<link rel="stylesheet" href="styles.css?v=20">
+<link rel="stylesheet" href="styles.css?v=21">
 <style>
   /* Baner zgody na cookie / Pixel Meta (RODO) */
   .cc-banner{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#16293a;color:#fff;border-top:2px solid #1cbcf2;box-shadow:0 -6px 24px rgba(0,0,0,.28);}
@@ -261,6 +261,9 @@
           <label class="consent"><input type="checkbox" id="ordRodo">
             <span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez Moderna Pool&amp;Spa Sp. z o.o.
             w celu przygotowania i przedstawienia wyceny. *</span></label>
+          <!-- Cloudflare Turnstile — weryfikacja „nie-bot" (bez CAPTCHA-klikania dla ludzi) -->
+          <div class="cf-turnstile order-turnstile" data-sitekey="0x4AAAAAAD7QUq7DGXoyHNec"
+               data-theme="light" data-size="flexible"></div>
           <div class="lead-err" id="ordErr" hidden></div>
           <button type="submit" class="btn btn-primary btn-lg" id="ordSubmit">
             <span class="ico" data-icon="mail"></span> Zamów wycenę na e-mail</button>
@@ -343,7 +346,8 @@
   <span class="wa-fab-t">Napisz na WhatsApp</span>
 </a>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="data.js?v=8"></script>
-<script src="app.js?v=13"></script>
+<script src="app.js?v=14"></script>
 </body>
 </html>

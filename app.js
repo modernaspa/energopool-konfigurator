@@ -640,24 +640,33 @@
     orderErr("");
     const v = validOrder();
     if (v.err) return orderErr(v.err);
+    // Cloudflare Turnstile: jeśli widget się załadował, wymagaj tokenu.
+    const hasCf = window.turnstile && typeof turnstile.getResponse === "function";
+    const cfToken = hasCf ? turnstile.getResponse() : null;
+    if (hasCf && !cfToken) return orderErr("Potwierdź, że nie jesteś robotem, i spróbuj ponownie.");
     const lead = v.lead;
     const btn = $("#ordSubmit");
     const t0 = btn.innerHTML;
     btn.disabled = true;
     btn.textContent = "Wysyłanie…";
     const payload = orderPayload(lead);
+    payload.cf_token = cfToken || "";
+    // Token Turnstile jest jednorazowy — po każdej próbie odświeżamy widget.
+    const restore = () => { btn.disabled = false; btn.innerHTML = t0; if (hasCf) { try { turnstile.reset(); } catch (_) {} } };
     try {
       if (gateConfigured()) {
         const res = await api(payload);
-        if (!res || !res.ok) throw new Error(res && res.error);
+        if (!res || !res.ok) {
+          restore();
+          return orderErr((res && res.error) || "Nie udało się wysłać zgłoszenia. Spróbuj ponownie.");
+        }
       } else {
         console.log("[ENERGOPOOL] Zgłoszenie wyceny (tryb demo — brak endpointu):", payload);
       }
       showOrderDone(lead.email, gateConfigured());
-    } catch {
-      orderErr("Nie udało się wysłać zgłoszenia. Sprawdź dane i spróbuj ponownie.");
-      btn.disabled = false;
-      btn.innerHTML = t0;
+    } catch (_) {
+      restore();
+      orderErr("Nie udało się wysłać zgłoszenia. Sprawdź połączenie i spróbuj ponownie.");
     }
   }
 
