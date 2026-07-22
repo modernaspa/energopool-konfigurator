@@ -613,9 +613,9 @@
     $("#ordName").classList.toggle("bad", !nameOk);
     $("#ordEmail").classList.toggle("bad", !emailOk);
     $("#ordPhone").classList.toggle("bad", !phoneOk);
-    if (!nameOk) return { err: "Podaj prawdziwe imię i nazwisko." };
-    if (!emailOk) return { err: "Podaj poprawny adres e-mail." };
-    if (!phoneOk) return { err: "Podaj poprawny numer telefonu (9 cyfr, np. 600 100 200)." };
+    if (!nameOk) return { err: "Podaj prawdziwe imię i nazwisko — na te dane przygotujemy wycenę." };
+    if (!emailOk) return { err: "Podaj prawdziwy adres e-mail — na niego wyślemy ofertę PDF." };
+    if (!phoneOk) return { err: "Podaj prawdziwy numer telefonu (9 cyfr, np. 600 100 200)." };
     if (!rodo) return { err: "Zaznacz zgodę na przetwarzanie danych osobowych." };
     return { lead: { name, email, phone, location: loc } };
   }
