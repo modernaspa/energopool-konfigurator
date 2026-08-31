@@ -325,10 +325,11 @@ function render() {
     const s = krok(7, "Zakres robót", null, "roboty");
     const g = h("div", "pk-siatka pk-siatka-2");
     g.append(kafel("Płyta fundamentowa",
-      "O 50 cm szersza od lustra wody z każdej strony" + (pak.plytaXps ? " · ocieplona styrodurem XPS 300" : ""),
+      "Betonowy fundament pod całą nieckę — bez niego basen z czasem osiada i pęka" +
+      (pak.plytaXps ? ". W tym pakiecie ocieplona styrodurem: woda wolniej stygnie w nocy" : ""),
       cfg.plyta, () => { cfg.plyta = !cfg.plyta; przelicz(); }));
     g.append(kafel("Prace ziemne — „Pod klucz”",
-      "Wykop, przygotowanie podłoża i obsypanie niecki po naszej stronie. Domyślnie wyłączone — koparkowy z okolicy zwykle wychodzi taniej.",
+      "Wykop, podłoże i obsypanie gotowej niecki po naszej stronie — nie szukasz koparki na własną rękę. Domyślnie wyłączone: własny koparkowy z okolicy zwykle wychodzi taniej.",
       cfg.praceZiemne, () => { cfg.praceZiemne = !cfg.praceZiemne; przelicz(); }));
     s.append(g);
     // Drenaż ma sens wyłącznie razem z naszym wykopem — bez prac ziemnych kafelek się nie pokazuje.
