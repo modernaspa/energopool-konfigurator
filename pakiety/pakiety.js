@@ -183,12 +183,12 @@ function render() {
 
     // Gotowe rozmiary jako duże kafelki na całą szerokość — większość klientów wybiera stąd,
     // a pola wyżej zostają dla wymiarów nietypowych.
-    const szyb = h("div", "pk-rozmiary");
+    const szyb = h("div", "size-grid");
     for (const [L, W] of SZYBKIE) {
-      const b = h("button", "pk-rozmiar" + (cfg.dlugosc === L && cfg.szerokosc === W ? " active" : ""));
+      const b = h("button", "size-tile" + (cfg.dlugosc === L && cfg.szerokosc === W ? " active" : ""));
       b.type = "button";
-      b.append(h("span", "pk-rozmiar-wym", `${lp(W)} × ${L} m`));
-      b.append(h("span", "pk-rozmiar-opis", `${lp(L * W)} m² / ${lp(Math.round(L * W * cfg.glebokosc * 10) / 10)} m³ wody`));
+      b.append(h("div", "st-dim", `${lp(W)} × ${L} m`));
+      b.append(h("div", "st-area", `${lp(L * W)} m² / ${lp(Math.round(L * W * cfg.glebokosc * 10) / 10)} m³ wody`));
       b.addEventListener("click", () => { cfg.dlugosc = L; cfg.szerokosc = W; przelicz(); });
       szyb.append(b);
     }
