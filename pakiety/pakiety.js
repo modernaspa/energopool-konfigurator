@@ -43,6 +43,36 @@ let cfg = {
 };
 let wycena = null;
 
+/* ---------- ikony ----------
+   Cienkie SVG dziedziczące currentColor, wstrzykiwane w <span class="ico" data-icon="...">.
+   ŚWIADOMA KOPIA z app.js starego konfiguratora ENERGOPOOL: tamten plik obsługuje reklamowany
+   ruch i nie ruszamy go bez potrzeby. Zestaw ograniczony do ikon używanych na tej stronie —
+   dodając nową w HTML, dopisz ją tutaj, inaczej zostanie pusty kwadrat. */
+const IKONY = (() => {
+  const svg = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+  return {
+    bolt: svg('<path d="M13 2 4.5 13.5H11l-1 8.5L19.5 10H13l1-8z"/>'),
+    shield: svg('<path d="M12 3 5 5.8V11c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V5.8L12 3z"/>'),
+    sliders: svg('<path d="M4 21v-6M4 11V3M12 21v-8M12 9V3M20 21v-5M20 12V3M1.5 15h5M9.5 9h5M17.5 16h5"/>'),
+    droplet: svg('<path d="M12 3.2 6.8 9.5a7 7 0 1 0 10.4 0L12 3.2z"/>'),
+    smartphone: svg('<rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/>'),
+    cpu: svg('<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/>'),
+    phone: svg('<path d="M6.5 3.5h3l1.3 4-2 1.3a12 12 0 0 0 5.1 5.1l1.3-2 4 1.3v3a1.8 1.8 0 0 1-2 1.8A16.5 16.5 0 0 1 4.7 7.5a1.8 1.8 0 0 1 1.8-2z"/>'),
+    mail: svg('<rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/>'),
+    pin: svg('<path d="M12 21s6.5-5 6.5-10.5a6.5 6.5 0 0 0-13 0C5.5 16 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/>'),
+    globe: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"/>'),
+  };
+})();
+// Kroki konfiguratora dokłada JS po pobraniu katalogu, więc uzupełniamy też po każdym renderze.
+function wstawIkony(root) {
+  (root || document).querySelectorAll("[data-icon]").forEach((e) => {
+    const n = e.getAttribute("data-icon");
+    if (IKONY[n] && !e.dataset.iconDone) { e.innerHTML = IKONY[n]; e.dataset.iconDone = "1"; }
+    else if (!IKONY[n]) console.warn(`[ikony] brak ikony „${n}" — sprawdź IKONY w pakiety.js`);
+  });
+}
+document.addEventListener("DOMContentLoaded", () => wstawIkony());
+
 /* ---------- pomocnicze do budowy DOM (bez innerHTML z danymi) ---------- */
 function h(tag, cls, txt) {
   const e = document.createElement(tag);
@@ -367,6 +397,8 @@ function render() {
     s.append(g2);
     root.append(s);
   }
+
+  wstawIkony(root);
 }
 
 /* ---------- formularz ---------- */
