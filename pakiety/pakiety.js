@@ -158,13 +158,25 @@ function render() {
     for (const [id, etykieta, krokWart, min, max] of [
       ["dlugosc", "Długość (m)", 0.5, 2, 20],
       ["szerokosc", "Szerokość (m)", 0.5, 2, 10],
-      ["glebokosc", "Głębokość (m)", 0.1, 1, 2.5],
     ]) {
       const lab = h("label", null, etykieta);
       const inp = h("input");
       Object.assign(inp, { type: "number", step: krokWart, min, max, value: cfg[id] });
       inp.addEventListener("input", () => { cfg[id] = Number(inp.value); przeliczPozniej(); });
       lab.append(inp);
+      g.append(lab);
+    }
+    // Głębokość to wybór z dwóch wartości, nie pole liczbowe — bloczki dostawia się warstwami.
+    {
+      const lab = h("label", null, "Głębokość (m)");
+      const box = h("div", "pk-glebokosci");
+      for (const gl of K.glebokosci) {
+        const b = h("button", "pk-glebokosc" + (cfg.glebokosc === gl ? " active" : ""), `${lp(gl)} m`);
+        b.type = "button";
+        b.addEventListener("click", () => { cfg.glebokosc = gl; przelicz(); });
+        box.append(b);
+      }
+      lab.append(box);
       g.append(lab);
     }
     s.append(g);
