@@ -131,14 +131,8 @@ function odswiezPodsumowanie() {
   el("sumStandard").textContent = pak.label;
   el("sumWymiar").textContent = `${lp(cfg.szerokosc)} × ${cfg.dlugosc} m · gł. ${lp(cfg.glebokosc)} m`;
 
-  const ul = el("sumPozycje");
-  ul.textContent = "";
-  for (const g of wycena.grupy) {
-    const li = h("li", g.wCenie ? null : "base");
-    li.append(h("span", "si-name", g.label), h("span", "si-price", zl(g.cenaBrutto)));
-    ul.append(li);
-  }
   el("sumBrutto").textContent = zl(wycena.brutto);
+  el("pasekCeny").hidden = false;
 
   el("ordPodsumowanie").textContent =
     `${pak.label} · ${lp(cfg.szerokosc)} × ${cfg.dlugosc} m · ${zl(wycena.brutto)} — prześlemy pełne zestawienie z opisem każdej pozycji.`;
@@ -211,10 +205,25 @@ function render() {
     root.append(s);
   }
 
-  /* 3 — folia */
+  /* 3 — system urządzeń */
+  {
+    const s = krok(3, "System urządzeń", pak.systemDoWyboru
+      ? "Spójny zestaw urządzeń jednej klasy. Wybierasz raz, zamiast składać sprzęt po sztuce."
+      : `W pakiecie ${pak.label.replace("ENERGOPOOL ", "")} system jest narzucony.`);
+    const g = h("div", "pk-siatka pk-siatka-2 pk-siatka-opis");
+    for (const sys of K.systemy) {
+      g.append(kafel(sys.label, sys.opis, cfg.system === sys.klucz,
+        () => { cfg.system = sys.klucz; przelicz(); },
+        !pak.systemDoWyboru && cfg.system !== sys.klucz, sys.zdjecie));
+    }
+    s.append(g);
+    root.append(s);
+  }
+
+  /* 4 — folia */
   {
     const seria = pak.foliaSeria;
-    const s = krok(3, "Kolor folii basenowej",
+    const s = krok(4, "Kolor folii basenowej",
       `${seria.label} — ${mm(seria.gruboscMm)} mm, zgrzewana ${seria.zgrzewanie}. ${K.foliaOpisSerii[pak.foliaSeriaKlucz] || ""}`);
     const g = h("div", "pk-siatka");
     const kolory = K.folie[pak.foliaSeriaKlucz] || [];
@@ -225,9 +234,9 @@ function render() {
     root.append(s);
   }
 
-  /* 4 — osprzęt */
+  /* 5 — osprzęt */
   {
-    const s = krok(4, "Osprzęt niecki", "Skimmery, dysze i lampy Tebas — cały komplet w jednym kolorze.");
+    const s = krok(5, "Osprzęt niecki", "Skimmery, dysze i lampy Tebas — cały komplet w jednym kolorze.");
     const g = h("div", "pk-siatka pk-siatka-opis");
     for (const c of K.koloryOsprzetu) {
       const dostepny = pak.koloryWCenie.includes(c.klucz);
@@ -246,9 +255,9 @@ function render() {
     root.append(s);
   }
 
-  /* 5 — schody */
+  /* 6 — schody */
   {
-    const s = krok(5, "Schody", "Konstrukcja z bloczków zalewanych betonem, wykończona tą samą folią co niecka.");
+    const s = krok(6, "Schody", "Konstrukcja z bloczków zalewanych betonem, wykończona tą samą folią co niecka.");
     const g = h("div", "pk-siatka pk-siatka-3 pk-siatka-opis");
     for (const x of K.schody) {
       g.append(kafel(x.label, [x.opis, x.wCenie ? "w standardzie" : "dopłata"].filter(Boolean).join(" · "),
@@ -258,9 +267,9 @@ function render() {
     root.append(s);
   }
 
-  /* 6 — zakres robót */
+  /* 7 — zakres robót */
   {
-    const s = krok(6, "Zakres robót");
+    const s = krok(7, "Zakres robót");
     const g = h("div", "pk-siatka pk-siatka-2");
     g.append(kafel("Płyta fundamentowa",
       "O 50 cm szersza od lustra wody z każdej strony" + (pak.plytaXps ? " · ocieplona styrodurem XPS 300" : ""),
@@ -272,9 +281,9 @@ function render() {
     root.append(s);
   }
 
-  /* 7 — pomieszczenie techniczne */
+  /* 8 — pomieszczenie techniczne */
   {
-    const s = krok(7, "Pomieszczenie techniczne",
+    const s = krok(8, "Pomieszczenie techniczne",
       "Miejsce na filtrację, pompę i automatykę. Jeśli masz garaż lub budynek gospodarczy w pobliżu, nie potrzebujesz osobnego.");
     const g = h("div", "pk-siatka pk-siatka-3 pk-siatka-opis");
     for (const d of K.pomieszczenieTechniczne) {
@@ -285,22 +294,24 @@ function render() {
     root.append(s);
   }
 
-  /* 8 — wyposażenie */
+  /* 9 — wyposażenie */
   {
-    const s = krok(8, "Wyposażenie i automatyka");
+    const s = krok(9, "Wyposażenie i automatyka");
     const g = h("div", "pk-siatka pk-siatka-2");
     // Opcje ograniczone pakietem zostają WIDOCZNE, tylko wyszarzone — klient ma wiedzieć,
     // co dostanie po przejściu wyżej, zamiast szukać znikającego kafelka.
+    const sys = K.systemy.find((x) => x.klucz === cfg.system) || K.systemy[0];
     const niedostepne = {
-      elektrolizer: !pak.opcje.some((o) => o.startsWith("elektrolizer")),
-      przeciwprad: !pak.opcje.includes("przeciwprad_fairland"),
       postument: !cfg.pompaCiepla,
+      // Zawór iWASH sterują wyłącznie pompy Fairland/Aquagem.
+      iwash: !sys.iwash,
+      // Przeciwprąd Swim Jet istnieje tylko w systemie Fairland.
+      przeciwprad: !sys.przeciwprad,
     };
+    const POWOD = { postument: "Tylko razem z pompą ciepła" };
     for (const o of K.wyposazenie) {
       const off = !!niedostepne[o.klucz];
-      const podpis = off
-        ? (o.klucz === "postument" ? "Tylko razem z pompą ciepła" : "Dostępne w wyższym pakiecie")
-        : o.opis;
+      const podpis = off ? (POWOD[o.klucz] || o.opisNiedostepny || "Dostępne w wyższym pakiecie") : o.opis;
       g.append(kafel(o.label, podpis, !!cfg[o.klucz],
         () => { cfg[o.klucz] = !cfg[o.klucz]; przelicz(); }, off, o.zdjecie));
     }

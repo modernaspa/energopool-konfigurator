@@ -30,10 +30,25 @@
 .pk-intro{max-width:70ch}
 .pk-body{font-size:.95rem;color:var(--ink-soft);line-height:1.7;margin-bottom:.9rem}
 
-/* ---------- układ konfiguratora ---------- */
-.pk-layout{display:grid;grid-template-columns:minmax(0,1fr) 22rem;gap:1.8rem;align-items:start;margin-top:1.6rem}
-.pk-aside{position:sticky;top:1.2rem}
+/* ---------- układ konfiguratora ----------
+   Kroki idą na pełną szerokość, tak jak w konfiguratorze ENERGOPOOL. Cenę pokazuje pasek
+   przyklejony do dołu ekranu — boczna kolumna nie mieści się w tym układzie, a kwota musi
+   być widoczna przy każdym kroku, bo to główna obietnica strony. */
 .pk-loading{text-align:center}
+
+.pk-pasek{
+  position:sticky;bottom:0;z-index:60;background:var(--ink);color:#fff;
+  box-shadow:0 -10px 30px -18px rgba(8,28,38,.55);
+}
+.pk-pasek-inner{display:flex;align-items:center;gap:1.5rem;padding:.85rem 0;flex-wrap:wrap}
+.pk-pasek-opis{flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:.1rem}
+.pk-pasek-opis strong{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-l)}
+.pk-pasek-opis span{font-size:.9rem;color:rgba(255,255,255,.72)}
+.pk-pasek-cena{display:flex;flex-direction:column;align-items:flex-end;gap:.05rem;flex:0 0 auto}
+.pk-pasek-cena span{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5)}
+.pk-pasek-cena strong{font-family:'Montserrat',sans-serif;font-size:1.6rem;line-height:1.1;white-space:nowrap}
+.pk-pasek .btn-primary{background:var(--teal);color:#fff;flex:0 0 auto}
+.pk-pasek .btn-primary:hover{background:var(--teal-l)}
 
 /* ---------- krok 1: wymiary ---------- */
 .pk-wymiary{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.9rem}
@@ -89,7 +104,7 @@
 /* ---------- podsumowanie ---------- */
 .pk-czeka{opacity:.4;transition:opacity .12s}
 /* Błąd wyceny stoi przy cenie, a nie w formularzu — inaczej klient sądzi, że to jego dane są złe */
-.sum-err{margin:0 1.4rem 1rem;background:rgba(190,40,40,.08);border-color:rgba(190,40,40,.35);color:#8c1d1d}
+.sum-err{margin:0;border-radius:0;background:rgba(220,60,60,.2);border-color:rgba(220,60,60,.45);color:#ffdede;text-align:center}
 
 /* ---------- formularz ---------- */
 .pk-order{padding:0 0 clamp(2.6rem,5vw,4rem)}
@@ -121,8 +136,6 @@
 
 /* ---------- responsywność ---------- */
 @media (max-width:1080px){
-  .pk-layout{grid-template-columns:1fr}
-  .pk-aside{position:static;order:-1}
   .pk-feature-grid{grid-template-columns:repeat(2,1fr)}
   .pk-siatka{grid-template-columns:repeat(3,1fr)}
 }
@@ -130,6 +143,12 @@
   .pk-pakiety{grid-template-columns:1fr}
   .pk-tech-grid{grid-template-columns:1fr}
   .order-fields{grid-template-columns:1fr}
+}
+@media (max-width:700px){
+  .pk-pasek-inner{gap:.7rem}
+  .pk-pasek-opis{flex-basis:100%}
+  .pk-pasek-cena{align-items:flex-start}
+  .pk-pasek .btn{margin-left:auto}
 }
 @media (max-width:560px){
   .pk-feature-grid{grid-template-columns:1fr}
