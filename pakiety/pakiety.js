@@ -36,7 +36,7 @@ let cfg = {
   dlugosc: 8, szerokosc: 4, glebokosc: 1.5,
   standard: "standard", kolorOsprzetu: "antracyt", typSkimmera: "szeroki",
   foliaKod: "", schody: "narozne",
-  plyta: true, praceZiemne: false,
+  plyta: true, praceZiemne: false, drenaz: false,
   pompaCiepla: true, uv: false, elektrolizer: false, przeciwprad: false,
   drabina: false, regulatorPoziomu: false, pomieszczenieTechniczne: "brak",
   plytaPodPomieszczenie: false, postument: false, iwash: false, odkurzacz: "brak",
@@ -169,10 +169,14 @@ function render() {
     }
     s.append(g);
 
-    const szyb = h("div", "pk-chips");
+    // Gotowe rozmiary jako duże kafelki na całą szerokość — większość klientów wybiera stąd,
+    // a pola wyżej zostają dla wymiarów nietypowych.
+    const szyb = h("div", "pk-rozmiary");
     for (const [L, W] of SZYBKIE) {
-      const b = h("button", "pk-chip" + (cfg.dlugosc === L && cfg.szerokosc === W ? " active" : ""), `${lp(W)} × ${L} m`);
+      const b = h("button", "pk-rozmiar" + (cfg.dlugosc === L && cfg.szerokosc === W ? " active" : ""));
       b.type = "button";
+      b.append(h("span", "pk-rozmiar-wym", `${lp(W)} × ${L} m`));
+      b.append(h("span", "pk-rozmiar-opis", `${lp(L * W)} m² / ${lp(Math.round(L * W * cfg.glebokosc * 10) / 10)} m³ wody`));
       b.addEventListener("click", () => { cfg.dlugosc = L; cfg.szerokosc = W; przelicz(); });
       szyb.append(b);
     }
@@ -282,9 +286,16 @@ function render() {
       "O 50 cm szersza od lustra wody z każdej strony" + (pak.plytaXps ? " · ocieplona styrodurem XPS 300" : ""),
       cfg.plyta, () => { cfg.plyta = !cfg.plyta; przelicz(); }));
     g.append(kafel("Prace ziemne — „Pod klucz”",
-      pak.praceZiemneDostepne ? "Wykop, przygotowanie podłoża, obsypanie niecki" : "Dostępne w pakiecie PREMIUM",
-      cfg.praceZiemne, () => { cfg.praceZiemne = !cfg.praceZiemne; przelicz(); }, !pak.praceZiemneDostepne));
+      "Wykop, przygotowanie podłoża i obsypanie niecki po naszej stronie. Domyślnie wyłączone — koparkowy z okolicy zwykle wychodzi taniej.",
+      cfg.praceZiemne, () => { cfg.praceZiemne = !cfg.praceZiemne; przelicz(); }));
     s.append(g);
+    // Drenaż ma sens wyłącznie razem z naszym wykopem — bez prac ziemnych kafelek się nie pokazuje.
+    if (cfg.praceZiemne) {
+      const gd = h("div", "pk-siatka pk-siatka-2");
+      gd.append(kafel(K.drenaz.label, K.drenaz.opis, cfg.drenaz,
+        () => { cfg.drenaz = !cfg.drenaz; przelicz(); }));
+      s.append(gd);
+    }
     root.append(s);
   }
 

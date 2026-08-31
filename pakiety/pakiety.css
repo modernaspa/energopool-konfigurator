@@ -61,6 +61,16 @@
 }
 .pk-wymiary input:focus{outline:none;border-color:var(--teal)}
 .pk-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1rem}
+.pk-rozmiary{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:1rem}
+@media(max-width:720px){.pk-rozmiary{grid-template-columns:repeat(2,1fr)}}
+.pk-rozmiar{display:flex;flex-direction:column;gap:.15rem;align-items:center;justify-content:center;
+  padding:.95rem .6rem;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.02);
+  color:rgba(255,255,255,.72);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.pk-rozmiar:hover{border-color:rgba(28,188,242,.5)}
+.pk-rozmiar.active{border-color:#1cbcf2;background:rgba(28,188,242,.1);color:#fff}
+.pk-rozmiar-wym{font-size:1.02rem;font-weight:600;letter-spacing:.01em}
+.pk-rozmiar-opis{font-size:.78rem;color:rgba(255,255,255,.42)}
+.pk-rozmiar.active .pk-rozmiar-opis{color:rgba(255,255,255,.6)}
 .pk-chip{
   border:1px solid var(--line);background:#fff;color:var(--ink-soft);
   padding:.4rem .8rem;font:inherit;font-size:.82rem;cursor:pointer;transition:.16s;
