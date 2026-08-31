@@ -50,12 +50,18 @@ function h(tag, cls, txt) {
   if (txt != null) e.textContent = txt;
   return e;
 }
-function krok(nr, tytul, opis) {
+function krok(nr, tytul, opis, banerKlucz) {
   const s = h("div", "step");
   const head = h("div", "step-head");
   head.append(h("span", "step-num", String(nr)), h("h3", null, tytul));
   s.append(head);
   if (opis) s.append(h("p", "step-sub", opis));
+  const b = banerKlucz && KATALOG.banery && KATALOG.banery[banerKlucz];
+  if (b) {
+    const im = h("img", "step-banner");
+    im.src = `${API}${KATALOG_ZDJEC}/${b.plik}`; im.alt = b.alt; im.loading = "lazy";
+    s.append(im);
+  }
   return s;
 }
 /** Kafelek wyboru. `aktywny` steruje klasą .active, którą stylują wspólne style konfiguratora. */
@@ -207,9 +213,10 @@ function render() {
 
   /* 3 — system urządzeń */
   {
-    const s = krok(3, "System urządzeń", pak.systemDoWyboru
-      ? "Spójny zestaw urządzeń jednej klasy. Wybierasz raz, zamiast składać sprzęt po sztuce."
-      : `W pakiecie ${pak.label.replace("ENERGOPOOL ", "")} system jest narzucony.`);
+    const s = krok(3, "System urządzeń",
+      `${K.systemyHaslo} ${pak.systemDoWyboru
+        ? "Spójny zestaw urządzeń jednej klasy — wybierasz raz, zamiast składać sprzęt po sztuce."
+        : "W tym pakiecie system jest narzucony."}`, "system");
     const g = h("div", "pk-siatka pk-siatka-2 pk-siatka-opis");
     for (const sys of K.systemy) {
       g.append(kafel(sys.label, sys.opis, cfg.system === sys.klucz,
@@ -224,7 +231,7 @@ function render() {
   {
     const seria = pak.foliaSeria;
     const s = krok(4, "Kolor folii basenowej",
-      `${seria.label} — ${mm(seria.gruboscMm)} mm, zgrzewana ${seria.zgrzewanie}. ${K.foliaOpisSerii[pak.foliaSeriaKlucz] || ""}`);
+      `${seria.label} — ${mm(seria.gruboscMm)} mm, zgrzewana ${seria.zgrzewanie}. ${K.foliaOpisSerii[pak.foliaSeriaKlucz] || ""}`, "folia");
     const g = h("div", "pk-siatka");
     const kolory = K.folie[pak.foliaSeriaKlucz] || [];
     for (const f of kolory) {
@@ -269,7 +276,7 @@ function render() {
 
   /* 7 — zakres robót */
   {
-    const s = krok(7, "Zakres robót");
+    const s = krok(7, "Zakres robót", null, "roboty");
     const g = h("div", "pk-siatka pk-siatka-2");
     g.append(kafel("Płyta fundamentowa",
       "O 50 cm szersza od lustra wody z każdej strony" + (pak.plytaXps ? " · ocieplona styrodurem XPS 300" : ""),
@@ -296,7 +303,7 @@ function render() {
 
   /* 9 — wyposażenie */
   {
-    const s = krok(9, "Wyposażenie i automatyka");
+    const s = krok(9, "Wyposażenie i automatyka", null, "wyposazenie");
     const g = h("div", "pk-siatka pk-siatka-2");
     // Opcje ograniczone pakietem zostają WIDOCZNE, tylko wyszarzone — klient ma wiedzieć,
     // co dostanie po przejściu wyżej, zamiast szukać znikającego kafelka.
@@ -316,6 +323,17 @@ function render() {
         () => { cfg[o.klucz] = !cfg[o.klucz]; przelicz(); }, off, o.zdjecie));
     }
     s.append(g);
+
+    if (pak.pompyCiepla && pak.pompyCiepla.length > 1) {
+      s.append(h("h4", "pk-podtytul", "Linia pompy ciepła"));
+      const gp = h("div", "pk-siatka pk-siatka-2 pk-siatka-opis");
+      for (const l of pak.pompyCiepla) {
+        gp.append(kafel(l.label, cfg.pompaCiepla ? l.opis : "Najpierw zaznacz pompę ciepła",
+          cfg.liniaPompyCiepla === l.klucz, () => { cfg.liniaPompyCiepla = l.klucz; przelicz(); },
+          !cfg.pompaCiepla, "pompa-ciepla-fairland.jpg"));
+      }
+      s.append(gp);
+    }
 
     s.append(h("h4", "pk-podtytul", "Odkurzacz automatyczny"));
     const g2 = h("div", "pk-siatka pk-siatka-3");

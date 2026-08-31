@@ -35,6 +35,8 @@
    przyklejony do dołu ekranu — boczna kolumna nie mieści się w tym układzie, a kwota musi
    być widoczna przy każdym kroku, bo to główna obietnica strony. */
 .pk-loading{text-align:center}
+/* Baner sekcji — jak .step-banner w konfiguratorze ENERGOPOOL, tylko niższy */
+.step .step-banner{height:170px;margin:.4rem 0 1.1rem}
 
 .pk-pasek{
   position:sticky;bottom:0;z-index:60;background:var(--ink);color:#fff;
