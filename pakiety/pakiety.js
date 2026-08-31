@@ -1,0 +1,375 @@
+/* ==========================================================================
+   Konfigurator pakietów basenowych — BASIC / STANDARD / PREMIUM
+   Moderna Pool&Spa
+
+   RÓŻNICA WOBEC ../app.js: tamten ma cały cennik u siebie (data.js) i liczy ceny
+   w przeglądarce. Tutaj przeglądarka NIE DOSTAJE cennika, bo są w nim nasze ceny
+   zakupu i marża. Strona wysyła konfigurację, serwer odsyła same ceny.
+
+   Skutek uboczny, który jest zaletą: nie ma czego rozjechać. Stary konfigurator
+   wymaga testu parytetu pilnującego, czy data.js zgadza się z bazą — tu cennik
+   jest jeden, po stronie serwera.
+
+   API (CORS ograniczony do modernaspa.github.io):
+     GET  /api/pakiety/katalog   → etykiety opcji (standardy, folie, kolory)
+     POST /api/pakiety/wycena    → ceny brutto per grupa dla przysłanej konfiguracji
+     POST /api/pakiety/zapytanie → zgłoszenie + double opt-in mailem
+   ========================================================================== */
+
+// Podczas pracy lokalnej strona gada z lokalnym CRM-em — inaczej każdy test wymagałby
+// wrzucania zmian na GitHub Pages, bo CORS produkcyjnego API dopuszcza tylko ten origin.
+const API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+  ? "http://localhost:3000"
+  : "https://moderna-wellness.cloud";
+
+const zl = (n) => n.toLocaleString("pl-PL") + " zł";
+const lp = (n) => String(n).replace(".", ",");
+const mm = (n) => n.toFixed(1).replace(".", ",");
+const el = (id) => document.getElementById(id);
+
+/** Rozmiary, o które klienci pytają najczęściej — skrót zamiast wpisywania wymiarów. */
+const SZYBKIE = [[6, 3], [7, 3], [7, 3.5], [8, 4], [10, 4], [12, 4], [10, 5]];
+
+let KATALOG = null;
+let KATALOG_ZDJEC = "/pakiety";
+let cfg = {
+  dlugosc: 8, szerokosc: 4, glebokosc: 1.5,
+  standard: "standard", kolorOsprzetu: "antracyt", typSkimmera: "szeroki",
+  foliaKod: "", schody: "narozne",
+  plyta: true, praceZiemne: false,
+  pompaCiepla: true, uv: false, elektrolizer: false, przeciwprad: false,
+  drabina: false, regulatorPoziomu: false, pomieszczenieTechniczne: "brak",
+  plytaPodPomieszczenie: false, postument: false, iwash: false, odkurzacz: "brak",
+};
+let wycena = null;
+
+/* ---------- pomocnicze do budowy DOM (bez innerHTML z danymi) ---------- */
+function h(tag, cls, txt) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (txt != null) e.textContent = txt;
+  return e;
+}
+function krok(nr, tytul, opis) {
+  const s = h("div", "step");
+  const head = h("div", "step-head");
+  head.append(h("span", "step-num", String(nr)), h("h3", null, tytul));
+  s.append(head);
+  if (opis) s.append(h("p", "step-sub", opis));
+  return s;
+}
+/** Kafelek wyboru. `aktywny` steruje klasą .active, którą stylują wspólne style konfiguratora. */
+function kafel(tytul, podpis, aktywny, onClick, wylaczony, zdjecie) {
+  const b = h("button", "opt pk-opt" + (aktywny ? " active" : "") + (wylaczony ? " pk-off" : ""));
+  b.type = "button";
+  if (zdjecie) {
+    // Zdjęcia leżą przy API, nie w tym repo — jeden komplet plików dla CRM, landingu i PDF.
+    const im = h("img", "pk-foto");
+    im.src = `${API}${KATALOG_ZDJEC}/${zdjecie}`;
+    im.alt = ""; im.loading = "lazy";
+    b.append(im);
+  }
+  const body = h("div", "opt-body");
+  body.append(h("strong", null, tytul));
+  if (podpis) body.append(h("span", "pk-sub", podpis));
+  b.append(body);
+  if (wylaczony) b.disabled = true;
+  else b.addEventListener("click", onClick);
+  return b;
+}
+
+/* ---------- wycena ---------- */
+let ostatnieZadanie = 0;
+let debounce = null;
+
+function przeliczPozniej() {
+  clearTimeout(debounce);
+  debounce = setTimeout(przelicz, 250);
+}
+
+async function przelicz() {
+  const moje = ++ostatnieZadanie;
+  el("sumBrutto").classList.add("pk-czeka");
+  try {
+    const r = await fetch(API + "/api/pakiety/wycena", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg),
+    });
+    const j = await r.json();
+    if (moje !== ostatnieZadanie) return; // wyścig — przyszła starsza odpowiedź
+    if (!r.ok) { bladWyceny(j.error || "Nie udało się policzyć wyceny."); return; }
+    wycena = j;
+    bladWyceny(null); // udane przeliczenie kasuje poprzedni komunikat
+    // Serwer normalizuje konfigurację (kolor niedostępny w BASIC, folia spoza serii)
+    // — przyjmujemy JEGO wersję, żeby ekran nie pokazywał wyboru, którego wycena nie objęła.
+    Object.assign(cfg, j.wybor);
+    render();
+    odswiezPodsumowanie();
+  } catch (e) {
+    if (moje === ostatnieZadanie) bladWyceny("Nie udało się policzyć wyceny — sprawdź połączenie i spróbuj ponownie.");
+  } finally {
+    if (moje === ostatnieZadanie) el("sumBrutto").classList.remove("pk-czeka");
+  }
+}
+
+/** Błąd wyceny — przy cenie. */
+function bladWyceny(tekst) {
+  const box = el("sumErr");
+  if (!box) return;
+  box.textContent = tekst || "";
+  box.hidden = !tekst;
+}
+/** Błąd formularza — przy formularzu. */
+function bladFormularza(tekst) {
+  const box = el("ordErr");
+  box.textContent = tekst || "";
+  box.hidden = !tekst;
+}
+
+function odswiezPodsumowanie() {
+  if (!wycena) return;
+  const pak = KATALOG.pakiety.find((p) => p.klucz === cfg.standard);
+  el("sumStandard").textContent = pak.label;
+  el("sumWymiar").textContent = `${lp(cfg.szerokosc)} × ${cfg.dlugosc} m · gł. ${lp(cfg.glebokosc)} m`;
+
+  const ul = el("sumPozycje");
+  ul.textContent = "";
+  for (const g of wycena.grupy) {
+    const li = h("li", g.wCenie ? null : "base");
+    li.append(h("span", "si-name", g.label), h("span", "si-price", zl(g.cenaBrutto)));
+    ul.append(li);
+  }
+  el("sumBrutto").textContent = zl(wycena.brutto);
+
+  el("ordPodsumowanie").textContent =
+    `${pak.label} · ${lp(cfg.szerokosc)} × ${cfg.dlugosc} m · ${zl(wycena.brutto)} — prześlemy pełne zestawienie z opisem każdej pozycji.`;
+}
+
+/* ---------- render kroków ---------- */
+function render() {
+  const K = KATALOG;
+  const pak = K.pakiety.find((p) => p.klucz === cfg.standard);
+  const root = el("kroki");
+  root.textContent = "";
+
+  /* 1 — wymiary */
+  {
+    const s = krok(1, "Wymiary basenu", "Budujemy w dowolnym wymiarze — wpisz swój albo wybierz jeden z popularnych.");
+    const g = h("div", "pk-wymiary");
+    for (const [id, etykieta, krokWart, min, max] of [
+      ["dlugosc", "Długość (m)", 0.5, 2, 20],
+      ["szerokosc", "Szerokość (m)", 0.5, 2, 10],
+      ["glebokosc", "Głębokość (m)", 0.1, 1, 2.5],
+    ]) {
+      const lab = h("label", null, etykieta);
+      const inp = h("input");
+      Object.assign(inp, { type: "number", step: krokWart, min, max, value: cfg[id] });
+      inp.addEventListener("input", () => { cfg[id] = Number(inp.value); przeliczPozniej(); });
+      lab.append(inp);
+      g.append(lab);
+    }
+    s.append(g);
+
+    const szyb = h("div", "pk-chips");
+    for (const [L, W] of SZYBKIE) {
+      const b = h("button", "pk-chip" + (cfg.dlugosc === L && cfg.szerokosc === W ? " active" : ""), `${lp(W)} × ${L} m`);
+      b.type = "button";
+      b.addEventListener("click", () => { cfg.dlugosc = L; cfg.szerokosc = W; przelicz(); });
+      szyb.append(b);
+    }
+    s.append(szyb);
+
+    if (wycena) {
+      const sp = wycena.spec;
+      s.append(h("p", "pk-spec",
+        `${lp(sp.area)} m² lustra wody · ${lp(sp.objetosc)} m³ wody · ${sp.skimmery} skimmer${sp.skimmery > 1 ? "y" : ""}, ` +
+        `${sp.dysze} dysze, ${sp.lampy} lampy LED · płyta ${lp(sp.plyta.sz)} × ${lp(sp.plyta.dl)} m`));
+    }
+    root.append(s);
+  }
+
+  /* 2 — standard */
+  {
+    const s = krok(2, "Standard wykonania", "Ten sam sposób budowy niecki w każdym pakiecie. Różni się folia, osprzęt, filtracja i płyta.");
+    s.id = "standardy";
+    const g = h("div", "pk-pakiety");
+    for (const p of K.pakiety) {
+      const b = h("button", "pk-pakiet" + (cfg.standard === p.klucz ? " active" : ""));
+      b.type = "button";
+      b.append(h("span", "pk-pakiet-nazwa", p.label.replace("ENERGOPOOL ", "")));
+      b.append(h("span", "pk-pakiet-cena", wycena ? zl(wycena.standardy[p.klucz]) : "—"));
+      b.append(h("span", "pk-pakiet-haslo", p.haslo));
+      const ul = h("ul", "pk-pakiet-lista");
+      for (const w of p.wyroznienia) ul.append(h("li", null, w));
+      b.append(ul);
+      b.addEventListener("click", () => { cfg.standard = p.klucz; przelicz(); });
+      g.append(b);
+    }
+    s.append(g);
+    s.append(h("p", "pk-spec",
+      "Na kartach widzisz, ile kosztowałaby Twoja obecna konfiguracja w każdym standardzie — łącznie z wybranym wyposażeniem. " +
+      "Opcje niedostępne w danym pakiecie (np. prace ziemne poza PREMIUM) nie są w tej kwocie liczone."));
+    root.append(s);
+  }
+
+  /* 3 — folia */
+  {
+    const seria = pak.foliaSeria;
+    const s = krok(3, "Kolor folii basenowej",
+      `${seria.label} — ${mm(seria.gruboscMm)} mm, zgrzewana ${seria.zgrzewanie}. ${K.foliaOpisSerii[pak.foliaSeriaKlucz] || ""}`);
+    const g = h("div", "pk-siatka");
+    const kolory = K.folie[pak.foliaSeriaKlucz] || [];
+    for (const f of kolory) {
+      g.append(kafel(f.nazwa, null, cfg.foliaKod === f.kod, () => { cfg.foliaKod = f.kod; przelicz(); }, false, f.zdjecie));
+    }
+    s.append(g);
+    root.append(s);
+  }
+
+  /* 4 — osprzęt */
+  {
+    const s = krok(4, "Osprzęt niecki", "Skimmery, dysze i lampy Tebas — cały komplet w jednym kolorze.");
+    const g = h("div", "pk-siatka pk-siatka-opis");
+    for (const c of K.koloryOsprzetu) {
+      const dostepny = pak.koloryWCenie.includes(c.klucz);
+      g.append(kafel(c.label, dostepny ? [c.ral, c.opis].filter(Boolean).join(" · ") : "tylko w wyższym pakiecie",
+        cfg.kolorOsprzetu === c.klucz, () => { cfg.kolorOsprzetu = c.klucz; przelicz(); }, !dostepny,
+        K.osprzetZdjecia && K.osprzetZdjecia[cfg.typSkimmera === "slim" ? "skimmer_slim" : "skimmer_szeroki"]));
+    }
+    s.append(g);
+    s.append(h("h4", "pk-podtytul", "Typ skimmera"));
+    const g2 = h("div", "pk-siatka pk-siatka-2 pk-siatka-opis");
+    for (const t of K.typySkimmera) {
+      g2.append(kafel(t.label, t.opis, cfg.typSkimmera === t.klucz,
+        () => { cfg.typSkimmera = t.klucz; przelicz(); }, false, t.zdjecie));
+    }
+    s.append(g2);
+    root.append(s);
+  }
+
+  /* 5 — schody */
+  {
+    const s = krok(5, "Schody", "Konstrukcja z bloczków zalewanych betonem, wykończona tą samą folią co niecka.");
+    const g = h("div", "pk-siatka pk-siatka-3 pk-siatka-opis");
+    for (const x of K.schody) {
+      g.append(kafel(x.label, [x.opis, x.wCenie ? "w standardzie" : "dopłata"].filter(Boolean).join(" · "),
+        cfg.schody === x.klucz, () => { cfg.schody = x.klucz; przelicz(); }, false, x.zdjecie));
+    }
+    s.append(g);
+    root.append(s);
+  }
+
+  /* 6 — zakres robót */
+  {
+    const s = krok(6, "Zakres robót");
+    const g = h("div", "pk-siatka pk-siatka-2");
+    g.append(kafel("Płyta fundamentowa",
+      "O 50 cm szersza od lustra wody z każdej strony" + (pak.plytaXps ? " · ocieplona styrodurem XPS 300" : ""),
+      cfg.plyta, () => { cfg.plyta = !cfg.plyta; przelicz(); }));
+    g.append(kafel("Prace ziemne — „Pod klucz”",
+      pak.praceZiemneDostepne ? "Wykop, przygotowanie podłoża, obsypanie niecki" : "Dostępne w pakiecie PREMIUM",
+      cfg.praceZiemne, () => { cfg.praceZiemne = !cfg.praceZiemne; przelicz(); }, !pak.praceZiemneDostepne));
+    s.append(g);
+    root.append(s);
+  }
+
+  /* 7 — pomieszczenie techniczne */
+  {
+    const s = krok(7, "Pomieszczenie techniczne",
+      "Miejsce na filtrację, pompę i automatykę. Jeśli masz garaż lub budynek gospodarczy w pobliżu, nie potrzebujesz osobnego.");
+    const g = h("div", "pk-siatka pk-siatka-3 pk-siatka-opis");
+    for (const d of K.pomieszczenieTechniczne) {
+      g.append(kafel(d.label, d.opis, cfg.pomieszczenieTechniczne === d.klucz,
+        () => { cfg.pomieszczenieTechniczne = d.klucz; przelicz(); }, false, d.zdjecie));
+    }
+    s.append(g);
+    root.append(s);
+  }
+
+  /* 8 — wyposażenie */
+  {
+    const s = krok(8, "Wyposażenie i automatyka");
+    const g = h("div", "pk-siatka pk-siatka-2");
+    // Opcje ograniczone pakietem zostają WIDOCZNE, tylko wyszarzone — klient ma wiedzieć,
+    // co dostanie po przejściu wyżej, zamiast szukać znikającego kafelka.
+    const niedostepne = {
+      elektrolizer: !pak.opcje.some((o) => o.startsWith("elektrolizer")),
+      przeciwprad: !pak.opcje.includes("przeciwprad_fairland"),
+      postument: !cfg.pompaCiepla,
+    };
+    for (const o of K.wyposazenie) {
+      const off = !!niedostepne[o.klucz];
+      const podpis = off
+        ? (o.klucz === "postument" ? "Tylko razem z pompą ciepła" : "Dostępne w wyższym pakiecie")
+        : o.opis;
+      g.append(kafel(o.label, podpis, !!cfg[o.klucz],
+        () => { cfg[o.klucz] = !cfg[o.klucz]; przelicz(); }, off, o.zdjecie));
+    }
+    s.append(g);
+
+    s.append(h("h4", "pk-podtytul", "Odkurzacz automatyczny"));
+    const g2 = h("div", "pk-siatka pk-siatka-3");
+    for (const o of K.odkurzacze) {
+      g2.append(kafel(o.label, o.opis, cfg.odkurzacz === o.klucz,
+        () => { cfg.odkurzacz = o.klucz; przelicz(); }, false, o.zdjecie));
+    }
+    s.append(g2);
+    root.append(s);
+  }
+}
+
+/* ---------- formularz ---------- */
+function podepnijFormularz() {
+  el("orderForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    bladFormularza(null);
+
+    const dane = {
+      imie: el("ordName").value.trim(),
+      email: el("ordEmail").value.trim(),
+      telefon: el("ordPhone").value.trim(),
+      miasto: el("ordLoc").value.trim(),
+      rodo: el("ordRodo").checked,
+      firma: el("ordFirma").value,
+    };
+    if (!dane.imie || !dane.email) { bladFormularza("Podaj imię i adres e-mail."); return; }
+    if (!dane.rodo) { bladFormularza("Potrzebujemy zgody na kontakt, żeby odesłać wycenę."); return; }
+
+    const btn = el("ordSubmit");
+    btn.disabled = true;
+    btn.textContent = "Wysyłam…";
+    try {
+      const r = await fetch(API + "/api/pakiety/zapytanie", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.assign({}, dane, { konfiguracja: cfg, brutto: wycena ? wycena.brutto : null })),
+      });
+      const j = await r.json();
+      if (!r.ok) { bladFormularza(j.error || "Nie udało się wysłać zgłoszenia."); return; }
+      el("orderForm").hidden = true;
+      el("orderDone").hidden = false;
+    } catch (e2) {
+      bladFormularza("Brak połączenia — spróbuj ponownie za chwilę.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Wyślij i odbierz wycenę";
+    }
+  });
+}
+
+/* ---------- start ---------- */
+(async function start() {
+  el("year").textContent = new Date().getFullYear();
+  podepnijFormularz();
+  try {
+    const r = await fetch(API + "/api/pakiety/katalog");
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || "brak katalogu");
+    KATALOG = j.katalog;
+    KATALOG_ZDJEC = KATALOG.zdjeciaKatalog || "/pakiety";
+    el("ladowanie").remove();
+    await przelicz();
+  } catch (e) {
+    el("ladowanie").textContent = "";
+    el("ladowanie").append(h("p", "step-sub",
+      "Konfigurator jest chwilowo niedostępny. Zadzwoń: +48 500 560 245 — policzymy wycenę od ręki."));
+  }
+})();

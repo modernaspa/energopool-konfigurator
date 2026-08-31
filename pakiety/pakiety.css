@@ -1,0 +1,140 @@
+/* ==========================================================================
+   Konfigurator pakietów — style WŁASNE.
+   Reszta (nagłówek, stopka, .step, .opt, .btn, .summary-*) jedzie ze wspólnego
+   ../styles.css, żeby strona nie wyglądała jak z innej firmy niż reszta serwisu.
+   ========================================================================== */
+
+/* ---------- hero ---------- */
+.pk-hero{background:var(--ink);color:#fff;padding:clamp(3rem,7vw,5.5rem) 0}
+.pk-hero .section-kicker{color:var(--teal-l)}
+.pk-hero h1{
+  font-family:'Montserrat',sans-serif;font-weight:600;
+  font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.14;margin:.9rem 0 0;max-width:22ch;
+}
+.pk-hero h1 em{font-style:normal;color:var(--teal-l)}
+.pk-lead{margin-top:1.3rem;max-width:60ch;font-size:clamp(.98rem,1.6vw,1.08rem);color:rgba(255,255,255,.78)}
+.pk-hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
+.pk-hero-actions .btn-primary{background:var(--teal);color:#fff}
+.pk-hero-actions .btn-primary:hover{background:var(--teal-l)}
+.pk-hero-actions .btn-ghost{color:#fff;border-color:rgba(255,255,255,.35)}
+.pk-hero-actions .btn-ghost:hover{border-color:#fff}
+
+/* ---------- dlaczego ---------- */
+.pk-features{padding:clamp(2.6rem,5vw,4rem) 0;background:var(--bg)}
+.pk-feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+.pk-feature-grid h2{font-size:1.02rem;margin:.85rem 0 .4rem;font-family:'Montserrat',sans-serif;font-weight:600}
+.pk-feature-grid p{font-size:.88rem;color:var(--ink-soft);line-height:1.55}
+.pk-feature-grid>div::before{content:"";display:block;width:38px;height:3px;background:var(--teal)}
+
+.pk-h2{font-family:'Montserrat',sans-serif;font-weight:600;font-size:clamp(1.5rem,3vw,2.1rem);margin:.4rem 0 .6rem}
+.pk-intro{max-width:70ch}
+.pk-body{font-size:.95rem;color:var(--ink-soft);line-height:1.7;margin-bottom:.9rem}
+
+/* ---------- układ konfiguratora ---------- */
+.pk-layout{display:grid;grid-template-columns:minmax(0,1fr) 22rem;gap:1.8rem;align-items:start;margin-top:1.6rem}
+.pk-aside{position:sticky;top:1.2rem}
+.pk-loading{text-align:center}
+
+/* ---------- krok 1: wymiary ---------- */
+.pk-wymiary{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.9rem}
+.pk-wymiary label{display:block;font-size:.8rem;color:var(--ink-soft);font-weight:600}
+.pk-wymiary input{
+  width:100%;margin-top:.35rem;padding:.7rem .8rem;font:inherit;font-size:.95rem;
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+}
+.pk-wymiary input:focus{outline:none;border-color:var(--teal)}
+.pk-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1rem}
+.pk-chip{
+  border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+  padding:.4rem .8rem;font:inherit;font-size:.82rem;cursor:pointer;transition:.16s;
+}
+.pk-chip:hover{border-color:var(--teal-l);color:var(--ink)}
+.pk-chip.active{border-color:var(--teal);background:var(--teal-bg);color:var(--ink);font-weight:600}
+.pk-spec{margin-top:1rem;font-size:.8rem;color:var(--ink-soft);line-height:1.5}
+
+/* ---------- krok 2: karty pakietów ---------- */
+.pk-pakiety{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}
+.pk-pakiet{
+  display:flex;flex-direction:column;text-align:left;gap:.35rem;
+  border:2px solid var(--line);background:#fff;padding:1.3rem;cursor:pointer;
+  font:inherit;color:var(--ink);transition:.16s;
+}
+.pk-pakiet:hover{border-color:var(--teal-l)}
+.pk-pakiet.active{border-color:var(--teal);background:var(--teal-bg)}
+.pk-pakiet-nazwa{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-d);font-weight:700}
+.pk-pakiet-cena{font-family:'Montserrat',sans-serif;font-size:1.45rem;font-weight:700;line-height:1.2}
+.pk-pakiet-haslo{font-size:.84rem;color:var(--ink-soft);line-height:1.5;margin-bottom:.4rem}
+.pk-pakiet-lista{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin-top:auto}
+.pk-pakiet-lista li{position:relative;padding-left:.85rem;font-size:.78rem;color:var(--ink-soft);line-height:1.45}
+.pk-pakiet-lista li::before{content:"";position:absolute;left:0;top:.5em;width:4px;height:4px;background:var(--teal)}
+
+/* ---------- kafelki wyboru ---------- */
+.pk-siatka{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:.5rem;align-items:stretch}
+/* Kafelki z opisem pod nazwą — 4 kolumny to za wąsko, tekst łamał się po dwa słowa */
+.pk-siatka-3{grid-template-columns:repeat(3,1fr)}
+.pk-siatka-2{grid-template-columns:repeat(2,1fr)}
+/* Kafelki z opisem pod nazwą — węższe siatki, bo tekst łamał się po dwa słowa */
+.pk-siatka.pk-siatka-opis{grid-template-columns:repeat(2,1fr)}
+/* .opt jest w ../styles.css poziomy (obrazek + tekst); tutaj nie ma obrazków, więc pionowo */
+.pk-opt{display:flex;align-items:center;gap:.8rem;padding:.75rem .9rem;font:inherit;text-align:left;color:var(--ink);min-height:74px}
+/* object-contain, bo zdjęcia produktowe mają różne proporcje — kadrowanie ucinało im połowę */
+.pk-foto{width:54px;height:54px;flex:none;object-fit:contain;background:#fff;border:1px solid var(--line);padding:2px}
+.pk-opt .opt-body{display:flex;flex-direction:column;gap:.15rem}
+.pk-opt strong{font-size:.9rem;font-weight:600;line-height:1.3}
+.pk-sub{font-size:.76rem;color:var(--ink-soft);line-height:1.4}
+.pk-off{opacity:.4;cursor:not-allowed}
+.pk-off:hover{border-color:var(--line)}
+.pk-podtytul{font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin:1.4rem 0 .2rem}
+
+/* ---------- podsumowanie ---------- */
+.pk-czeka{opacity:.4;transition:opacity .12s}
+/* Błąd wyceny stoi przy cenie, a nie w formularzu — inaczej klient sądzi, że to jego dane są złe */
+.sum-err{margin:0 1.4rem 1rem;background:rgba(190,40,40,.08);border-color:rgba(190,40,40,.35);color:#8c1d1d}
+
+/* ---------- formularz ---------- */
+.pk-order{padding:0 0 clamp(2.6rem,5vw,4rem)}
+.order-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.3rem}
+.order-fields label{display:block;font-size:.8rem;color:rgba(255,255,255,.65);font-weight:600}
+.order-fields label small{font-weight:400;opacity:.6}
+.order-fields input{
+  width:100%;margin-top:.35rem;padding:.75rem .85rem;font:inherit;font-size:.93rem;
+  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#fff;
+}
+.order-fields input::placeholder{color:rgba(255,255,255,.3)}
+.order-fields input:focus{outline:none;border-color:var(--teal-l)}
+.consent{display:flex;gap:.7rem;align-items:flex-start;margin-top:1.2rem;font-size:.8rem;color:rgba(255,255,255,.65);line-height:1.55}
+.consent input{margin-top:.25rem;flex:none}
+.consent a{color:var(--teal-l);text-decoration:underline}
+.lead-err{margin-top:1rem;padding:.7rem .9rem;background:rgba(220,60,60,.16);border:1px solid rgba(220,60,60,.4);color:#ffd7d7;font-size:.84rem}
+#ordSubmit{margin-top:1.3rem;background:var(--teal);color:#fff}
+#ordSubmit:hover{background:var(--teal-l)}
+.order-done h3{font-family:'Montserrat',sans-serif;font-weight:600;font-size:1.35rem;color:#fff;margin-bottom:.6rem}
+.order-done p{color:rgba(255,255,255,.7);font-size:.93rem;line-height:1.65;max-width:56ch}
+
+/* ---------- technologia ---------- */
+.pk-tech{padding:clamp(2.6rem,5vw,4rem) 0;background:var(--bg);border-top:1px solid var(--line)}
+.pk-tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(2rem,4vw,3.4rem)}
+.pk-tech-list{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+.pk-tech-list li{background:#fff;border:1px solid var(--line);padding:1rem 1.15rem;display:flex;flex-direction:column;gap:.2rem}
+.pk-tech-list strong{font-size:.82rem;color:var(--teal-d);text-transform:uppercase;letter-spacing:.08em}
+.pk-tech-list span{font-size:.87rem;color:var(--ink-soft);line-height:1.55}
+
+/* ---------- responsywność ---------- */
+@media (max-width:1080px){
+  .pk-layout{grid-template-columns:1fr}
+  .pk-aside{position:static;order:-1}
+  .pk-feature-grid{grid-template-columns:repeat(2,1fr)}
+  .pk-siatka{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:820px){
+  .pk-pakiety{grid-template-columns:1fr}
+  .pk-tech-grid{grid-template-columns:1fr}
+  .order-fields{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .pk-feature-grid{grid-template-columns:1fr}
+  .pk-wymiary{grid-template-columns:1fr}
+  .pk-siatka,.pk-siatka-3,.pk-siatka-2{grid-template-columns:repeat(2,1fr)}
+/* Kafelki z opisem pod nazwą — węższe siatki, bo tekst łamał się po dwa słowa */
+.pk-siatka.pk-siatka-opis{grid-template-columns:repeat(2,1fr)}
+}
