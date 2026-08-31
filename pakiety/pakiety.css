@@ -62,7 +62,7 @@
 .pk-wymiary input:focus{outline:none;border-color:var(--teal)}
 .pk-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1rem}
 /* .size-tile w styles.css powstało dla <div> — jako <button> nie dziedziczy fontu ani szerokości. */
-.size-grid button.size-tile{font:inherit;width:100%;display:block}
+.size-grid button.size-tile{font:inherit;color:var(--ink);width:100%;display:block}
 .pk-glebokosci{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;margin-top:.35rem}
 .pk-glebokosc{padding:.7rem .4rem;border:2px solid var(--line);border-radius:0;background:#fff;
   color:var(--ink-soft);font:inherit;font-size:.95rem;cursor:pointer;transition:.16s}
