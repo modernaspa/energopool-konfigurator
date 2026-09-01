@@ -264,7 +264,7 @@ function render() {
       `${K.systemyHaslo} ${pak.systemDoWyboru
         ? "Spójny zestaw urządzeń jednej klasy — wybierasz raz, zamiast składać sprzęt po sztuce."
         : "W tym pakiecie system jest narzucony."}`, "system");
-    const g = h("div", "pk-siatka pk-siatka-2 pk-siatka-opis");
+    const g = h("div", "pk-siatka pk-siatka-1 pk-siatka-opis");
     for (const sys of K.systemy) {
       g.append(kafel(sys.label, sys.opis, cfg.system === sys.klucz,
         () => { cfg.system = sys.klucz; przelicz(); },
@@ -346,7 +346,7 @@ function render() {
     }
     s.append(g);
     s.append(h("h4", "pk-podtytul", "Typ skimmera"));
-    const g2 = h("div", "pk-siatka pk-siatka-2 pk-siatka-opis");
+    const g2 = h("div", "pk-siatka pk-siatka-1 pk-siatka-opis");
     for (const t of K.typySkimmera) {
       g2.append(kafel(t.label, t.opis, cfg.typSkimmera === t.klucz,
         () => { cfg.typSkimmera = t.klucz; przelicz(); }, false, t.zdjecie));
@@ -358,7 +358,7 @@ function render() {
   /* 6 — schody */
   {
     const s = krok(6, "Schody", "Konstrukcja z bloczków zalewanych betonem, wykończona tą samą folią co niecka.");
-    const g = h("div", "pk-siatka pk-siatka-3 pk-siatka-opis");
+    const g = h("div", "pk-siatka pk-siatka-1 pk-siatka-opis");
     for (const x of K.schody) {
       g.append(kafel(x.label, [x.opis, x.wCenie ? "w standardzie" : "dopłata"].filter(Boolean).join(" · "),
         cfg.schody === x.klucz, () => { cfg.schody = x.klucz; przelicz(); }, false, x.zdjecie));
@@ -370,7 +370,7 @@ function render() {
   /* 7 — zakres robót */
   {
     const s = krok(7, "Zakres robót", null, "roboty");
-    const g = h("div", "pk-siatka pk-siatka-2");
+    const g = h("div", "pk-siatka pk-siatka-1");
     g.append(kafel("Płyta fundamentowa",
       "Betonowy fundament pod całą nieckę — bez niego basen z czasem osiada i pęka" +
       (pak.plytaXps ? ". W tym pakiecie ocieplona styrodurem: woda wolniej stygnie w nocy" : ""),
@@ -381,7 +381,7 @@ function render() {
     s.append(g);
     // Drenaż ma sens wyłącznie razem z naszym wykopem — bez prac ziemnych kafelek się nie pokazuje.
     if (cfg.praceZiemne) {
-      const gd = h("div", "pk-siatka pk-siatka-2");
+      const gd = h("div", "pk-siatka pk-siatka-1");
       gd.append(kafel(K.drenaz.label, K.drenaz.opis, cfg.drenaz,
         () => { cfg.drenaz = !cfg.drenaz; przelicz(); }));
       s.append(gd);
@@ -418,7 +418,7 @@ function render() {
   /* 9 — wyposażenie */
   {
     const s = krok(9, "Wyposażenie i automatyka", null, "wyposazenie");
-    const g = h("div", "pk-siatka pk-siatka-2");
+    const g = h("div", "pk-siatka pk-siatka-1");
     // Opcje ograniczone pakietem zostają WIDOCZNE, tylko wyszarzone — klient ma wiedzieć,
     // co dostanie po przejściu wyżej, zamiast szukać znikającego kafelka.
     const sys = K.systemy.find((x) => x.klucz === cfg.system) || K.systemy[0];
@@ -432,15 +432,19 @@ function render() {
     const POWOD = { postument: "Tylko razem z pompą ciepła" };
     for (const o of K.wyposazenie) {
       const off = !!niedostepne[o.klucz];
-      const podpis = off ? (POWOD[o.klucz] || o.opisNiedostepny || "Dostępne w wyższym pakiecie") : o.opis;
-      g.append(kafel(o.label, podpis, !!cfg[o.klucz],
-        () => { cfg[o.klucz] = !cfg[o.klucz]; przelicz(); }, off, o.zdjecie));
+      // Lampa UV i elektrolizer to INNE urządzenia w Eco+ i Advantage+, a pompa ciepła
+      // zależy od linii przypisanej do systemu. Kafelek musi pokazywać to, co faktycznie
+      // wejdzie do wyceny — inaczej klient wybiera Advantage+, a widzi sprzęt z Eco+.
+      const w = (o.wgSystemu && o.wgSystemu[cfg.system]) || o;
+      const podpis = off ? (POWOD[o.klucz] || o.opisNiedostepny || "Dostępne w wyższym pakiecie") : w.opis;
+      g.append(kafel(w.label || o.label, podpis, !!cfg[o.klucz],
+        () => { cfg[o.klucz] = !cfg[o.klucz]; przelicz(); }, off, w.zdjecie || o.zdjecie));
     }
     s.append(g);
 
     if (pak.pompyCiepla && pak.pompyCiepla.length > 1) {
       s.append(h("h4", "pk-podtytul", "Linia pompy ciepła"));
-      const gp = h("div", "pk-siatka pk-siatka-2 pk-siatka-opis");
+      const gp = h("div", "pk-siatka pk-siatka-1 pk-siatka-opis");
       for (const l of pak.pompyCiepla) {
         gp.append(kafel(l.label, cfg.pompaCiepla ? l.opis : "Najpierw zaznacz pompę ciepła",
           cfg.liniaPompyCiepla === l.klucz, () => { cfg.liniaPompyCiepla = l.klucz; przelicz(); },
@@ -451,7 +455,7 @@ function render() {
     }
 
     s.append(h("h4", "pk-podtytul", "Odkurzacz automatyczny"));
-    const g2 = h("div", "pk-siatka pk-siatka-3");
+    const g2 = h("div", "pk-siatka pk-siatka-1");
     for (const o of K.odkurzacze) {
       g2.append(kafel(o.label, o.opis, cfg.odkurzacz === o.klucz,
         () => { cfg.odkurzacz = o.klucz; przelicz(); }, false, o.zdjecie));
