@@ -37,7 +37,8 @@ let cfg = {
   standard: "standard", kolorOsprzetu: "antracyt", typSkimmera: "szeroki",
   foliaKod: "", schody: "narozne",
   plyta: true, praceZiemne: false, drenaz: false,
-  pompaCiepla: true, uv: false, elektrolizer: false, przeciwprad: false,
+  // Pompa ciepła wyłączona domyślnie — patrz WYBOR_DOMYSLNY w silniku wyceny.
+  pompaCiepla: false, uv: false, elektrolizer: false, przeciwprad: false,
   drabina: false, regulatorPoziomu: false, pomieszczenieTechniczne: "brak",
   plytaPodPomieszczenie: false, postument: false, iwash: false, odkurzacz: "brak",
 };
