@@ -441,7 +441,8 @@ function render() {
       for (const l of pak.pompyCiepla) {
         gp.append(kafel(l.label, cfg.pompaCiepla ? l.opis : "Najpierw zaznacz pompę ciepła",
           cfg.liniaPompyCiepla === l.klucz, () => { cfg.liniaPompyCiepla = l.klucz; przelicz(); },
-          !cfg.pompaCiepla, "pompa-ciepla-fairland.jpg"));
+          // Zdjęcie TEJ linii — dotąd każdy kafelek pokazywał pompę Fairland, także przy Tebasie.
+          !cfg.pompaCiepla, l.zdjecie || "pompa-ciepla-fairland-x20.jpg"));
       }
       s.append(gp);
     }
