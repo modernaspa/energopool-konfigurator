@@ -276,26 +276,72 @@ function render() {
   /* 4 — folia */
   {
     const seria = pak.foliaSeria;
+    const serie = pak.foliaSerie && pak.foliaSerie.length ? pak.foliaSerie : [{ klucz: pak.foliaSeriaKlucz, ...seria }];
     const s = krok(4, "Kolor folii basenowej",
+      serie.length > 1 ? "Kilka serii do wyboru — różnią się grubością, fakturą i sposobem łączenia." :
       `${seria.label} — ${mm(seria.gruboscMm)} mm, zgrzewana ${seria.zgrzewanie}. ${K.foliaOpisSerii[pak.foliaSeriaKlucz] || ""}`, "folia");
-    const g = h("div", "pk-siatka");
-    const kolory = K.folie[pak.foliaSeriaKlucz] || [];
-    for (const f of kolory) {
-      g.append(kafel(f.nazwa, null, cfg.foliaKod === f.kod, () => { cfg.foliaKod = f.kod; przelicz(); }, false, f.zdjecie));
+
+    // Serie osobnymi grupami — klient ma widzieć, że wyższa seria to inna klasa materiału,
+    // a nie kolejny kolor w tym samym worku.
+    let wybrana = null;
+    for (const ser of serie) {
+      if (serie.length > 1) {
+        const nag = h("div", "pk-seria");
+        nag.append(h("strong", null, ser.label));
+        nag.append(h("span", null, ` — ${mm(ser.gruboscMm)} mm, zgrzewana ${ser.zgrzewanie}. ${ser.opis || ""}`));
+        s.append(nag);
+      }
+      const g = h("div", "pk-siatka");
+      for (const f of (K.folie[ser.klucz] || [])) {
+        if (cfg.foliaKod === f.kod) wybrana = { f, ser };
+        g.append(kafel(f.nazwa, null, cfg.foliaKod === f.kod, () => { cfg.foliaKod = f.kod; przelicz(); }, false, f.zdjecie));
+      }
+      s.append(g);
     }
-    s.append(g);
+
+    // Zdjęcie WYBRANEJ folii w basenie — próbka 3 × 3 cm nie mówi nic o tym,
+    // jak kolor wygląda pod wodą. Zdjęcia z galerii producenta.
+    if (wybrana && wybrana.f.zdjecieBasen) {
+      const fig = h("figure", "pk-foliaEx");
+      const im = h("img");
+      im.src = `${API}${KATALOG_ZDJEC}/${wybrana.f.zdjecieBasen}`;
+      im.alt = `Basen wyłożony folią ${wybrana.ser.label} ${wybrana.f.nazwa}`;
+      im.loading = "lazy";
+      const cap = h("figcaption");
+      cap.append(document.createTextNode(`${wybrana.ser.label} · `));
+      cap.append(h("strong", null, wybrana.f.nazwa));
+      cap.append(document.createTextNode(" — przykładowa realizacja"));
+      fig.append(im, cap);
+      s.append(fig);
+    }
+
+    // Wizualizatory producentów: CGT dla serii Aqua*, RENOLIT dla TOUCH/VOGUE.
+    for (const w of (K.wizualizatory || [])) {
+      const a = h("a", "foil-visualizer");
+      a.href = w.url; a.target = "_blank"; a.rel = "noopener";
+      const ic = h("span", "fv-ic");
+      ic.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+      const t = h("span", "fv-text");
+      t.append(h("strong", null, w.label), h("span", null, w.opis));
+      const cta = h("span", "fv-cta", "Otwórz");
+      a.append(ic, t, cta);
+      s.append(a);
+    }
     root.append(s);
   }
 
   /* 5 — osprzęt */
   {
-    const s = krok(5, "Osprzęt niecki", "Skimmery, dysze i lampy Tebas — cały komplet w jednym kolorze.");
+    const s = krok(5, "Osprzęt niecki", "Skimmery, dysze i lampy — cały komplet w jednym kolorze.");
     const g = h("div", "pk-siatka pk-siatka-opis");
     for (const c of K.koloryOsprzetu) {
       const dostepny = pak.koloryWCenie.includes(c.klucz);
       g.append(kafel(c.label, dostepny ? [c.ral, c.opis].filter(Boolean).join(" · ") : "tylko w wyższym pakiecie",
         cfg.kolorOsprzetu === c.klucz, () => { cfg.kolorOsprzetu = c.klucz; przelicz(); }, !dostepny,
-        K.osprzetZdjecia && K.osprzetZdjecia[cfg.typSkimmera === "slim" ? "skimmer_slim" : "skimmer_szeroki"]));
+        // Zdjęcie W TYM kolorze — wcześniej wszystkie kafelki pokazywały ten sam biały skimmer,
+        // więc wybór koloru nie miał żadnego odzwierciedlenia na ekranie.
+        (c.zdjecia && c.zdjecia[cfg.typSkimmera === "slim" ? "skimmer_slim" : "skimmer_szeroki"])
+          || (K.osprzetZdjecia && K.osprzetZdjecia[cfg.typSkimmera === "slim" ? "skimmer_slim" : "skimmer_szeroki"])));
     }
     s.append(g);
     s.append(h("h4", "pk-podtytul", "Typ skimmera"));
@@ -352,6 +398,17 @@ function render() {
         () => { cfg.pomieszczenieTechniczne = d.klucz; przelicz(); }, false, d.zdjecie));
     }
     s.append(g);
+    // Płyta pod pomieszczenie: przy PODZIEMNYM dochodzi automatycznie (jej wymiar zależy od
+    // szerokości basenu), przy WOLNOSTOJĄCYM jest wyborem klienta — i tego wyboru brakowało.
+    if (cfg.pomieszczenieTechniczne === "wolnostojace") {
+      // Podopcja WPISANA POD kafelek pomieszczenia — jak w konfiguratorze ENERGOPOOL:
+      // wcięta, bez zdjęcia, żeby było widać, że należy do pozycji nad nią.
+      const b = kafel("Płyta pod pomieszczenie techniczne",
+        "Betonowa płyta 210 × 105 × 10 cm — wypoziomowane podłoże pod skrzynię techniczną.",
+        cfg.plytaPodPomieszczenie, () => { cfg.plytaPodPomieszczenie = !cfg.plytaPodPomieszczenie; przelicz(); });
+      b.classList.add("opt-addon");
+      s.append(b);
+    }
     root.append(s);
   }
 
