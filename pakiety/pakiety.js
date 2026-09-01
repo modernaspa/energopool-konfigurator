@@ -393,23 +393,25 @@ function render() {
   {
     const s = krok(8, "Pomieszczenie techniczne",
       "Miejsce na filtrację, pompę i automatykę. Jeśli masz garaż lub budynek gospodarczy w pobliżu, nie potrzebujesz osobnego.");
-    const g = h("div", "pk-siatka pk-siatka-3 pk-siatka-opis");
+    // JEDNA KOLUMNA, jak w konfiguratorze ENERGOPOOL. W siatce dwukolumnowej podopcja
+    // „Płyta pod pomieszczenie" lądowała pod sąsiednim kafelkiem (podziemnym) i wyglądała,
+    // jakby należała do niego — a należy do wolnostojącego.
+    const g = h("div", "pk-siatka pk-siatka-1 pk-siatka-opis");
     for (const d of K.pomieszczenieTechniczne) {
       g.append(kafel(d.label, d.opis, cfg.pomieszczenieTechniczne === d.klucz,
         () => { cfg.pomieszczenieTechniczne = d.klucz; przelicz(); }, false, d.zdjecie));
+      // Płyta pod pomieszczenie: przy PODZIEMNYM dochodzi automatycznie (jej wymiar zależy
+      // od szerokości basenu), przy WOLNOSTOJĄCYM jest wyborem klienta. Podopcja wchodzi
+      // BEZPOŚREDNIO pod swój kafelek, wcięta — tak jak `addonCard` w ENERGOPOOL.
+      if (d.klucz === "wolnostojace" && cfg.pomieszczenieTechniczne === "wolnostojace") {
+        const b = kafel("Płyta pod pomieszczenie techniczne",
+          "Betonowa płyta 210 × 105 × 10 cm — wypoziomowane podłoże pod skrzynię techniczną.",
+          cfg.plytaPodPomieszczenie, () => { cfg.plytaPodPomieszczenie = !cfg.plytaPodPomieszczenie; przelicz(); });
+        b.classList.add("opt-addon");
+        g.append(b);
+      }
     }
     s.append(g);
-    // Płyta pod pomieszczenie: przy PODZIEMNYM dochodzi automatycznie (jej wymiar zależy od
-    // szerokości basenu), przy WOLNOSTOJĄCYM jest wyborem klienta — i tego wyboru brakowało.
-    if (cfg.pomieszczenieTechniczne === "wolnostojace") {
-      // Podopcja WPISANA POD kafelek pomieszczenia — jak w konfiguratorze ENERGOPOOL:
-      // wcięta, bez zdjęcia, żeby było widać, że należy do pozycji nad nią.
-      const b = kafel("Płyta pod pomieszczenie techniczne",
-        "Betonowa płyta 210 × 105 × 10 cm — wypoziomowane podłoże pod skrzynię techniczną.",
-        cfg.plytaPodPomieszczenie, () => { cfg.plytaPodPomieszczenie = !cfg.plytaPodPomieszczenie; przelicz(); });
-      b.classList.add("opt-addon");
-      s.append(b);
-    }
     root.append(s);
   }
 

@@ -66,6 +66,7 @@
 /* .size-tile w styles.css powstało dla <div> — jako <button> nie dziedziczy fontu ani szerokości. */
 .size-grid button.size-tile{font:inherit;color:var(--ink);width:100%;display:block}
 /* Nagłówek serii folii wewnątrz kroku — pakiet może dopuszczać kilka serii. */
+.pk-siatka-1{grid-template-columns:1fr}
 .pk-seria{margin:1.2rem 0 .5rem;font-size:.86rem;color:var(--ink-soft)}
 .pk-seria:first-of-type{margin-top:.6rem}
 .pk-seria strong{font-family:'Montserrat',sans-serif;font-size:.95rem;color:var(--ink)}
