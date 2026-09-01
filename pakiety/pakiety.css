@@ -128,13 +128,26 @@
 .sum-err{margin:0;border-radius:0;background:rgba(220,60,60,.2);border-color:rgba(220,60,60,.45);color:#ffdede;text-align:center}
 
 /* ---------- formularz ---------- */
-/* Formularz na CAŁĄ szerokość okna — dotąd ciemny blok siedział w kolumnie treści
-   i dookoła zostawały białe ramki. `calc(50% - 50vw)` wyprowadza go poza `.wrap`. */
-.pk-order{padding:0 0 clamp(2.6rem,5vw,4rem)}
-.pk-order .order-cta{margin:3rem calc(50% - 50vw) 0;padding:clamp(2rem,4vw,3.6rem) clamp(1.2rem,6vw,5rem);max-width:100vw}
-/* Zdjęcie wypełnia swoją połowę do samych krawędzi bloku, bez marginesu z prawej i u góry. */
-.pk-order .order-media{margin:calc(-1*clamp(2rem,4vw,3.6rem)) calc(-1*clamp(1.2rem,6vw,5rem)) calc(-1*clamp(2rem,4vw,3.6rem)) 0;min-height:100%}
-@media(max-width:900px){.pk-order .order-media{display:none}}
+/* Formularz: TŁO na całą szerokość okna, TREŚĆ w kolumnie jak reszta strony.
+   Sekcja nie ma marginesów pionowych — inaczej nad i pod ciemnym blokiem zostają
+   białe pasy. `calc(50% - 50vw)` wyprowadza tło poza .container (min(1600px, 92vw)),
+   a lewy padding wraca do szerokości kolumny, więc tekst nie ucieka na skraj ekranu. */
+/* Sekcja kroków ma 80 px dolnego paddingu — tuż nad ciemnym blokiem zostawał z tego
+   biały pas. Odstęp daje już własny padding bloku formularza. */
+.configurator{padding-bottom:0}
+.pk-order{padding:0;margin:0}
+.pk-order .order-cta{
+  margin:0 calc(50% - 50vw);
+  padding:clamp(2rem,4vw,3.6rem) 0;
+  max-width:100vw;
+}
+.pk-order .order-inner{padding-left:max(4vw, calc(50vw - min(1600px, 92vw) / 2))}
+/* Zdjęcie dobija do prawej krawędzi ekranu i wypełnia całą wysokość bloku. */
+.pk-order .order-media{margin:calc(-1*clamp(2rem,4vw,3.6rem)) 0 calc(-1*clamp(2rem,4vw,3.6rem)) 0;min-height:100%}
+@media(max-width:900px){
+  .pk-order .order-media{display:none}
+  .pk-order .order-inner{padding-right:max(4vw, calc(50vw - min(1600px, 92vw) / 2))}
+}
 .order-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.3rem}
 .order-fields label{display:block;font-size:.8rem;color:rgba(255,255,255,.65);font-weight:600}
 .order-fields label small{font-weight:400;opacity:.6}
