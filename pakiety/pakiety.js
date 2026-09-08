@@ -65,6 +65,17 @@ const IKONY = (() => {
   };
 })();
 // Kroki konfiguratora dokłada JS po pobraniu katalogu, więc uzupełniamy też po każdym renderze.
+// Linia pompy ciepła należy do systemu: Tebas ma swoją, Fairland swoje (S i X20).
+// Ta sama reguła stoi po stronie serwera w `normalizuj` — tutaj tylko po to, żeby ekran
+// nie proponował pary, którą serwer i tak poprawi.
+function pasujeDoSystemu(kluczLinii, system) {
+  return system === "fairland" ? String(kluczLinii).startsWith("fairland") : kluczLinii === "tebas";
+}
+function liniaDlaSystemu(pak, system) {
+  const l = (pak.pompyCiepla || []).find((x) => pasujeDoSystemu(x.klucz, system));
+  return l ? l.klucz : ((pak.pompyCiepla || [])[0] || {}).klucz;
+}
+
 function wstawIkony(root) {
   (root || document).querySelectorAll("[data-icon]").forEach((e) => {
     const n = e.getAttribute("data-icon");
@@ -267,7 +278,13 @@ function render() {
     const g = h("div", "pk-siatka pk-siatka-1 pk-siatka-opis");
     for (const sys of K.systemy) {
       g.append(kafel(sys.label, sys.opis, cfg.system === sys.klucz,
-        () => { cfg.system = sys.klucz; przelicz(); },
+        () => {
+          cfg.system = sys.klucz;
+          // Linia pompy należy do systemu — po zmianie systemu musi pójść za nim, inaczej
+          // ekran pokazywałby parę, której serwer i tak nie wyceni (normalizuj ją poprawia).
+          cfg.liniaPompyCiepla = liniaDlaSystemu(pak, cfg.system);
+          przelicz();
+        },
         !pak.systemDoWyboru && cfg.system !== sys.klucz, sys.zdjecie));
     }
     s.append(g);
@@ -442,10 +459,13 @@ function render() {
     }
     s.append(g);
 
-    if (pak.pompyCiepla && pak.pompyCiepla.length > 1) {
+    // Tylko linie z WYBRANEGO systemu. Wcześniej lista pokazywała obie naraz, więc dało się
+    // ustawić Tebasa z pompą Fairland — zestaw, którego nie sprzedajemy.
+    const linieSystemu = (pak.pompyCiepla || []).filter((l) => pasujeDoSystemu(l.klucz, cfg.system));
+    if (linieSystemu.length > 1) {
       s.append(h("h4", "pk-podtytul", "Linia pompy ciepła"));
       const gp = h("div", "pk-siatka pk-siatka-1 pk-siatka-opis");
-      for (const l of pak.pompyCiepla) {
+      for (const l of linieSystemu) {
         gp.append(kafel(l.label, cfg.pompaCiepla ? l.opis : "Najpierw zaznacz pompę ciepła",
           cfg.liniaPompyCiepla === l.klucz, () => { cfg.liniaPompyCiepla = l.klucz; przelicz(); },
           // Zdjęcie TEJ linii — dotąd każdy kafelek pokazywał pompę Fairland, także przy Tebasie.
