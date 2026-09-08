@@ -144,7 +144,7 @@ async function przelicz() {
     });
     const j = await r.json();
     if (moje !== ostatnieZadanie) return; // wyścig — przyszła starsza odpowiedź
-    if (!r.ok) { bladWyceny(j.error || "Nie udało się policzyć wyceny."); return; }
+    if (!r.ok) { bladWyceny(j.komunikat || j.error || "Nie udało się policzyć wyceny."); return; }
     wycena = j;
     bladWyceny(null); // udane przeliczenie kasuje poprzedni komunikat
     // Serwer normalizuje konfigurację (kolor niedostępny w BASIC, folia spoza serii)
@@ -198,8 +198,8 @@ function render() {
     const s = krok(1, "Wymiary basenu", "Budujemy w dowolnym wymiarze — wpisz swój albo wybierz jeden z popularnych.");
     const g = h("div", "pk-wymiary");
     for (const [id, etykieta, krokWart, min, max] of [
-      ["dlugosc", "Długość (m)", 0.5, 2, 20],
-      ["szerokosc", "Szerokość (m)", 0.5, 2, 10],
+      ["dlugosc", "Długość (m)", 0.5, 2, 16],
+      ["szerokosc", "Szerokość (m)", 0.5, 2, 8],
     ]) {
       const lab = h("label", null, etykieta);
       const inp = h("input");
@@ -223,10 +223,29 @@ function render() {
     }
     s.append(g);
 
+    // Konfigurator liczy do 50 m² lustra wody: do tej wielkości basen buduje się bez pozwolenia
+    // na budowę, a powyżej dochodzi inna technika (większa filtracja, często dwa obiegi) —
+    // wycena z automatu byłaby nierzetelna. Limit przychodzi z katalogu, nie jest tu zaszyty.
+    const LIMIT = K.maxLustroM2 || null;
+    const lustro = (cfg.dlugosc || 0) * (cfg.szerokosc || 0);
+    if (LIMIT && lustro > LIMIT + 0.001) {
+      const info = h("div", "pk-limit");
+      info.append(h("strong", null, `${lp(Math.round(lustro * 10) / 10)} m² to więcej, niż liczy konfigurator.`));
+      info.append(h("p", null,
+        `Do ${LIMIT} m² lustra wody basen buduje się bez pozwolenia na budowę. Większy wymaga projektu ` +
+        `i innej techniki — mocniejszej filtracji, czasem dwóch obiegów — więc wycenimy go indywidualnie, ` +
+        `żeby kwota była rzetelna.`));
+      const cta = h("a", "pk-btn pk-btn-glowny", "Zamów wycenę indywidualną");
+      cta.href = "#kontakt";
+      info.append(cta);
+      s.append(info);
+    }
+
     // Gotowe rozmiary jako duże kafelki na całą szerokość — większość klientów wybiera stąd,
     // a pola wyżej zostają dla wymiarów nietypowych.
     const szyb = h("div", "size-grid");
     for (const [L, W] of SZYBKIE) {
+      if (LIMIT && L * W > LIMIT + 0.001) continue; // rozmiar spoza zakresu konfiguratora
       const b = h("button", "size-tile" + (cfg.dlugosc === L && cfg.szerokosc === W ? " active" : ""));
       b.type = "button";
       b.append(h("div", "st-dim", `${lp(W)} × ${L} m`));
@@ -445,17 +464,40 @@ function render() {
       iwash: !sys.iwash,
       // Przeciwprąd Swim Jet istnieje tylko w systemie Fairland.
       przeciwprad: !sys.przeciwprad,
+      // Elektroliza soli i automatyczne dozowanie chemii to dwie metody TEJ SAMEJ rzeczy —
+      // dezynfekcji wody. Serwer i tak wycina dozowanie przy elektrolizerze, więc kafelek
+      // musi to pokazywać, zamiast dawać się kliknąć bez efektu na cenie.
+      dozowanieChemii: !!cfg.elektrolizer,
     };
-    const POWOD = { postument: "Tylko razem z pompą ciepła" };
+    // Stacja dozująca ma limit objętości (Bayrol Automatic pH-Cl: 90 m³) — przy większym
+    // basenie kafelek gaśnie, zamiast sprzedać urządzenie o połowę za małe.
+    const objetosc = (cfg.dlugosc || 0) * (cfg.szerokosc || 0) * (cfg.glebokosc || 0);
+    const limitDoz = (K.wyposazenie.find((o) => o.klucz === "dozowanieChemii") || {}).maxM3?.[cfg.system] ?? null;
+    const zaDuzyBasen = limitDoz != null && objetosc > limitDoz;
+    if (zaDuzyBasen) niedostepne.dozowanieChemii = true;
+    const POWOD = {
+      postument: "Tylko razem z pompą ciepła",
+      dozowanieChemii: cfg.elektrolizer
+        ? "Niepotrzebne przy elektrolizie soli — sól sama wytwarza dezynfekcję"
+        : `Basen ${Math.round(objetosc)} m³ przekracza zakres stacji (${limitDoz} m³) — dobierzemy większą indywidualnie`,
+    };
     for (const o of K.wyposazenie) {
       const off = !!niedostepne[o.klucz];
       // Lampa UV i elektrolizer to INNE urządzenia w Eco+ i Advantage+, a pompa ciepła
       // zależy od linii przypisanej do systemu. Kafelek musi pokazywać to, co faktycznie
       // wejdzie do wyceny — inaczej klient wybiera Advantage+, a widzi sprzęt z Eco+.
-      const w = (o.wgSystemu && o.wgSystemu[cfg.system]) || o;
+      let w = (o.wgSystemu && o.wgSystemu[cfg.system]) || o;
+      // Lampa budżetowa nie znosi solanki: po zaznaczeniu elektrolizera wycena bierze
+      // wersję DUPLEX, więc kafelek musi pokazać TĘ lampę, a nie ostrzegać przed solą.
+      if (o.wgElektrolizera && cfg.elektrolizer && o.wgElektrolizera[cfg.system])
+        w = o.wgElektrolizera[cfg.system];
       const podpis = off ? (POWOD[o.klucz] || o.opisNiedostepny || "Dostępne w wyższym pakiecie") : w.opis;
-      g.append(kafel(w.label || o.label, podpis, !!cfg[o.klucz],
-        () => { cfg[o.klucz] = !cfg[o.klucz]; przelicz(); }, off, w.zdjecie || o.zdjecie));
+      g.append(kafel(w.label || o.label, podpis, !!cfg[o.klucz] && !off,
+        () => {
+          cfg[o.klucz] = !cfg[o.klucz];
+          if (o.klucz === "elektrolizer" && cfg.elektrolizer) cfg.dozowanieChemii = false;
+          przelicz();
+        }, off, w.zdjecie || o.zdjecie));
     }
     s.append(g);
 

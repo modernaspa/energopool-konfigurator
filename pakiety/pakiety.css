@@ -198,3 +198,13 @@
 /* Kafelki z opisem pod nazwą — węższe siatki, bo tekst łamał się po dwa słowa */
 .pk-siatka.pk-siatka-opis{grid-template-columns:repeat(2,1fr)}
 }
+
+/* Basen ponad zakres konfiguratora — zamiast ceny tłumaczymy dlaczego i kierujemy do wyceny. */
+.pk-limit {
+  margin: 16px 0 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--pk-akcent, #1cbcf2);
+  background: rgba(28, 188, 242, .06);
+}
+.pk-limit strong { display: block; font-size: 15px; margin-bottom: 6px; }
+.pk-limit p { margin: 0 0 12px; font-size: 14px; line-height: 1.55; opacity: .85; }
