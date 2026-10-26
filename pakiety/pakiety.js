@@ -529,6 +529,37 @@ function render() {
   wstawIkony(root);
 }
 
+/* ---------- atrybucja i zgoda marketingowa ----------
+   Ten sam klucz co stary konfigurator (app.js): parametry z kliknięcia w reklamę (utm_*, fbclid,
+   gclid) czekają w localStorage do wysłania zapytania, nawet po przejściu między stronami.
+   Bez nich CRM nie przypisze leada do kampanii i nie policzy jej zwrotu. */
+const ATTR_KEY = "moderna_attribution";
+const ATTR_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+(function zapamietajAtrybucje() {
+  try {
+    const q = new URLSearchParams(location.search);
+    const found = {};
+    let jest = false;
+    for (const f of ATTR_FIELDS) { const v = q.get(f); if (v) { found[f] = v; jest = true; } }
+    if (jest) { found.landing_url = location.href; localStorage.setItem(ATTR_KEY, JSON.stringify(found)); }
+  } catch (e) { /* tryb prywatny */ }
+})();
+const atrybucja = () => { try { return JSON.parse(localStorage.getItem(ATTR_KEY) || "{}") || {}; } catch (e) { return {}; } };
+const ciastko = (n) => { const p = document.cookie.split("; ").find((r) => r.startsWith(n + "=")); return p ? p.split("=")[1] : null; };
+
+/** Zgoda marketingowa jest OSOBNA i dobrowolna. Tylko z nią zgłoszenie idzie do Meta jako „Lead”
+    (Pixel w przeglądarce + Conversions API z CRM, wspólny event_id → Meta liczy je raz). */
+function daneMarketingowe() {
+  const zgoda = !!(el("ordMkt") && el("ordMkt").checked);
+  const d = Object.assign({ landing_url: location.href }, atrybucja(), { zgoda_mkt: zgoda });
+  if (zgoda) {
+    d.event_id = "pkt_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
+    d.fbp = ciastko("_fbp");
+    d.fbc = ciastko("_fbc");
+  }
+  return d;
+}
+
 /* ---------- formularz ---------- */
 function podepnijFormularz() {
   el("orderForm").addEventListener("submit", async (e) => {
@@ -546,16 +577,20 @@ function podepnijFormularz() {
     if (!dane.imie || !dane.email) { bladFormularza("Podaj imię i adres e-mail."); return; }
     if (!dane.rodo) { bladFormularza("Potrzebujemy zgody na kontakt, żeby odesłać wycenę."); return; }
 
+    const mkt = daneMarketingowe();
     const btn = el("ordSubmit");
     btn.disabled = true;
     btn.textContent = "Wysyłam…";
     try {
       const r = await fetch(API + "/api/pakiety/zapytanie", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.assign({}, dane, { konfiguracja: cfg, brutto: wycena ? wycena.brutto : null })),
+        body: JSON.stringify(Object.assign({}, dane, mkt, { konfiguracja: cfg, brutto: wycena ? wycena.brutto : null })),
       });
       const j = await r.json();
       if (!r.ok) { bladFormularza(j.error || "Nie udało się wysłać zgłoszenia."); return; }
+      // Pixel tylko za zgodą i tylko gdy załadował się sam (czyli po zgodzie na ciasteczka).
+      if (mkt.zgoda_mkt && window.fbq) window.fbq("track", "Lead",
+        { value: wycena ? wycena.brutto : 0, currency: "PLN", content_category: "basen" }, { eventID: mkt.event_id });
       el("orderForm").hidden = true;
       el("orderDone").hidden = false;
     } catch (e2) {
