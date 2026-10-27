@@ -3,51 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Konfigurator basenu — Moderna Pool&amp;Spa</title>
+<title>Wycena indywidualna — Moderna Pool&amp;Spa</title>
 <!--
-  STRONA WYGASZONA 02.10.2026 (decyzja właściciela).
+  KONFIGURATOR WYŁĄCZONY 27.10.2026 (decyzja właściciela).
 
-  Tu stał konfigurator ENERGOPOOL: jeden poziom wyposażenia i osiem sztywnych rozmiarów,
-  w cenie zbliżonej do dzisiejszego pakietu PREMIUM. Klient, który tu trafiał ze starej
-  reklamy albo z zakładki, nie miał jak zobaczyć, że ta sama niecka w pakiecie BASIC
-  kosztuje około 30% mniej — najtańsza oferta wyglądała na nieistniejącą.
-
-  Aktualny konfigurator (BASIC / STANDARD / PREMIUM, folie CGT, dowolne wymiary):
-  https://moderna-baseny.pl/konfigurator-basenu/
-
-  DLACZEGO PRZEKIEROWANIE, A NIE USUNIĘCIE PLIKU. GitHub Pages nie umie odpowiedzieć 301,
-  a pod tym adresem wisi historia reklam z lipca i sierpnia 2026 (UTM-y w bazie ofert).
-  Skasowany plik dałby 404 i stratę tych wejść; przekierowanie przenosi je na aktualne ceny
-  RAZEM z parametrami kampanii, więc atrybucja w CRM się nie urywa.
-
-  Katalog /assets i /pakiety zostają — korzysta z nich strona, na którą tu przekierowujemy.
+  Z publicznego konfiguratora korzystali obcy wykonawcy — generowali na nim wyceny i wysyłali
+  je swoim klientom jako własne. Wyceny basenów robimy teraz wyłącznie indywidualnie.
+  API wyceny w CRM odmawia żądaniom bez sesji (lib/cors.ts, PUBLICZNA_WYCENA_WYLACZONA),
+  a stary cennik (data.js) i logika (app.js) zniknęły z serwowanych plików — zostają w historii git.
 -->
-<link rel="canonical" href="https://moderna-baseny.pl/konfigurator-basenu/">
 <meta name="robots" content="noindex, follow">
-<meta http-equiv="refresh" content="0; url=https://moderna-baseny.pl/konfigurator-basenu/">
-<script>
-  // Parametry kampanii (utm_*, fbclid) muszą przejść dalej, inaczej wejście z reklamy
-  // zapisze się w CRM jako ruch bezpośredni. Kotwica #konfigurator istnieje też na nowej stronie.
-  (function () {
-    var cel = "https://moderna-baseny.pl/konfigurator-basenu/";
-    var zapytanie = window.location.search || "";
-    var kotwica = window.location.hash === "#konfigurator" ? "#konfigurator" : "";
-    window.location.replace(cel + zapytanie + kotwica);
-  })();
-</script>
 <style>
-  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#122232;color:#fff;
-       font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center;padding:24px;}
-  a{color:#7fd4f5;}
-  p{max-width:34rem;line-height:1.6;}
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px 16px; background: #eef3f5; color: #1d2f3d;
+    font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  .card { max-width: 560px; width: 100%; background: #fff; border-radius: 14px; padding: 40px 32px;
+    box-shadow: 0 10px 40px rgba(29, 47, 61, .08); text-align: center; }
+  .logo { height: 44px; margin-bottom: 28px; }
+  h1 { font-size: 26px; margin: 0 0 14px; }
+  p { font-size: 16px; line-height: 1.6; color: #42586a; margin: 0 0 12px; }
+  .akcje { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 26px; }
+  .btn { display: inline-block; padding: 14px 26px; border-radius: 10px; font-weight: 600; font-size: 16px;
+    text-decoration: none; background: #0E8A93; color: #fff; }
+  .btn.ghost { background: #fff; color: #0E8A93; border: 2px solid #0E8A93; }
+  address { font-style: normal; margin-top: 26px; font-size: 14px; color: #6b7f8e; line-height: 1.6; }
 </style>
 </head>
 <body>
-  <main>
-    <h1>Konfigurator basenu ma nowy adres</h1>
-    <p>Przenosimy Cię do aktualnego konfiguratora — z trzema standardami wykończenia
-       i wyceną online. Jeśli strona nie otworzy się sama:</p>
-    <p><a href="https://moderna-baseny.pl/konfigurator-basenu/">moderna-baseny.pl/konfigurator-basenu</a></p>
-  </main>
+<main class="card">
+  <img src="assets/logo-dark.png" alt="Moderna Pool&amp;Spa" class="logo">
+  <h1>Wycena indywidualna</h1>
+  <p>Każdy basen ENERGOPOOL wyceniamy indywidualnie — po rozmowie o wymiarach, wyposażeniu i&nbsp;warunkach na działce.</p>
+  <p>Zadzwoń albo napisz, a&nbsp;przygotujemy ofertę dla Ciebie.</p>
+  <div class="akcje">
+    <a class="btn" href="tel:+48500560245">Zadzwoń: +48 500 560 245</a>
+    <a class="btn ghost" href="mailto:biuro@moderna-spa.pl?subject=Wycena%20basenu%20ENERGOPOOL">biuro@moderna-spa.pl</a>
+  </div>
+  <address>Moderna Pool&amp;Spa · Showroom: ul. św. Teresy od Dzieciątka Jezus 91, 91-341 Łódź</address>
+</main>
 </body>
 </html>

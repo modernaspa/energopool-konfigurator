@@ -3,241 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseny betonowe — trzy standardy, wycena online | Moderna Pool&amp;Spa</title>
-<meta name="description" content="Basen bloczkowo-betonowy w trzech standardach: BASIC, STANDARD i PREMIUM. Skonfiguruj wymiary i wyposażenie, zobacz cenę od razu i odbierz pełną wycenę w PDF.">
-<link rel="stylesheet" href="../assets/fonts/fonts.css">
-<link rel="stylesheet" href="../styles.css?v=21">
-<link rel="stylesheet" href="pakiety.css?v=7">
+<title>Wycena indywidualna — Moderna Pool&amp;Spa</title>
+<!--
+  KONFIGURATOR WYŁĄCZONY 27.10.2026 (decyzja właściciela).
+
+  Z publicznego konfiguratora korzystali obcy wykonawcy — generowali na nim wyceny i wysyłali
+  je swoim klientom jako własne. Wyceny basenów robimy teraz wyłącznie indywidualnie.
+  API wyceny w CRM odmawia żądaniom bez sesji (lib/cors.ts, PUBLICZNA_WYCENA_WYLACZONA),
+  a stary cennik (data.js) i logika (app.js) zniknęły z serwowanych plików — zostają w historii git.
+-->
+<meta name="robots" content="noindex, follow">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px 16px; background: #eef3f5; color: #1d2f3d;
+    font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  .card { max-width: 560px; width: 100%; background: #fff; border-radius: 14px; padding: 40px 32px;
+    box-shadow: 0 10px 40px rgba(29, 47, 61, .08); text-align: center; }
+  .logo { height: 44px; margin-bottom: 28px; }
+  h1 { font-size: 26px; margin: 0 0 14px; }
+  p { font-size: 16px; line-height: 1.6; color: #42586a; margin: 0 0 12px; }
+  .akcje { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 26px; }
+  .btn { display: inline-block; padding: 14px 26px; border-radius: 10px; font-weight: 600; font-size: 16px;
+    text-decoration: none; background: #0E8A93; color: #fff; }
+  .btn.ghost { background: #fff; color: #0E8A93; border: 2px solid #0E8A93; }
+  address { font-style: normal; margin-top: 26px; font-size: 14px; color: #6b7f8e; line-height: 1.6; }
+</style>
 </head>
 <body>
-
-<!-- ================= HEADER ================= -->
-<header class="site-header" id="top">
-  <div class="container header-inner">
-    <a href="#top" class="brand">
-      <img src="../assets/logo-dark.png" alt="Moderna Pool&Spa" class="brand-mark">
-    </a>
-    <nav class="main-nav">
-      <a href="#technologia">Technologia</a>
-      <a href="#konfigurator">Konfigurator</a>
-      <a href="#wycena">Wycena</a>
-    </nav>
-    <div class="header-actions">
-      <a href="tel:+48500560245" class="header-phone">
-        <span class="ico" data-icon="phone"></span> +48 500 560 245
-      </a>
-      <a href="#konfigurator" class="btn btn-primary btn-sm">Policz cenę</a>
-    </div>
+<main class="card">
+  <img src="../assets/logo-dark.png" alt="Moderna Pool&amp;Spa" class="logo">
+  <h1>Wycena indywidualna</h1>
+  <p>Każdy basen ENERGOPOOL wyceniamy indywidualnie — po rozmowie o wymiarach, wyposażeniu i&nbsp;warunkach na działce.</p>
+  <p>Zadzwoń albo napisz, a&nbsp;przygotujemy ofertę dla Ciebie.</p>
+  <div class="akcje">
+    <a class="btn" href="tel:+48500560245">Zadzwoń: +48 500 560 245</a>
+    <a class="btn ghost" href="mailto:biuro@moderna-spa.pl?subject=Wycena%20basenu%20ENERGOPOOL">biuro@moderna-spa.pl</a>
   </div>
-</header>
-
-<!-- ================= HERO ================= -->
-<section class="hero" style="background-image:url('../assets/hero-energopool.jpg')">
-  <div class="hero-overlay"></div>
-  <div class="container">
-    <div class="hero-content">
-      <span class="hero-kicker">Basen bloczkowo-betonowy · trzy standardy</span>
-      <h1>ENERGOPOOL</h1>
-      <p class="hero-lead">Wpisz wymiary, wybierz standard i wyposażenie — kwota policzy się od razu.
-        Bez formularza „oddzwonimy”, bez rozmowy z handlowcem na start. Pełną wycenę w PDF wyślemy na e-mail.</p>
-      <div class="hero-cta">
-        <a href="#konfigurator" class="btn btn-primary btn-lg">Policz cenę swojego basenu</a>
-        <a href="#technologia" class="btn btn-ghost btn-lg">Poznaj technologię</a>
-      </div>
-      <ul class="hero-badges">
-        <li><span class="ico" data-icon="bolt"></span> Cena od razu</li>
-        <li><span class="ico" data-icon="shield"></span> Beton C30/37 W8</li>
-        <li><span class="ico" data-icon="sliders"></span> Trzy standardy</li>
-        <li><span class="ico" data-icon="cpu"></span> 2 lata gwarancji</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FEATURES ================= -->
-<section class="features">
-  <div class="container">
-    <div class="feature-grid">
-      <div class="feature"><div class="f-ico"><span class="ico" data-icon="bolt"></span></div><h3>Cena od razu, bez telefonu</h3><p>Konfigurujesz basen i widzisz kwotę w tej samej chwili. Bez czekania na oddzwonienie handlowca.</p></div>
-      <div class="feature"><div class="f-ico"><span class="ico" data-icon="shield"></span></div><h3>Trzy standardy, jedna technologia</h3><p>Nieckę budujemy tak samo w każdym pakiecie — bloczki zalewane betonem C30/37 W8. Różni się wykończenie i wyposażenie.</p></div>
-      <div class="feature"><div class="f-ico"><span class="ico" data-icon="sliders"></span></div><h3>Wszystko rozpisane</h3><p>W wycenie widzisz każdą grupę osobno: płytę, nieckę, folię, uzbrojenie, filtrację i robociznę. Żadnej pozycji „basen — 100 000 zł”.</p></div>
-      <div class="feature"><div class="f-ico"><span class="ico" data-icon="droplet"></span></div><h3>Dwa systemy urządzeń</h3><p>Eco+ — komplet sprawdzonej automatyki taniej. Advantage+ — full-inverter, sterowanie z telefonu i automatyczne płukanie filtra.</p></div>
-      <div class="feature"><div class="f-ico"><span class="ico" data-icon="smartphone"></span></div><h3>2 lata gwarancji na wykonanie</h3><p>Plus gwarancja producenta na urządzenia. Serwis, części i wsparcie techniczne w Łodzi.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= TECHNOLOGIA ================= -->
-<section class="tech" id="technologia">
-  <div class="container tech-inner">
-    <div class="tech-text">
-      <span class="section-kicker">Technologia</span>
-      <h2>Konstrukcja bloczkowo-betonowa, która przetrwa pokolenia</h2>
-      <p>Ściany stawiamy z bloczków szalunkowych, które zalewamy betonem C30/37 W8 — tym samym,
-        z którego robi się zbiorniki na wodę. W środku zbrojenie pionowe i poziome. Powstaje monolit,
-        który nie pracuje i nie pęka przy przemarzaniu gruntu.</p>
-      <ul class="tech-list">
-        <li><strong>Ściany 30 cm</strong> — bloczki szalunkowe zalewane betonem C30/37 W8</li>
-        <li><strong>Zbrojenie</strong> — pręty fi 10 pionowo co 25 cm i dwa pręty w każdej warstwie poziomej</li>
-        <li><strong>Płyta fundamentowa</strong> — o 50 cm szersza od lustra wody z każdej strony</li>
-        <li><strong>Osprzęt w jednym kolorze</strong> — skimmery, dysze i podświetlenie RGB LED dobrane do niecki, nie w przypadkowej bieli</li>
-        <li><strong>Folia zgrzewana</strong> na geowłókninie 400 g/m² — szczelna powłoka bez fug</li>
-      </ul>
-      <a href="#konfigurator" class="btn btn-primary">Przejdź do konfiguratora</a>
-    </div>
-    <div class="tech-media">
-      <img src="../assets/konstrukcja.jpg" alt="Render 3D przekroju niecki basenowej w technologii bloczkowo-betonowej">
-      <p class="tech-caption">Render 3D — przekrój niecki: bloczki szalunkowe, zbrojenie i płyta fundamentowa.</p>
-      <div class="layers">
-        <h4 class="layers-title">Specyfikacja warstw konstrukcji</h4>
-        <ol class="layers-list">
-          <li><span class="ln">01</span><div class="lc"><strong>Podłoże i podsypka</strong><span>Zagęszczone podłoże pod płytę fundamentową</span></div></li>
-          <li><span class="ln">02</span><div class="lc"><strong>Płyta fundamentowa</strong><span>Beton wodoszczelny C30/37 W8 na folii izolacyjnej, zbrojony siatką stalową. W pakiecie PREMIUM dodatkowo ocieplona styrodurem XPS 300, żeby ciepło nie uciekało w grunt</span></div></li>
-          <li><span class="ln">03</span><div class="lc"><strong>Ściany z bloczków</strong><span>Bloczki szalunkowe zalewane betonem C30/37 W8 · grubość ściany 25 cm</span></div></li>
-          <li><span class="ln">04</span><div class="lc"><strong>Zbrojenie stalowe</strong><span>Pręty zbrojeniowe pionowo i poziomo w komorach bloczków, zakotwione w płycie — ściana i płyta pracują jak jedna bryła</span></div></li>
-          <li><span class="ln">05</span><div class="lc"><strong>Folia basenowa CGT ALKOR lub RENOLIT ALKORPLAN</strong><span>Zgrzewana membrana 1,5 lub 2,0 mm — zależnie od wybranego standardu; w PREMIUM także serie TOUCH i VOGUE</span></div></li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= KONFIGURATOR ================= -->
-<section class="configurator" id="konfigurator">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-kicker">Konfigurator online</span>
-      <h2>Skonfiguruj Twój basen</h2>
-      <p>Ceny brutto, zawierają materiał i robociznę naszej ekipy. Prace ziemne nie wchodzą w cenę
-        pakietu — większość klientów organizuje koparkowego we własnym zakresie, bo wychodzi taniej.
-        W pakiecie PREMIUM można dobrać opcję „Pod klucz”.</p>
-    </div>
-
-    <div class="config-layout">
-      <div class="config-main" id="kroki">
-        <!-- Kroki renderuje pakiety.js po pobraniu katalogu z API -->
-        <div class="step pk-loading" id="ladowanie"><p class="step-sub">Wczytuję konfigurator…</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Pasek ceny — trzyma się dołu ekranu, żeby kwota była widoczna przy każdym kroku.
-     Zastępuje boczną kolumnę, która nie mieści się w układzie pełnej szerokości. -->
-<div class="pk-pasek" id="pasekCeny" hidden>
-  <div class="container pk-pasek-inner">
-    <div class="pk-pasek-opis">
-      <strong id="sumStandard">ENERGOPOOL</strong>
-      <span id="sumWymiar">—</span>
-    </div>
-    <div class="pk-pasek-cena">
-      <span>Razem brutto</span>
-      <strong id="sumBrutto">—</strong>
-    </div>
-    <a href="#wycena" class="btn btn-primary">Odbierz wycenę w PDF</a>
-  </div>
-  <div class="lead-err sum-err" id="sumErr" hidden></div>
-</div>
-
-<!-- ================= ZAMÓWIENIE WYCENY ================= -->
-<section class="pk-order" id="wycena">
-  <div class="container">
-    <div class="order-cta">
-      <div class="order-inner">
-        <div class="order-head">
-          <span class="section-kicker">Twoja wycena</span>
-          <h3>Zamów wycenę na e-mail</h3>
-          <p id="ordPodsumowanie">Zostaw dane kontaktowe — przygotujemy ofertę PDF z pełnym zestawieniem
-            i opisem każdej pozycji, i wyślemy ją prosto na Twoją skrzynkę.</p>
-        </div>
-
-        <form class="order-form" id="orderForm" novalidate>
-          <!-- honeypot anty-bot: niewidoczny dla ludzi; boty wypełniają to pole → serwer odrzuca -->
-          <input type="text" id="ordFirma" name="firma" tabindex="-1" autocomplete="off" aria-hidden="true"
-                 style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
-          <div class="order-fields">
-            <label>Imię i nazwisko
-              <input type="text" id="ordName" autocomplete="name" placeholder="Jan Kowalski"></label>
-            <label>Adres e-mail
-              <input type="email" id="ordEmail" autocomplete="email" placeholder="jan@przyklad.pl"></label>
-            <label>Telefon <small>(opcjonalnie)</small>
-              <input type="tel" id="ordPhone" autocomplete="tel" placeholder="+48 600 000 000"></label>
-            <label>Miejscowość budowy
-              <input type="text" id="ordLoc" autocomplete="address-level2" placeholder="np. Łódź"></label>
-          </div>
-          <label class="consent"><input type="checkbox" id="ordRodo">
-            <span>Wyrażam zgodę na kontakt w sprawie mojego zapytania i przetwarzanie danych przez
-              Moderna Pool&amp;Spa Sp. z o.o. Zgodę mogę wycofać w każdej chwili.
-              <a href="../polityka-prywatnosci.html" target="_blank" rel="noopener">Polityka prywatności</a>.</span>
-          </label>
-          <label class="consent"><input type="checkbox" id="ordMkt">
-            <span>(Opcjonalnie) Zgadzam się na przetwarzanie moich danych w celach marketingowych przez
-              Moderna Pool&amp;Spa Sp. z o.o., w tym na przesyłanie informacji o ofercie oraz przekazanie
-              zaszyfrowanego adresu e-mail i telefonu firmie Meta Platforms w celu pomiaru skuteczności reklam.
-              Zgodę mogę wycofać w każdej chwili.</span>
-          </label>
-          <div class="lead-err" id="ordErr" hidden></div>
-          <button type="submit" class="btn btn-primary btn-lg" id="ordSubmit">Wyślij i odbierz wycenę</button>
-        </form>
-
-        <div class="order-done" id="orderDone" hidden>
-          <h3>Sprawdź skrzynkę e-mail</h3>
-          <p>Wysłaliśmy do Ciebie wiadomość z linkiem potwierdzającym. Kliknij go, a od razu prześlemy
-             pełną ofertę PDF dla konfiguracji, którą wybrałeś. Zajrzyj też do folderu SPAM.</p>
-        </div>
-      </div>
-      <div class="order-media"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= STOPKA ================= -->
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-cta">
-      <div class="footer-cta-text">
-        <h3>Gotowy na własny basen ENERGOPOOL?</h3>
-        <p>Skonfiguruj basen online i&nbsp;zamów wycenę na e-mail — albo zadzwoń i&nbsp;odwiedź nasz showroom w&nbsp;Łodzi.</p>
-      </div>
-      <div class="footer-cta-actions">
-        <a href="#konfigurator" class="btn btn-primary">Skonfiguruj i wyceń basen</a>
-        <a href="tel:+48500560245" class="btn btn-ghost"><span class="ico" data-icon="phone"></span> +48 500 560 245</a>
-      </div>
-    </div>
-  </div>
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <img src="../assets/img_002.png" alt="Moderna Pool&Spa" class="brand-mark">
-    </div>
-    <div class="footer-col">
-      <h4>Showroom Łódź</h4>
-      <div class="footer-addr">
-        <span class="ico" data-icon="pin"></span>
-        <address>ul. św. Teresy od Dzieciątka&nbsp;Jezus&nbsp;91<br>91-341 Łódź</address>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h4>Kontakt</h4>
-      <ul class="footer-list">
-        <li><span class="ico" data-icon="mail"></span><a href="mailto:biuro@moderna-spa.pl">biuro@moderna-spa.pl</a></li>
-        <li><span class="ico" data-icon="phone"></span><a href="tel:+48500560245">+48 500 560 245</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Nasze serwisy</h4>
-      <ul class="footer-list">
-        <li><span class="ico" data-icon="globe"></span><a class="footer-site" href="https://moderna-baseny.pl" target="_blank" rel="noopener">moderna-baseny.pl<small>Baseny i zadaszenia</small></a></li>
-        <li><span class="ico" data-icon="globe"></span><a class="footer-site" href="https://moderna-spa.pl" target="_blank" rel="noopener">moderna-spa.pl<small>Strefa SPA</small></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom"><div class="container">
-    © <span id="year"></span> Moderna Pool&amp;Spa Sp. z o.o. — Konfigurator pakietów basenowych.
-    Ceny brutto, orientacyjne; nie stanowią oferty w rozumieniu art. 66 § 1 Kodeksu cywilnego.
-    <a href="../polityka-prywatnosci.html">Polityka prywatności</a>
-  </div></div>
-</footer>
-
-<script src="pakiety.js?v=10"></script>
+  <address>Moderna Pool&amp;Spa · Showroom: ul. św. Teresy od Dzieciątka Jezus 91, 91-341 Łódź</address>
+</main>
 </body>
 </html>
